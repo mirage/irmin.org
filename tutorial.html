@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/main.css">
+    <title>Irmin</title>
+  </head>
+
+  <body class="documentation">
+    <header>
+      <nav class="menu">
+        <ul>
+          <li><a href="https://github.com/mirage/irmin">Github</a></li>
+          <li><a class="active" href="/tutorial">Tutorial</a></li>
+          <li><a href="#">API</a></li>
+          <li><a href="#">News</a></li>
+        </ul>
+      </nav>
+      <div class="logo">
+        <a href="/"><img src="img/logo_white.png" alt="Irmin logo"></a>
+      </div>
+    </header>
+
+    <nav class="sidebar">
+      <h3>Tutorial</h3>
+      <ul>
+        <li><a class="active" href="#">1. Introduction</a></li>
+        <li><a href="#">2. Using the command-line</a></li>
+        <li><a href="#">3. Getting started with OCaml</a></li>
+        <li><a href="#">4. Custom content types</a></li>
+        <li><a href="#">5. Writing a storage backend</a></li>
+        <li><a href="#">6. Resources</a></li>
+      </ul>
+    </nav>
+
+    <section class="doc">
+      <h2>Introduction</h2>
+      <p>Irmin is a key-value store based on the same priciples as Git. This means that for existing Git users it provides many familiar features: branching/merging, history and the ability to restore to any previous state.</p>
+
+      <p>Typically Irmin is accessed by embedding it into an OCaml application, but there are also several tools like <code>irmin-http</code>, <code>irmin-rpc</code>, <code>irmin-graphql</code>, <code>irmin-resp</code>, which allow you to use it as a standalone server.</p>
+
+      <p>It is most often used to store application data, like configuration values, shared state or checkpoint data, but can be used as a general purpose key-value store too. Additionally, since it is compatible with Git, Irmin can be used to interact with Git repositories directly from your application.</p>
+
+      <p>Take a moment to skim the <strong><a href="#">README</a></strong> to familiarize yourself with some of the concepts. Also, if you find that anything is missing or unclear in this tutorial then please file an issue!</p>
+
+      <a class="next" href="#">Next: Using the command-line</a>
+      <a class="previous" href="#">Previous: Introduction</a>
+    </section>
+
+  </body>
+</html>
