@@ -139,7 +139,7 @@ let main =
     Store.master >>= fun t ->
 
     (* Set key "foo/bar" to "testing 123" *)
-    Store.set t ~info:(info "Updating foo/bar") ["foo"; "bar"] "testing 123" >>= fun () ->
+    Store.set_exn t ~info:(info "Updating foo/bar") ["foo"; "bar"] "testing 123" >>= fun () ->
 
     (* Get key "foo/bar" and print it to stdout *)
     Store.get t ["foo"; "bar"] >|= fun x ->
