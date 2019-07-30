@@ -1,0 +1,34 @@
+{
+    "name": "irmin",
+    "description": "irmin.io website",
+    "version": "1.0.0",
+    "author": "Tarides <contact@tarides.com>",
+    "dependencies": {
+        "gatsby": "^2.0.53",
+        "gatsby-source-filesystem": "^2.0.8",
+        "gatsby-transformer-remark": "^2.2.4",
+        "react": "^16.6.3",
+        "react-dom": "^16.6.3"
+    },
+    "keywords": [
+        "gatsby"
+    ],
+    "private": "true",
+    "scripts": {
+        "build": "gatsby build",
+        "develop": "gatsby develop",
+        "start": "npm run develop",
+        "format": "prettier --write \"*.js\" \"src/**/*.js\"",
+        "lint": "prettier --check \"*.js\" \"src/**/*.js\"",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "devDependencies": {
+        "gatsby-cli": "^2.4.16",
+        "prettier": "^1.15.2",
+        "url-loader": "^1.1.2"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/tarides/irmin.io"
+    }
+}
