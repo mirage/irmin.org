@@ -19,6 +19,15 @@ module.exports = {
       options: {
         plugins: [`gatsby-remark-autolink-headers`]
       }
+    },
+    {
+      resolve: `gatsby-plugin-google-fonts`,
+      options: {
+        fonts: [
+            `Ubuntu Mono`,
+            `Titillium Web:400,600,700`
+        ]
+      }
     }
   ]
 };

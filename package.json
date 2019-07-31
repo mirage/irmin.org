@@ -5,9 +5,10 @@
     "author": "Tarides <contact@tarides.com>",
     "dependencies": {
         "gatsby": "^2.0.53",
+        "gatsby-plugin-google-fonts": "^1.0.1",
+        "gatsby-remark-autolink-headers": "^2.0.14",
         "gatsby-source-filesystem": "^2.0.8",
         "gatsby-transformer-remark": "^2.2.4",
-        "gatsby-remark-autolink-headers": "^2.0.14",
         "react": "^16.6.3",
         "react-dom": "^16.6.3"
     },
