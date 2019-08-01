@@ -94,6 +94,8 @@ This module needs an `add` function, which takes a value, hashes it, stores the 
       let value = Irmin.Type.to_string V.t value in
       ignore (Client.run client [| "SET"; prefix ^ key; value |]);
       Lwt.return hash
+
+  let unsafe_add t _ v = add t v >|= ignore
 ```
 
 Then a `batch` function, which can be used to group writes together. We will use the most basic implementation:
