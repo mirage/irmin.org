@@ -57,9 +57,9 @@ const HomeFeatureGrid = () => {
         Irmin is an OCaml library for building mergeable, branchable distributed
         data stores.
       </h2>
-      <div class="list">
+      <div className="list">
         {features.map(f => {
-          return <Feature feature={f} />;
+            return <Feature key={f.title} feature={f} />;
         })}
       </div>
     </section>

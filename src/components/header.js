@@ -5,7 +5,7 @@ import Logo from "../images/logo_white.png";
 
 const Header = () => (
   <header>
-    <nav class="menu">
+    <nav className="menu">
       <ul>
         <li>
           <a href="https://github.com/mirage/irmin">Github</a>
@@ -17,11 +17,11 @@ const Header = () => (
           <a href="https://mirage.github.io/irmin">API</a>
         </li>
         <li>
-          <Link to="#">News</Link>
+          <a href="#">News</a>
         </li>
       </ul>
     </nav>
-    <div class="logo">
+    <div className="logo">
       <Link to="/">
         <img src={Logo} alt="Irmin logo" />
       </Link>

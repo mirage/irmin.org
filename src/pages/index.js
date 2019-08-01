@@ -17,9 +17,9 @@ const HomePage = () => {
       <HomeHeader />
       <HomeFeatureGrid />
 
-      <div class="wrapper">
-        <section class="doc">
-          <div class="colleft">
+      <div className="wrapper">
+        <section className="doc">
+          <div className="colleft">
             <h2>Installation</h2>
             <p>
               To install Irmin, the command-line tool and all optional
@@ -46,7 +46,7 @@ const HomePage = () => {
             <br />
           </div>
 
-          <div class="colright">
+          <div className="colright">
             <br />
             <br />
             <br />
@@ -87,9 +87,9 @@ const HomePage = () => {
           </div>
         </section>
 
-        <div class="clearfix"></div>
+        <div className="clearfix"></div>
 
-        <section class="doc">
+        <section className="doc">
           <h2>Examples</h2>
           <p>
             Below is a simple example of setting a key and getting the value out
@@ -97,7 +97,7 @@ const HomePage = () => {
           </p>
 
           <pre>
-            <code dangerouslySetInnerHTML={{ __html: exampleCode }}></code>
+            <code className="language-ocaml" dangerouslySetInnerHTML={{ __html: exampleCode }}></code>
           </pre>
 
           <p>
@@ -154,13 +154,13 @@ const HomePage = () => {
               <img src={imgTutorial} alt="" /> Tutorial
             </Link>
             <a
-              class="button issue"
+              className="button issue"
               href="https://github.com/mirage/irmin/issues"
             >
               <img src={imgIssue} alt="" /> Issues
             </a>
             <a
-              class="button license"
+              className="button license"
               href="https://github.com/mirage/irmin/blob/master/LICENSE.md"
             >
               <img src={imgLicense} alt="" /> License

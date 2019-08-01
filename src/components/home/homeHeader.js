@@ -6,8 +6,8 @@ import imgGithub from "../../images/icons/github.svg";
 
 const HomeHeader = ({ pages, currentLink }) => {
   return (
-    <section class="intro wrapper">
-      <div class="logo">
+    <section className="intro wrapper">
+      <div className="logo">
         <Link to="/">
           <img className="logo" src={imgLogo} alt="Irmin logo" />
         </Link>
