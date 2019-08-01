@@ -9,7 +9,7 @@ const TutorialSidebar = ({ pages, currentLink }) => {
         {pages.map((p, i) => {
           if (p.link === currentLink) {
             return (
-              <li>
+              <li key={p.title}>
                 <Link to={p.link} className="active">
                   {i + 1}. {p.title}
                 </Link>
@@ -17,7 +17,7 @@ const TutorialSidebar = ({ pages, currentLink }) => {
             );
           } else {
             return (
-              <li>
+              <li key={p.title}>
                 <Link to={p.link}>
                   {i + 1}. {p.title}
                 </Link>
