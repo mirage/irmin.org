@@ -24,7 +24,7 @@ export default function Template({ data }) {
 
   return (
     <body className="documentation">
-      <Layout>
+      <Layout title="Tutorial">
         <TutorialSidebar pages={pages} currentLink={frontmatter.path} />
         <section className="doc">
           <h2>{frontmatter.title}</h2>

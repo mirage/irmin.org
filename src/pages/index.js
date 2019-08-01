@@ -1,5 +1,5 @@
-import { Link } from "gatsby";
 import React from "react";
+import { Link } from "gatsby";
 
 import HomeHeader from "../components/home/homeHeader";
 import HomeFeatureGrid from "../components/home/homeFeatureGrid";
@@ -13,7 +13,7 @@ import exampleCode from "raw-loader!../data/example.ml";
 
 const HomePage = () => {
   return (
-    <Layout>
+    <Layout title="Irmin">
       <HomeHeader />
       <HomeFeatureGrid />
 
@@ -97,7 +97,10 @@ const HomePage = () => {
           </p>
 
           <pre>
-            <code className="language-ocaml" dangerouslySetInnerHTML={{ __html: exampleCode }}></code>
+            <code
+              className="language-ocaml"
+              dangerouslySetInnerHTML={{ __html: exampleCode }}
+            ></code>
           </pre>
 
           <p>
@@ -105,11 +108,10 @@ const HomePage = () => {
             and run:
           </p>
           <pre>
-            {/* prettier-ignore */}
             <code>
-      $ ocamlfind ocamlopt example.ml -o example -package irmin-unix,lwt.unix -linkpkg
-      $ ./example
-      foo/bar => 'testing 123'
+              {`$ ocamlfind ocamlopt example.ml -o example -package irmin-unix,lwt.unix -linkpkg
+$ ./example
+foo/bar => 'testing 123'`}
             </code>
           </pre>
 
@@ -119,8 +121,8 @@ const HomePage = () => {
           </p>
           <pre>
             <code>
-              $ jbuilder build examples/trees.exe $
-              _build/default/examples/trees.exe
+              {`$ jbuilder build examples/trees.exe
+$ _build/default/examples/trees.exe`}
             </code>
           </pre>
 
@@ -130,13 +132,12 @@ const HomePage = () => {
             command-line application installed with irmin-unix, by running:
           </p>
 
-          <pre>
-            {/* prettier-ignore */}
+          <pre className="command-line" data-prompt="$">
             <code>
-                $ echo "root: ." > irmin.yml
-                $ irmin init
-                $ irmin set foo/bar "testing 123"
-                $ irmin get foo/bar
+              {`$ echo "root: ." > irmin.yml
+$ irmin init
+$ irmin set foo/bar "testing 123"
+$ irmin get foo/bar`}
             </code>
           </pre>
 
