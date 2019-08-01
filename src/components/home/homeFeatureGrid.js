@@ -1,6 +1,6 @@
 import React from "react";
 
-import Feature from "../feature";
+import HomeFeature from "./homeFeature";
 
 import imgSnapshot from "../../images/icons/snapshot.png";
 import imgStorage from "../../images/icons/storage.png";
@@ -59,7 +59,7 @@ const HomeFeatureGrid = () => {
       </h2>
       <div className="list">
         {features.map(f => {
-            return <Feature key={f.title} feature={f} />;
+          return <HomeFeature key={f.title} feature={f} />;
         })}
       </div>
     </section>

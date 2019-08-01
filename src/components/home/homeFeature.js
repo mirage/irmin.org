@@ -1,6 +1,6 @@
 import React from "react";
 
-const Feature = ({ feature }) => {
+const HomeFeature = ({ feature }) => {
   let { image, alt, title, body } = feature;
 
   return (
@@ -12,4 +12,4 @@ const Feature = ({ feature }) => {
   );
 };
 
-export default Feature;
+export default HomeFeature;
