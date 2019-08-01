@@ -1,5 +1,7 @@
+_build/
 .cache/
 public/
 node_modules/
-
+*.merlin
+.#*
 package-lock.json

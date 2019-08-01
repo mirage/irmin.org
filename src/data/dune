@@ -1,0 +1,7 @@
+(executable
+ (name example)
+ (libraries irmin-unix))
+
+(alias
+ (name runtest)
+ (deps example.exe))
