@@ -25,7 +25,7 @@ module.exports = {
             options: {
               classPrefix: "language-",
               inlineCodeMarker: null,
-              aliases: {},
+              aliases: { shell: "shell-session" },
               showLineNumbers: false,
               noInlineHighlight: true
             }
