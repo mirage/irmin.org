@@ -9,6 +9,8 @@ import imgPortable from "../../images/icons/portable.png";
 import imgGit from "../../images/icons/git.png";
 import imgBehavior from "../../images/icons/behavior.png";
 
+import "./homeFeatureGrid.css";
+
 const HomeFeatureGrid = () => {
   let features = [
     {
@@ -52,7 +54,7 @@ const HomeFeatureGrid = () => {
   ];
 
   return (
-    <section className="features wrapper">
+    <section className="home-feature-grid wrapper">
       <h2>
         Irmin is an OCaml library for building mergeable, branchable distributed
         data stores.

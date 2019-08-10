@@ -1,0 +1,34 @@
+.tutorial-sidebar {
+  width: 25%;
+  max-width: 325px;
+  padding-left: 45px;
+  background: #f8f8f8;
+  float: left;
+  height: 100%;
+  padding-top: 40px;
+}
+
+.tutorial-sidebar h3 {
+  font-size: 20px;
+}
+
+.tutorial-sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.tutorial-sidebar ul li a {
+  display: block;
+  font-size: 16px;
+  color: #23342f;
+  transition: opacity 0.1s ease-in-out;
+  margin: 7px 0;
+}
+
+.tutorial-sidebar ul li a.active {
+  font-weight: bold;
+}
+
+.tutorial-sidebar ul li a:hover {
+  opacity: 0.7;
+}

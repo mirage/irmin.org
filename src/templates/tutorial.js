@@ -5,6 +5,8 @@ import Layout from "../components/layout";
 import TutorialSidebar from "../components/tutorial/tutorialSidebar";
 import TutorialFooter from "../components/tutorial/tutorialFooter";
 
+import "./tutorial.css";
+
 export default function Template({ data }) {
   const { markdownRemark } = data;
   const { frontmatter, html } = markdownRemark;

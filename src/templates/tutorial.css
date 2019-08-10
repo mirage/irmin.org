@@ -1,0 +1,90 @@
+body.documentation header.wrapper {
+  padding: 0 45px;
+}
+
+body.documentation section.doc {
+  margin-left: 325px;
+  width: 50%;
+  padding-left: 7%;
+  padding-top: 20px;
+}
+
+section.doc {
+  padding-bottom: 80px;
+}
+
+section.doc .colleft,
+section.doc .colright {
+  float: left;
+  width: 44%;
+}
+
+section.doc .colleft {
+  margin-right: 3%;
+}
+
+section.doc .colright {
+  margin-left: 3%;
+}
+
+section.doc h2 {
+  font-size: 30px;
+  font-weight: 600;
+  position: relative;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+section.doc h2::after {
+  content: "";
+  display: block;
+  position: absolute;
+  bottom: -5px;
+  width: 40%;
+  border-bottom: 3px solid #23342f;
+}
+
+section.doc p {
+  padding: 0;
+  margin: 0;
+  margin-top: 20px;
+}
+
+section.doc a {
+  color: #09ab82;
+  transition: color 0.1s ease-in-out;
+}
+
+section.doc a:hover {
+  color: #127c61;
+}
+
+section.doc p code,
+section.doc li code {
+  color: #438680;
+  background: #defff7;
+  font-family: "Ubuntu Mono", monospace;
+  padding: 2px 4px;
+}
+
+section.doc pre {
+  background: #212f29;
+  border-radius: 2px;
+  padding: 20px;
+  color: #dde7df;
+  font-size: 15px;
+  line-height: 19px;
+  font-weight: normal;
+  margin: 0;
+  max-width: 800px;
+  margin-top: 8px;
+}
+
+section.doc pre code {
+  font-family: "Ubuntu Mono", monospace;
+}
+
+section.doc p + h2,
+section.doc pre + h2 {
+  margin-top: 50px;
+}

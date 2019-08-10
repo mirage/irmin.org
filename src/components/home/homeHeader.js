@@ -4,9 +4,11 @@ import React from "react";
 import imgLogo from "../../images/logo.png";
 import imgGithub from "../../images/icons/github.svg";
 
+import "./homeHeader.css";
+
 const HomeHeader = ({ pages, currentLink }) => {
   return (
-    <section className="intro wrapper">
+    <section className="home-header wrapper">
       <div className="logo">
         <Link to="/">
           <img className="logo" src={imgLogo} alt="Irmin logo" />
