@@ -1,0 +1,15 @@
+.home-feature-grid {
+  margin-top: 100px;
+}
+
+.home-feature-grid .list {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 60px;
+}
+
+.home-feature-grid h2 {
+  font-size: 27px;
+  font-weight: normal;
+  text-align: center;
+}

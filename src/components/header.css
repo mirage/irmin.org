@@ -1,0 +1,35 @@
+header {
+  background-image: linear-gradient(-189deg, #1a3f47 0%, #1a4733 100%);
+  height: 60px;
+  padding: 0 45px;
+}
+
+header .logo a img {
+  width: 92px;
+  margin-top: 14px;
+  transition: opacity 0.1s ease-in-out;
+}
+
+header .logo a:hover img {
+  opacity: 0.7;
+}
+
+nav.menu ul {
+  list-style-type: none;
+  display: flex;
+  float: right;
+  margin-top: 21px;
+  font-size: 15px;
+}
+
+nav.menu ul li a {
+  color: white;
+  display: block;
+  margin-left: 30px;
+  transition: color 0.1s ease-in-out;
+}
+
+nav.menu ul li a.active,
+nav.menu ul li a:hover {
+  color: #86acad;
+}

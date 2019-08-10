@@ -1,0 +1,64 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: "Titillium Web", -apple-system, sans-serif;
+  font-size: 16px;
+  color: #23342f;
+  height: 100%;
+}
+
+a {
+  text-decoration: none;
+}
+
+.wrapper {
+  padding: 0 10%;
+}
+
+.clearfix {
+  clear: both;
+}
+
+a.button {
+  background-image: linear-gradient(-208deg, #1a3f47 0%, #1a4733 100%);
+  box-shadow: 0 1px 6px 2px rgba(0, 0, 0, 0.06);
+  border-radius: 2px;
+  color: white !important;
+  padding: 8px 17px;
+  transition: all 0.1s ease-in-out;
+}
+
+a.button:hover {
+  background-image: linear-gradient(-208deg, #286951 0%, #286951 100%);
+}
+
+a.button.github {
+  background-image: linear-gradient(-180deg, #ffffff 0%, #fcf8f8 100%);
+  border: 1px solid #e3e3e3;
+  box-shadow: 0 0 13px 0 rgba(0, 0, 0, 0.06);
+  color: #373737 !important;
+  font-weight: 600;
+}
+
+a.button.github img {
+  width: 17px;
+  padding-right: 7px;
+  vertical-align: -2px;
+}
+
+a.button.github:hover {
+  background: white;
+}
+
+a.button + a.button {
+  margin-left: 13px;
+}
+
+a.tutorial img,
+a.issue img,
+a.license img {
+  height: 17px;
+  vertical-align: -3px;
+  padding-right: 5px;
+}

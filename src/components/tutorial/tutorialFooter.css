@@ -1,0 +1,22 @@
+a.next,
+a.previous {
+  font-weight: 600;
+  margin-top: 40px;
+}
+
+a.next {
+  float: right;
+}
+a.previous {
+  float: left;
+}
+
+a.next::before {
+  content: "\2192";
+  padding-right: 5px;
+}
+
+a.previous::before {
+  content: "\2190";
+  padding-right: 5px;
+}

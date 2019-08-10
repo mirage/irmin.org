@@ -1,0 +1,19 @@
+.home-header {
+  text-align: center;
+  margin-top: 60px;
+}
+
+.home-header .logo a img.logo {
+  width: 212px;
+  height: 75px;
+}
+
+.home-header h1 {
+  font-weight: 600;
+  font-size: 28px;
+  line-height: 40px;
+  max-width: 420px;
+  margin: 0 auto;
+  margin-bottom: 30px;
+  margin-top: 20px;
+}

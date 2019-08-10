@@ -1,9 +1,11 @@
 import { Link } from "gatsby";
 import React from "react";
 
+import "./tutorialSidebar.css";
+
 const TutorialSidebar = ({ pages, currentLink }) => {
   return (
-    <nav className="sidebar">
+    <nav className="tutorial-sidebar">
       <h3>Tutorial</h3>
       <ul>
         {pages.map((p, i) => {

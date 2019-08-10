@@ -3,6 +3,8 @@ import React from "react";
 
 import Logo from "../images/logo_white.png";
 
+import "./header.css";
+
 const Header = () => (
   <header>
     <nav className="menu">
