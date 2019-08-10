@@ -21,6 +21,7 @@ export default function Template({ data }) {
     },
     { link: "/tutorial/contents", title: "Custom content types" },
     { link: "/tutorial/backend", title: "Writing a storage backend" },
+    { link: "/tutorial/graphql", title: "GraphQL bindings" },
     { link: "/tutorial/resources", title: "Resources" }
   ];
 
