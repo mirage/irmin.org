@@ -44,11 +44,11 @@ To start off we will create a query to retrieve the value stored at the path `ab
 
 ```graphql
 query {
-    master {
-      tree {
-        get(key: "abc")
-      }
+  master {
+    tree {
+      get(key: "abc")
     }
+  }
 }
 ```
 
@@ -77,11 +77,11 @@ The following would accomplish the same thing in `my-branch`:
 
 ```graphql
 query {
-    branch(name: "my-branch") {
-      tree {
-    	  get(key: "a/b/c")
-      }
+  branch(name: "my-branch") {
+    tree {
+      get(key: "a/b/c")
     }
+  }
 }
 ```
 
@@ -89,7 +89,10 @@ It's also possible to set or update multiple keys using the `set_tree` and `upda
 
 ```graphql
 mutation {
-  set_tree(key: "/", tree: [{key: "a", value: "foo"}, {key: "b", value:"bar"}]){
+  set_tree(
+    key: "/"
+    tree: [{ key: "a", value: "foo" }, { key: "b", value: "bar" }]
+  ) {
     hash
   }
 }
@@ -99,7 +102,10 @@ And updating multiple keys is similar:
 
 ```graphql
 mutation {
-  update_tree(key: "/", tree: [{key: "a", value: "testing"}, {key: "b", value: null}]){
+  update_tree(
+    key: "/"
+    tree: [{ key: "a", value: "testing" }, { key: "b", value: null }]
+  ) {
     hash
   }
 }
@@ -107,20 +113,19 @@ mutation {
 
 this will set `a` to "testing" and remove the value associated with `b`.
 
-
 ### Branch info
 
 Using `master`/`branch` queries we are able to find lots of information about the attached Irmin store:
 
 ```graphql
 query {
-    master {
-        head {
-            hash
-            info
-            parents
-        }
+  master {
+    head {
+      hash
+      info
+      parents
     }
+  }
 }
 ```
 
@@ -136,11 +141,11 @@ Using this new information, it is possible to list every key/value pair using:
 
 ```graphql
 query {
-	master {
+  master {
     head {
       tree {
         list_contents_recursively {
-          key,
+          key
           value
         }
       }
@@ -153,15 +158,15 @@ Which can also be augmented using `get_tree` to return a specific subtree:
 
 ```graphql
 query {
-	master {
+  master {
     head {
       tree {
-        get_tree(key:"a"){
-        	list_contents_recursively {
-          	key,
-          	value
-        	}
-      	}
+        get_tree(key: "a") {
+          list_contents_recursively {
+            key
+            value
+          }
+        }
       }
     }
   }
@@ -178,9 +183,9 @@ For example, setting a key is easy:
 
 ```graphql
 mutation {
-    set(key: "a/b/c", value: "123") {
-        hash
-    }
+  set(key: "a/b/c", value: "123") {
+    hash
+  }
 }
 ```
 
@@ -192,9 +197,9 @@ The example above sets the key "a/b/c" (`["a"; "b"; "c"]` in OCaml) to "123" and
 
 ```graphql
 mutation {
-    pull(remote: "git://github.com/mirage/irmin") {
-        hash
-    }
+  pull(remote: "git://github.com/mirage/irmin") {
+    hash
+  }
 }
 ```
 
@@ -206,10 +211,10 @@ provided, otherwise removing the current value if `null` is provided. For exampl
 
 ```graphql
 mutation {
-  set_tree (key: "/", tree: [
-    {key:"a/b/c", value:"123"},
-    {key:"d/e/f", value:"456"}
-  ]) {
+  set_tree(
+    key: "/"
+    tree: [{ key: "a/b/c", value: "123" }, { key: "d/e/f", value: "456" }]
+  ) {
     hash
   }
 }
@@ -218,14 +223,16 @@ mutation {
 will set `a/b/c` to `"123"` and `d/e/f` to "456", and if there are any other keys they will be removed. To keep the existing values,
 `update_tree` should be used:
 
-
 ```graphql
 mutation {
-  update_tree (key: "/", tree: [
-    {key:"a/b/c", value:"123"},
-    {key:"d/e/f", value:"456"},
-    {key:"testing", value:null}
-  ]) {
+  update_tree(
+    key: "/"
+    tree: [
+      { key: "a/b/c", value: "123" }
+      { key: "d/e/f", value: "456" }
+      { key: "testing", value: null }
+    ]
+  ) {
     hash
   }
 }
@@ -233,7 +240,6 @@ mutation {
 
 The above query will set the values of `a/b/c` and `d/e/f`, while removing the value associated with `testing` - all other values
 will be left as-is.
-
 
 ## GraphQL servers in OCaml
 

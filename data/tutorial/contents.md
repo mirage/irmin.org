@@ -34,7 +34,7 @@ module Counter: Irmin.Contents.S with type t = int64 = struct
 	let t = Irmin.Type.int64
 ```
 
-Now we need to define a merge function.  There is already a `counter` implementation available in [Irmin.Merge](https://docs.mirage.io/irmin/Irmin/Merge/index.html), so you wouldn't actually need to write this yourself:
+Now we need to define a merge function. There is already a `counter` implementation available in [Irmin.Merge](https://docs.mirage.io/irmin/Irmin/Merge/index.html), so you wouldn't actually need to write this yourself:
 
 ```ocaml
 	let merge ~old a b =
@@ -175,7 +175,6 @@ So far so good, Irmin provides a simple way to model a list of pairs!
 
 To write the merge function we can leverage `Irmin.Merge.alist`, which simplifies this process for association lists. In this example we are using strings for both the keys and values, however in most other cases `alist` can get a bit more complicated since it requires existing merge functions for both the key and value types. For a slightly more complicated example you can read through `merge_object` and `merge_value` in [contents.ml](https://github.com/mirage/irmin/blob/master/src/irmin/contents.ml), which are used to implement JSON contents for Irmin.
 
-
 ```ocaml
     let merge_alist =
         Irmin.Merge.(alist Irmin.Type.string Irmin.Type.string (fun _key -> option string))
@@ -194,6 +193,7 @@ module type TIMESTAMP = sig
     val now: unit -> int64
 end
 ```
+
 On Unix this can be implemented `Unix.gettimeofday`:
 
 ```ocaml
@@ -210,6 +210,7 @@ module Lww_register (Time: TIMESTAMP) (C: Irmin.Type.S) = struct
     let t =
         Irmin.Type.(pair C.t int64)
 ```
+
 A convenience function for adding a timestamp to a `C.t` value:
 
 ```ocaml
