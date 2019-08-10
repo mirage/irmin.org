@@ -31,7 +31,7 @@ An on-disk git store with JSON contents:
 module Git_store = Irmin_unix.Git.FS.KV(Irmin.Contents.Json)
 ```
 
-These examples are using [Irmin.KV]( https://mirage.github.io/irmin/irmin/Irmin/module-type-KV/index.html), which is a specialization of [Irmin.S](https://mirage.github.io/irmin/irmin/Irmin/module-type-S/index.html) with string list keys, string branches and no metadata.
+These examples are using [Irmin.KV](https://mirage.github.io/irmin/irmin/Irmin/module-type-KV/index.html), which is a specialization of [Irmin.S](https://mirage.github.io/irmin/irmin/Irmin/module-type-S/index.html) with string list keys, string branches and no metadata.
 
 The following example is the same as the first, using `Irmin_mem.Make` instead of `Irmin_mem.KV`:
 
@@ -121,7 +121,7 @@ Mem_store.with_tree_exn t [] ~info ~strategy:`Set (fun tree ->
 let () = Lwt_main.run transaction_example
 ```
 
-A tree can be modified using the functions in [Irmin.S.Tree](https://mirage.github.io/irmin/irmin/Irmin/module-type-S/Tree/index.html), and when it is returned by the `with_tree` callback, it will be applied using the transaction's strategy (``` `Set``` in the code above)  at the given key (`[]` in the code above).
+A tree can be modified using the functions in [Irmin.S.Tree](https://mirage.github.io/irmin/irmin/Irmin/module-type-S/Tree/index.html), and when it is returned by the `with_tree` callback, it will be applied using the transaction's strategy (`` `Set `` in the code above) at the given key (`[]` in the code above).
 
 Here is an example `move` function to move files from one path to another:
 
@@ -215,4 +215,3 @@ let main =
     assert (Irmin.Type.equal Store.contents_t (`O ["c", value]) x)
 let () = Lwt_main.run main
 ```
-

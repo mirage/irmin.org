@@ -163,4 +163,3 @@ $ git push $GIT_REPO_URL master
 ```
 
 As you can see, the command-line application has many capabilities, but it's just a fraction of what's available when using Irmin from OCaml! For more information about using Irmin and OCaml, check out the [next section](GettingStartedOCaml.html).
-

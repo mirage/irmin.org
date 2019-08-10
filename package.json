@@ -24,8 +24,8 @@
     "build": "gatsby build",
     "develop": "gatsby develop",
     "start": "npm run develop",
-    "format": "prettier --write package.json \"*.js\" \"src/**/*.{css,js,json}\"",
-    "lint": "prettier --check package.json \"*.js\" \"src/**/*.{css,js,json}\"",
+    "format": "prettier --write package.json \"*.js\" \"{src,data}/**/*.{css,js,json,md}\"",
+    "lint": "prettier --check package.json \"*.js\" \"{src,data}/**/*.{css,js,json,md}\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {

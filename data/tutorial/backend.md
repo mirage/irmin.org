@@ -15,7 +15,6 @@ This example uses the [hiredis](https://github.com/zshipko/ocaml-hiredis) packag
 
 The process for writing a backend for Irmin requires implementing a few functors -- the accomplish this, we can start off by writing a helper module that provides a generic implementation that can be re-used by the content-addressable store and the atomic-write store:
 
-
 - `t`: the store type
 - `key`: the key type
 - `value`: the value/content type
@@ -39,7 +38,6 @@ Additionally, it requires a few functions:
 - `find`: returns the value associated with a key (if it exists)
 
 Since an Irmin database requires a few levels of store types (links, objects, etc...) a prefix is needed to identify the store type in Redis or else several functions will return incorrect results. This is not an issue with the in-memory backend, since it is easy to just create an independent store for each type, however in this case, there will be several different store types on a single Redis instance.
-
 
 ```ocaml
   let v prefix config =
@@ -256,4 +254,3 @@ module KV: Irmin.KV_MAKER = functor (C: Irmin.Contents.S) ->
     (Irmin.Branch.String)
     (Irmin.Hash.SHA1)
 ```
-
