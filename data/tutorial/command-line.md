@@ -28,6 +28,7 @@ $ irmin init --daemon --store mem --address http://127.0.0.1:8888
 Or create a new store on-disk and manipulate it directly from the terminal:
 
 ```shell
+$ irmin init
 $ export EXAMPLE=/tmp/irmin/example
 $ mkdir -p $EXAMPLE
 $ irmin set -s git --root $EXAMPLE "My key" "My value"
