@@ -5,7 +5,7 @@ title: "Writing a storage backend"
 
 This section illustrates how to write a custom storage backend for Irmin using a simplified implementation of [irmin-redis](https://github.com/zshipko/irmin-redis) as an example. `irmin-redis` uses a Redis server to store Irmin data.
 
-Unlike writing a [custom datatype](Contents.html), there is not a tidy way of doing this. Each backend must fulfill certain criteria as defined by [Irmin.CONTENT_ADDRESSABLE_STORE_MAKER](https://mirage.github.io/irmin/irmin/Irmin/module-type-CONTENT_ADDRESSABLE_STORE_MAKER/index.html), [Irmin.ATOMIC_WRITE_STORE_MAKER](https://mirage.github.io/irmin/irmin/Irmin/module-type-ATOMIC_WRITE_STORE_MAKER/index.html), [Irmin.S_MAKER](https://mirage.github.io/irmin/irmin/Irmin/module-type-S_MAKER/index.html), and [Irmin.KV_MAKER](https://mirage.github.io/irmin/irmin/Irmin/module-type-KV_MAKER/index.html). These module types define interfaces for functors that create stores. For example, a `KV_MAKER` defines a module that takes an `Irmin.Contents.S` as a parameter and returns a module of type `Irmin.KV`.
+Unlike writing a [custom datatype](Contents.html), there is not a tidy way of doing this. A backend is built from a number of lower level stores, where each store implements some of the operations provided by a backend. Each lower level store must fulfill certain criteria as defined by [Irmin.CONTENT_ADDRESSABLE_STORE_MAKER](https://mirage.github.io/irmin/irmin/Irmin/module-type-CONTENT_ADDRESSABLE_STORE_MAKER/index.html), [Irmin.ATOMIC_WRITE_STORE_MAKER](https://mirage.github.io/irmin/irmin/Irmin/module-type-ATOMIC_WRITE_STORE_MAKER/index.html), [Irmin.S_MAKER](https://mirage.github.io/irmin/irmin/Irmin/module-type-S_MAKER/index.html), and [Irmin.KV_MAKER](https://mirage.github.io/irmin/irmin/Irmin/module-type-KV_MAKER/index.html). These module types define interfaces for functors that create stores. For example, a `KV_MAKER` defines a module that takes an `Irmin.Contents.S` as a parameter and returns a module of type `Irmin.KV`.
 
 ## Redis client
 
@@ -13,7 +13,7 @@ This example uses the [hiredis](https://github.com/zshipko/ocaml-hiredis) packag
 
 ## The readonly store
 
-The process for writing a backend for Irmin requires implementing a few functors -- the accomplish this, we can start off by writing a helper module that provides a generic implementation that can be re-used by the content-addressable store and the atomic-write store:
+The process for writing a backend for Irmin requires implementing a few functors -- to accomplish this, we can start off by writing a helper module that provides a generic implementation that can be re-used by the content-addressable store and the atomic-write store:
 
 - `t`: the store type
 - `key`: the key type
@@ -180,7 +180,7 @@ The `list` implementation will get a list of keys from Redis using the `KEYS` co
       | _ -> Lwt.return []
 ```
 
-`set` just encodes the keys and values as strings, then uses the Redis `SET` command to store them:
+`set` just encodes the keys and values as strings, then uses the Redis `SET` command to store them. As this operation updates the store, the watchers have to be notified:
 
 ```ocaml
   let set {t = (prefix, client); w} key value =
@@ -191,7 +191,7 @@ The `list` implementation will get a list of keys from Redis using the `KEYS` co
       | _ -> Lwt.return_unit
 ```
 
-`remove` uses the Redis `DEL` command to remove stored values:
+`remove` uses the Redis `DEL` command to remove stored values and then notifies the watchers:
 
 ```ocaml
   let remove {t = (prefix, client); w} key =
