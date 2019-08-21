@@ -46,6 +46,16 @@ Since an Irmin database requires a few levels of store types (links, objects, et
       | Some root -> root ^ ":" ^ prefix ^ ":"
       | None -> prefix ^ ":"
     in
+    let client = Client.connect ~port:6379 "127.0.0.1" in
+    let () =
+      match Hiredis.Client.run client [|"PING"|] with
+      | Nil ->
+          print_endline "redis-server is not running"
+      | Status pong ->
+          assert (String.equal pong "PONG")
+      | s ->
+          failwith ("unexpected server response" ^ encode_string s)
+    in
     Lwt.return (root, Client.connect ~port:6379 "127.0.0.1")
 ```
 
@@ -87,7 +97,7 @@ This module needs an `add` function, which takes a value, hashes it, stores the 
 
 ```ocaml
   let add (prefix, client) value =
-      let hash = K.hash (fun f -> f @@ Irmin.Type.to_string V.t value) in
+      let hash = K.hash (fun f -> f @@ Irmin.Type.to_bin_string V.t value) in
       let key = Irmin.Type.to_string K.t hash in
       let value = Irmin.Type.to_string V.t value in
       ignore (Client.run client [| "SET"; prefix ^ key; value |]);
@@ -253,4 +263,29 @@ module KV: Irmin.KV_MAKER = functor (C: Irmin.Contents.S) ->
     (Irmin.Path.String_list)
     (Irmin.Branch.String)
     (Irmin.Hash.SHA1)
+```
+We also have to provide a configuration for our backend, which in this simple example is the empty configuration. We can then instantiate the store and create a repo
+```ocaml
+let config = Irmin.Private.Conf.empty
+
+module Store = KV (Irmin.Contents.String)
+let repo = Store.Repo.v config
+```
+
+## The Redis Server
+
+If you want to test this example you also need a Redis server running. You can start one from the command line:
+```shell
+$ redis-server /usr/local/etc/redis.conf
+```
+which starts the server on port 6379. Or you can run the server from OCaml:
+```ocaml
+let start_server () =
+  let config = [("port", ["6379"]); ("daemonize", ["no"])] in
+  let server = Hiredis.Shell.Server.start ~config 6379 in
+  let () = print_endline "Starting redis server" in
+  let _ = Unix.sleep 1 in
+  server
+
+let stop_server server () = Hiredis.Shell.Server.stop server
 ```
