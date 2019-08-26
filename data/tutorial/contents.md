@@ -220,7 +220,7 @@ A convenience function for adding a timestamp to a `C.t` value:
 The merge operation for `Lww_register` is slightly different than the ones covered so far. It will not attempt to merge any values, instead it will pick the newest value based on the attached timestamp.
 
 ```ocaml
-    let merge ~old (a, timestamp_a) (b, timestamp_b) =
+    let merge ~old:_ (a, timestamp_a) (b, timestamp_b) =
         match Int64.compare timestamp_a timestamp_b with
         | 0 ->
             if Irmin.Type.equal C.t a b then

@@ -102,7 +102,7 @@ class HomePage extends React.Component {
             </div>
           </section>
 
-          <div className="clearfix"></div>
+          <div className="clearfix" />
 
           <section className="doc">
             <h2>Examples</h2>
@@ -115,7 +115,7 @@ class HomePage extends React.Component {
               <code
                 className="language-ocaml"
                 dangerouslySetInnerHTML={{ __html: exampleCode }}
-              ></code>
+              />
             </pre>
 
             <p>

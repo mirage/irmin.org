@@ -5,7 +5,8 @@ title: "Writing a storage backend"
 
 This section illustrates how to write a custom storage backend for Irmin using a simplified implementation of [irmin-redis](https://github.com/zshipko/irmin-redis) as an example. `irmin-redis` uses a Redis server to store Irmin data.
 
-Unlike writing a [custom datatype](Contents.html), there is not a tidy way of doing this. Each backend must fulfill certain criteria as defined by [Irmin.CONTENT_ADDRESSABLE_STORE_MAKER](https://mirage.github.io/irmin/irmin/Irmin/module-type-CONTENT_ADDRESSABLE_STORE_MAKER/index.html), [Irmin.ATOMIC_WRITE_STORE_MAKER](https://mirage.github.io/irmin/irmin/Irmin/module-type-ATOMIC_WRITE_STORE_MAKER/index.html), [Irmin.S_MAKER](https://mirage.github.io/irmin/irmin/Irmin/module-type-S_MAKER/index.html), and [Irmin.KV_MAKER](https://mirage.github.io/irmin/irmin/Irmin/module-type-KV_MAKER/index.html). These module types define interfaces for functors that create stores. For example, a `KV_MAKER` defines a module that takes an `Irmin.Contents.S` as a parameter and returns a module of type `Irmin.KV`.
+Unlike writing a [custom datatype](Contents.html), there is not a tidy way of doing this. A backend is built from a number of lower level stores, where each store implements some of the operations needed by the backend.
+In this example we instantiate functors of type [Irmin.CONTENT_ADDRESSABLE_STORE_MAKER](https://mirage.github.io/irmin/irmin/Irmin/module-type-CONTENT_ADDRESSABLE_STORE_MAKER/index.html) (for the block store) and [Irmin.ATOMIC_WRITE_STORE_MAKER](https://mirage.github.io/irmin/irmin/Irmin/module-type-ATOMIC_WRITE_STORE_MAKER/index.html) (for the tag store). The two are used in creating a module of type [Irmin.S_MAKER](https://mirage.github.io/irmin/irmin/Irmin/module-type-S_MAKER/index.html), which is in turn used in a functor of type [Irmin.KV_MAKER](https://mirage.github.io/irmin/irmin/Irmin/module-type-KV_MAKER/index.html).
 
 ## Redis client
 
@@ -13,7 +14,7 @@ This example uses the [hiredis](https://github.com/zshipko/ocaml-hiredis) packag
 
 ## The readonly store
 
-The process for writing a backend for Irmin requires implementing a few functors -- the accomplish this, we can start off by writing a helper module that provides a generic implementation that can be re-used by the content-addressable store and the atomic-write store:
+The process for writing a backend for Irmin requires implementing a few functors -- to accomplish this, we can start off by writing a helper module that provides a generic implementation that can be re-used by the content-addressable store and the atomic-write store:
 
 - `t`: the store type
 - `key`: the key type
@@ -37,7 +38,9 @@ Additionally, it requires a few functions:
 - `mem`: checks whether or not a key exists
 - `find`: returns the value associated with a key (if it exists)
 
-Since an Irmin database requires a few levels of store types (links, objects, etc...) a prefix is needed to identify the store type in Redis or else several functions will return incorrect results. This is not an issue with the in-memory backend, since it is easy to just create an independent store for each type, however in this case, there will be several different store types on a single Redis instance.
+A single Redis instance provides all of the different types of stores within an Irmin database. This entails two issues that we have to address in our implementation. First, some functions (namely `list`) need to differentiate between entries of the atomic-write store and ones of other stores. We use two prefixes ,`"obj"` and `"data"`, added at the beginning of a key, to identify the store type in Redis.
+
+The second issue is that the requests to the server from one store can interleave with the requests of another store (as for example in the `batch` function). Therefore, to prevent conflicts, each store has its own Redis client.
 
 ```ocaml
   let v prefix config =
@@ -46,7 +49,17 @@ Since an Irmin database requires a few levels of store types (links, objects, et
       | Some root -> root ^ ":" ^ prefix ^ ":"
       | None -> prefix ^ ":"
     in
-    Lwt.return (root, Client.connect ~port:6379 "127.0.0.1")
+    let client = Client.connect ~port:6379 "127.0.0.1" in
+    let () =
+      match Hiredis.Client.run client [|"PING"|] with
+      | Nil ->
+          print_endline "redis-server is not running"
+      | Status pong ->
+          assert (String.equal pong "PONG")
+      | s ->
+          failwith ("unexpected server response" ^ encode_string s)
+    in
+    Lwt.return (root, client)
 ```
 
 `mem` is implemented using the `EXISTS` command, which checks for the existence of a key in Redis:
@@ -87,7 +100,7 @@ This module needs an `add` function, which takes a value, hashes it, stores the 
 
 ```ocaml
   let add (prefix, client) value =
-      let hash = K.hash (fun f -> f @@ Irmin.Type.to_string V.t value) in
+      let hash = K.hash (fun f -> f @@ Irmin.Type.to_bin_string V.t value) in
       let key = Irmin.Type.to_string K.t hash in
       let value = Irmin.Type.to_string V.t value in
       ignore (Client.run client [| "SET"; prefix ^ key; value |]);
@@ -180,7 +193,7 @@ The `list` implementation will get a list of keys from Redis using the `KEYS` co
       | _ -> Lwt.return []
 ```
 
-`set` just encodes the keys and values as strings, then uses the Redis `SET` command to store them:
+`set` just encodes the keys and values as strings, then uses the Redis `SET` command to store them. As this operation updates the store, the watchers have to be notified:
 
 ```ocaml
   let set {t = (prefix, client); w} key value =
@@ -191,7 +204,7 @@ The `list` implementation will get a list of keys from Redis using the `KEYS` co
       | _ -> Lwt.return_unit
 ```
 
-`remove` uses the Redis `DEL` command to remove stored values:
+`remove` uses the Redis `DEL` command to remove stored values and then notifies the watchers:
 
 ```ocaml
   let remove {t = (prefix, client); w} key =
@@ -241,7 +254,7 @@ The `list` implementation will get a list of keys from Redis using the `KEYS` co
 end
 ```
 
-Finally, add `Make` and `KV` functors for creating Redis-backed Irmin stores:
+Now, let's use the `Make` and `KV` functors for creating Redis-backed Irmin stores:
 
 ```ocaml
 module Make: Irmin.S_MAKER = Irmin.Make(Content_addressable)(Atomic_write)
@@ -253,4 +266,36 @@ module KV: Irmin.KV_MAKER = functor (C: Irmin.Contents.S) ->
     (Irmin.Path.String_list)
     (Irmin.Branch.String)
     (Irmin.Hash.SHA1)
+```
+
+We also have to provide a configuration for our backend specifying the parameters needed when initialising a store. In our example, we start with an empty configuration, which comes with `root` as a parameter. We can then instantiate the store and create a repo:
+
+```ocaml
+let config ?(config = Irmin.Private.Conf.empty) ?root () =
+  let module C = Irmin.Private.Conf in
+  C.add config C.root root
+
+module Store = KV (Irmin.Contents.String)
+let repo = Store.Repo.v (config ())
+```
+
+## The Redis Server
+
+To test this example we also need a Redis server running. We can start one from the command line using the default configuration, which runs the server on port 6379:
+
+```shell
+$ redis-server /usr/local/etc/redis.conf
+```
+
+or we can run the server from OCaml:
+
+```ocaml
+let start_server () =
+  let config = [("port", ["6379"]); ("daemonize", ["no"])] in
+  let server = Hiredis.Shell.Server.start ~config 6379 in
+  let () = print_endline "Starting redis server" in
+  let _ = Unix.sleep 1 in
+  server
+
+let stop_server server () = Hiredis.Shell.Server.stop server
 ```
