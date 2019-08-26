@@ -267,7 +267,9 @@ module KV: Irmin.KV_MAKER = functor (C: Irmin.Contents.S) ->
     (Irmin.Branch.String)
     (Irmin.Hash.SHA1)
 ```
-We also have to provide a configuration for our backend specifying the parameters needed when initialising a store. In our example, we start with an empty configuration, which comes with  `root` as a parameter. We can then instantiate the store and create a repo:
+
+We also have to provide a configuration for our backend specifying the parameters needed when initialising a store. In our example, we start with an empty configuration, which comes with `root` as a parameter. We can then instantiate the store and create a repo:
+
 ```ocaml
 let config ?(config = Irmin.Private.Conf.empty) ?root () =
   let module C = Irmin.Private.Conf in
@@ -280,10 +282,13 @@ let repo = Store.Repo.v (config ())
 ## The Redis Server
 
 To test this example we also need a Redis server running. We can start one from the command line using the default configuration, which runs the server on port 6379:
+
 ```shell
 $ redis-server /usr/local/etc/redis.conf
 ```
+
 or we can run the server from OCaml:
+
 ```ocaml
 let start_server () =
   let config = [("port", ["6379"]); ("daemonize", ["no"])] in
