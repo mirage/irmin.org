@@ -38,7 +38,7 @@ Additionally, it requires a few functions:
 - `mem`: checks whether or not a key exists
 - `find`: returns the value associated with a key (if it exists)
 
-A single Redis instance serves all the different types of stores behind an Irmin database. This entails two issues that we have to address in our implementation. First, some functions (namely `list`) need to differentiate between entries of the atomic-write store and ones of other stores. We use two prefixes ,`"obj"` and `"data"`, added at the beginning of a key, to identify the store type in Redis.
+A single Redis instance provides all of the different types of stores within an Irmin database. This entails two issues that we have to address in our implementation. First, some functions (namely `list`) need to differentiate between entries of the atomic-write store and ones of other stores. We use two prefixes ,`"obj"` and `"data"`, added at the beginning of a key, to identify the store type in Redis.
 
 The second issue is that the requests to the server from one store can interleave with the requests of another store (as for example in the `batch` function). Therefore, to prevent conflicts, each store has its own Redis client.
 
