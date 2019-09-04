@@ -91,7 +91,10 @@ end
 Next is the content-addressable ([CONTENT_ADDRESSABLE_STORE](https://mirage.github.io/irmin/irmin/Irmin/module-type-CONTENT_ADDRESSABLE_STORE/index.html)) interface - the majority of the required methods can be inherited from `Helper`!
 
 ```ocaml
-module Content_addressable (K: Irmin.Hash.S) (V: Irmin.Type.S) = struct
+module Content_addressable : Irmin.CONTENT_ADDRESSABLE_STORE_MAKER = functor
+    (K: Irmin.Hash.S)
+    (V: Irmin.Type.S) -> struct
+
   include Helper(K)(V)
   let v = v "obj"
 ```
@@ -117,6 +120,14 @@ Then a `batch` function, which can be used to group writes together. We will use
     f (prefix, client) >|= fun result ->
     let _ = Client.run client [| "EXEC" |] in
     result
+
+```
+
+Finally, we must provide a `close` function to free any resources held by the backend. In our case,
+this can be a simple no-op:
+
+```ocaml
+  let close _t = Lwt.return_unit
 end
 ```
 
@@ -127,7 +138,10 @@ The [ATOMIC_WRITE_STORE](https://mirage.github.io/irmin/irmin/Irmin/module-type-
 To start off we can use the `Helper` functor defined above:
 
 ```ocaml
-module Atomic_write (K: Irmin.Type.S) (V: Irmin.Type.S) = struct
+module Atomic_write: Irmin.ATOMIC_WRITE_STORE_MAKER = functor
+    (K: Irmin.Type.S)
+    (V: Irmin.Type.S) -> struct
+
   module H = Helper(K)(V)
 ```
 
@@ -176,6 +190,7 @@ We will need to implement a few more functions:
 - `set`, writes a value to the store.
 - `remove`, deletes a value from the store.
 - `test_and_set`, modifies a key only if the `test` value matches the current value for the given key.
+- `close`, closes any resources held by the backend.
 
 The `list` implementation will get a list of keys from Redis using the `KEYS` command then convert them from strings to `Store.key` values:
 
@@ -251,13 +266,19 @@ The `list` implementation will get a list of keys from Redis using the `KEYS` co
       ignore @@ Client.run client [| "UNWATCH"; prefix ^ key' |];
       Lwt.return_false
     )
+```
+
+Finally, we need another `close` function:
+
+```ocaml
+  let close _t = Lwt.return_unit
 end
 ```
 
 Now, let's use the `Make` and `KV` functors for creating Redis-backed Irmin stores:
 
 ```ocaml
-module Make: Irmin.S_MAKER = Irmin.Make(Content_addressable)(Atomic_write)
+module Make: Irmin.S_MAKER = Irmin.Make (Content_addressable) (Atomic_write)
 
 module KV: Irmin.KV_MAKER = functor (C: Irmin.Contents.S) ->
   Make
@@ -276,7 +297,7 @@ let config ?(config = Irmin.Private.Conf.empty) ?root () =
   C.add config C.root root
 
 module Store = KV (Irmin.Contents.String)
-let repo = Store.Repo.v (config ())
+let _repo = Store.Repo.v (config ())
 ```
 
 ## The Redis Server
@@ -287,14 +308,14 @@ To test this example we also need a Redis server running. We can start one from 
 $ redis-server /usr/local/etc/redis.conf
 ```
 
-or we can run the server from OCaml:
+or we can run the server from OCaml:
 
 ```ocaml
 let start_server () =
   let config = [("port", ["6379"]); ("daemonize", ["no"])] in
   let server = Hiredis.Shell.Server.start ~config 6379 in
   let () = print_endline "Starting redis server" in
-  let _ = Unix.sleep 1 in
+  let () = Unix.sleep 1 in
   server
 
 let stop_server server () = Hiredis.Shell.Server.stop server
