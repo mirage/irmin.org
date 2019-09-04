@@ -238,28 +238,30 @@ An example using `Lww_register`:
 
 ```ocaml
 open Lwt.Infix
-module Value = Lww_register(Timestamp)(Irmin.Contents.String)
-module Store = Irmin_mem.KV(Value)
+module Value = Lww_register (Timestamp) (Irmin.Contents.String)
+module S = Irmin_mem.KV (Value)
+
 let main =
     (* Configure the repo *)
     let cfg = Irmin_mem.config () in
     (* Access the master branch *)
-    Store.Repo.v cfg >>= Store.master >>= fun master ->
+    S.Repo.v cfg >>= S.master >>= fun master ->
     (* Set [foo] to ["bar"] on master branch *)
-    Store.set_exn master ["foo"] (Value.v "bar") ~info:(Irmin_unix.info "set foo on master branch") >>= fun () ->
+    S.set_exn master ["foo"] (Value.v "bar") ~info:(Irmin_unix.info "set foo on master branch") >>= fun () ->
     (* Access example branch *)
-    Store.Repo.v cfg >>= fun repo -> Store.of_branch repo "example" >>= fun example ->
+    S.Repo.v cfg >>= fun repo -> S.of_branch repo "example" >>= fun example ->
     (* Set [foo] to ["baz"] on example branch *)
-    Store.set_exn example ["foo"] (Value.v "baz") ~info:(Irmin_unix.info "set foo on example branch") >>= fun () ->
+    S.set_exn example ["foo"] (Value.v "baz") ~info:(Irmin_unix.info "set foo on example branch") >>= fun () ->
     (* Merge the example into master branch *)
-    Store.merge_into ~into:master example ~info:(Irmin_unix.info "merge example into master") >>= function
+    S.merge_into ~into:master example ~info:(Irmin_unix.info "merge example into master") >>= function
     | Ok () ->
         (* Check that [foo] is set to ["baz"] after the merge *)
-        Store.get master ["foo"] >|= fun (foo, _) ->
+        S.get master ["foo"] >|= fun (foo, _) ->
         assert (foo = "baz")
     | Error conflict ->
         let fmt = Irmin.Type.pp_json Irmin.Merge.conflict_t in
         Lwt_io.printl (Fmt.to_to_string fmt conflict)
+
 let () = Lwt_main.run main
 ```
 
