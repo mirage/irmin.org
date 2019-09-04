@@ -31,4 +31,5 @@ pin-depends: [
   ["irmin-http.dev"    "git+https://github.com/mirage/irmin.git"]
   ["irmin-fs.dev"      "git+https://github.com/mirage/irmin.git"]
   ["irmin-graphql.dev" "git+https://github.com/mirage/irmin.git"]
+  ["mdx.dev"           "git+https://github.com/realworldocaml/mdx.git"]
 ]

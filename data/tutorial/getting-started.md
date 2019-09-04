@@ -154,7 +154,7 @@ Each of these also has an `_exn` variant which may raise an exception instead of
 
 For example, you can pull a repo and list the files in the root of the project:
 
-```ocaml
+```ocaml skip
 open Irmin_unix
 module Git_mem_store = Git.Mem.KV(Irmin.Contents.String)
 module Sync = Irmin.Sync(Git_mem_store)
