@@ -4,16 +4,16 @@
   "version": "1.0.0",
   "author": "Tarides <contact@tarides.com>",
   "dependencies": {
-    "gatsby": "^2.0.53",
+    "gatsby": "^2.15.6",
     "gatsby-plugin-google-fonts": "^1.0.1",
-    "gatsby-plugin-react-helmet": "^3.1.2",
-    "gatsby-remark-autolink-headers": "^2.0.14",
-    "gatsby-remark-prismjs": "^3.3.3",
-    "gatsby-source-filesystem": "^2.0.8",
-    "gatsby-transformer-remark": "^2.2.4",
+    "gatsby-plugin-react-helmet": "^3.1.6",
+    "gatsby-remark-autolink-headers": "^2.1.9",
+    "gatsby-remark-prismjs": "^3.3.12",
+    "gatsby-source-filesystem": "^2.1.21",
+    "gatsby-transformer-remark": "^2.6.21",
     "prismjs": "^1.17.1",
-    "react": "^16.6.3",
-    "react-dom": "^16.6.3",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
     "react-helmet": "^5.2.1"
   },
   "keywords": [
@@ -30,7 +30,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
-    "gatsby-cli": "^2.4.16",
+    "gatsby-cli": "^2.7.44",
     "prettier": "^1.15.2",
     "url-loader": "^1.1.2"
   },
