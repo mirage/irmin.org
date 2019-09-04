@@ -18,6 +18,7 @@ depends: [
   "dune"       {build & >= "1.7.0"}
   "irmin"
   "irmin-unix"
+  "digestif"   {= "0.7.3"}
   "mdx"
   "lwt"
   "hiredis"
