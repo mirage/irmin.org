@@ -19,19 +19,19 @@ website locally:
 git clone https://github.com/tarides/irmin.io
 cd irmin.io
 
-npm install    # Install build dependencies
-npm run build  # Build the website
-npm run serve  # Serve the build at `localhost:9000`
+yarn install    # Install build dependencies
+yarn run build  # Build the website
+yarn run serve  # Serve the build at `localhost:9000`
 ```
 
-When working on the website, an incremental development server can be run with `npm run develop`,
+When working on the website, an incremental development server can be run with `yarn run develop`,
 but beware that this may show stale artefacts.
 
 ### Running tests/linting
 
 - The source code is formatted with [Prettier][prettier], and this is enforced in the CI. 
-- Any incorrectly formatted code will be reported by `npm run lint`. 
-- Use `npm run format` to apply the changes.
+- Any incorrectly formatted code will be reported by `yarn run lint`.
+- Use `yarn run format` to apply the changes.
 
 [irmin]: https://github.com/mirage/irmin/
 [irmin.io]: https://irmin.io/
