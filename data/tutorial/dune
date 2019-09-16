@@ -6,7 +6,7 @@
  (action
   (with-stdout-to
    %{targets}
-   (bash "echo %{markdown} | xargs --max-args=1 ocaml-mdx pp"))))
+   (bash "echo %{markdown} | xargs -n 1 ocaml-mdx pp"))))
 
 (test
  (name mdx)
