@@ -21,6 +21,6 @@ this tutorial then please file [an issue][irmin-issues]!
 
 <!-- prettier-ignore-start -->
 [irmin]: https://github.com/mirage/irmin
-[irmin-issues]: https://github.com/tarides/irmin.io/issues
+[irmin-issues]: https://github.com/mirage/irmin.io/issues
 [irmin-readme]: https://github.com/mirage/irmin/blob/master/README.md
 <!-- prettier-ignore-end -->

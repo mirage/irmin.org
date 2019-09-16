@@ -1,7 +1,7 @@
 # Irmin website &nbsp;&nbsp; [![Travis status][travis-img]][travis]
 
-[travis]: https://travis-ci.org/tarides/irmin.io/branches
-[travis-img]: https://travis-ci.org/tarides/irmin.io.svg?branch=master
+[travis]: https://travis-ci.org/mirage/irmin.io/branches
+[travis-img]: https://travis-ci.org/mirage/irmin.io.svg?branch=master
 
 This repository contains the source code for [irmin.io][irmin.io], which describes the [Irmin
 distributed database][irmin] and contains tutorials for getting started with Irmin.
@@ -16,7 +16,7 @@ The website is generated using [GatsbyJS][gatsby]. The following commands run an
 website locally:
 
 ```shell
-git clone https://github.com/tarides/irmin.io
+git clone https://github.com/mirage/irmin.io
 cd irmin.io
 
 yarn install    # Install build dependencies
@@ -35,6 +35,6 @@ but beware that this may show stale artefacts.
 
 [irmin]: https://github.com/mirage/irmin/
 [irmin.io]: https://irmin.io/
-[tutorial-dir]: https://github.com/tarides/irmin.io/tree/master/data/tutorial/
+[tutorial-dir]: https://github.com/mirage/irmin.io/tree/master/data/tutorial/
 [prettier]: https://github.com/prettier/prettier/
 [gatsby]: https://www.gatsbyjs.org/
