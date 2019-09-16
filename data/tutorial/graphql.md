@@ -5,8 +5,7 @@ title: "GraphQL bindings"
 
 `irmin-graphql` provides a nice interface for accessing remote Irmin stores over
 a network. This section will show you how to run an `irmin-graphql` server and
-query it using [irmin-js](https://github.com/zshipko/irmin-js), or your favorite
-GraphQL client!
+query it using [irmin-js], or your favorite GraphQL client!
 
 ## Installation
 
@@ -35,15 +34,14 @@ There are several reference client implementations which provide many basic
 queries by default, in addition to simplifying the process of executing
 handwritten queries.
 
-- [irmin-js](https://github.com/zshipko/irmin-js)
-- [irmin-go](https://github.com/zshipko/irmin-go)
+- [irmin-js]
+- [irmin-go]
 
 ## Schema
 
 Using the GraphiQL web interface you can explore the schema using the **Docs**
 button in the upper-right corner. Additionally, there are tools like
-[`get-graphql-schema`](https://github.com/prisma/get-graphql-schema) which will
-dump the entire schema for you.
+[`get-graphql-schema`] which will dump the entire schema for you.
 
 ## Queries
 
@@ -369,3 +367,9 @@ module Graphql_ext =
     (Example_store)
     (Presentation)
 ```
+
+<!-- prettier-ignore-start -->
+[irmin-js]: https://github.com/zshipko/irmin-js
+[irmin-go]: https://github.com/zshipko/irmin-go
+[get-graphql-schema]: https://github.com/prisma/get-graphql-schema
+<!-- prettier-ignore-end -->

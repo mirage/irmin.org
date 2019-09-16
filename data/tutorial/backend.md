@@ -4,27 +4,21 @@ title: "Writing a storage backend"
 ---
 
 This section illustrates how to write a custom storage backend for Irmin using a
-simplified implementation of
-[irmin-redis](https://github.com/zshipko/irmin-redis) as an example.
-`irmin-redis` uses a Redis server to store Irmin data.
+simplified implementation of [irmin-redis] as an example. `irmin-redis` uses a
+Redis server to store Irmin data.
 
 Unlike writing a [custom datatype](Contents.html), there is not a tidy way of
 doing this. A backend is built from a number of lower level stores, where each
 store implements some of the operations needed by the backend. In this example
-we instantiate functors of type
-[Irmin.CONTENT_ADDRESSABLE_STORE_MAKER](https://mirage.github.io/irmin/irmin/Irmin/module-type-CONTENT_ADDRESSABLE_STORE_MAKER/index.html)
-(for the block store) and
-[Irmin.ATOMIC_WRITE_STORE_MAKER](https://mirage.github.io/irmin/irmin/Irmin/module-type-ATOMIC_WRITE_STORE_MAKER/index.html)
-(for the tag store). The two are used in creating a module of type
-[Irmin.S_MAKER](https://mirage.github.io/irmin/irmin/Irmin/module-type-S_MAKER/index.html),
-which is in turn used in a functor of type
-[Irmin.KV_MAKER](https://mirage.github.io/irmin/irmin/Irmin/module-type-KV_MAKER/index.html).
+we instantiate functors of type [Irmin.CONTENT_ADDRESSABLE_STORE_MAKER] (for the
+block store) and [Irmin.ATOMIC_WRITE_STORE_MAKER] (for the tag store). The two
+are used in creating a module of type [Irmin.S_MAKER], which is in turn used in
+a functor of type [Irmin.KV_MAKER].
 
 ## Redis client
 
-This example uses the [hiredis](https://github.com/zshipko/ocaml-hiredis)
-package to create connections, send and receive data from Redis servers. It is
-available on [opam](https://github.com/ocaml/opam) under the same name.
+This example uses the [hiredis] package to create connections, send and receive
+data from Redis servers. It is available on [opam] under the same name.
 
 ## The readonly store
 
@@ -114,9 +108,8 @@ end
 
 ### The content-addressable store
 
-Next is the content-addressable
-([CONTENT_ADDRESSABLE_STORE](https://mirage.github.io/irmin/irmin/Irmin/module-type-CONTENT_ADDRESSABLE_STORE/index.html))
-interface - the majority of the required methods can be inherited from `Helper`!
+Next is the content-addressable ([Irmin.CONTENT_ADDRESSABLE_STORE]) interface -
+the majority of the required methods can be inherited from `Helper`!
 
 ```ocaml
 module Content_addressable : Irmin.CONTENT_ADDRESSABLE_STORE_MAKER = functor
@@ -163,10 +156,8 @@ end
 
 ## The atomic-write store
 
-The
-[ATOMIC_WRITE_STORE](https://mirage.github.io/irmin/irmin/Irmin/module-type-ATOMIC_WRITE_STORE/index.html)
-has many more types and values that need to be defined than the previous
-examples, but luckily this is the last step!
+The [Irmin.ATOMIC_WRITE_STORE] has many more types and values that need to be
+defined than the previous examples, but luckily this is the last step!
 
 To start off we can use the `Helper` functor defined above:
 
@@ -181,8 +172,7 @@ module Atomic_write: Irmin.ATOMIC_WRITE_STORE_MAKER = functor
 There are a few types we need to declare next. `key` and `value` should match
 `H.key` and `H.value` and `watch` is used to declare the type of the watcher --
 this is used to send notifications when the store has been updated.
-[irmin-watcher](https://github.com/mirage/irmin-watcher) has some more
-information on watchers.
+[irmin-watcher] has some more information on watchers.
 
 ```ocaml
   module W = Irmin.Private.Watch.Make(K)(V)
@@ -373,3 +363,16 @@ let start_server () =
 
 let stop_server server () = Hiredis.Shell.Server.stop server
 ```
+
+<!-- prettier-ignore-start -->
+[Irmin.S_MAKER]: https://mirage.github.io/irmin/irmin/Irmin/module-type-S_MAKER/index.html
+[Irmin.KV_MAKER]: https://mirage.github.io/irmin/irmin/Irmin/module-type-KV_MAKER/index.html
+[Irmin.CONTENT_ADDRESSABLE_STORE_MAKER]: https://mirage.github.io/irmin/irmin/Irmin/module-type-CONTENT_ADDRESSABLE_STORE_MAKER/index.html
+[Irmin.ATOMIC_WRITE_STORE]: https://mirage.github.io/irmin/irmin/Irmin/module-type-ATOMIC_WRITE_STORE/index.html
+[Irmin.ATOMIC_WRITE_STORE_MAKER]: https://mirage.github.io/irmin/irmin/Irmin/module-type-ATOMIC_WRITE_STORE_MAKER/index.html
+
+[irmin-watcher]: https://github.com/mirage/irmin-watcher
+[irmin-redis]: https://github.com/zshipko/irmin-redis
+[hiredis]: https://github.com/zshipko/ocaml-hiredis
+[opam]: https://github.com/ocaml/opam
+<!-- prettier-ignore-end -->

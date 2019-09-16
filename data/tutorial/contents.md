@@ -7,15 +7,13 @@ At some point working with `Irmin` you will probably want to move beyond using
 the default content types.
 
 This section will explain how custom datatypes can be implemented using
-[Irmin.Type](https://mirage.github.io/irmin/irmin/Irmin/Type/index.html). Before
-continuing with these examples make sure to read through the
-[official documentation](https://docs.mirage.io/irmin/Irmin/Type/index.html),
-which has information about the predefined types and how they're used.
+[Irmin.Type][irmin.type]. Before continuing with these examples make sure to
+read through the [official documentation][irmin.type], which has information
+about the predefined types and how they're used.
 
 Now that you've read through the documentation, let's create some contents by
-defining the functions required by the
-[Irmin.Contents.S](https://docs.mirage.io/irmin/Irmin/Contents/module-type-S/index.html)
-interface. This section will walk you through a few different examples:
+defining the functions required by the [Irmin.Contents.S] interface. This
+section will walk you through a few different examples:
 
 - [Counter](#counter)
 - [Record](#record)
@@ -36,10 +34,8 @@ A counter is just a simple `int64` value that can be incremented and
 decremented, when counters are merged the values will be added together.
 
 To get started, you will need to define a type `t` and build a value `t` using
-the functions provided in
-[Irmin.Type](https://docs.mirage.io/irmin/Irmin/Type/index.html). In this case
-all we need is the existing `int64` value, but in most cases it won't be this
-simple!
+the functions provided in [Irmin.Type]. In this case all we need is the existing
+`int64` value, but in most cases it won't be this simple!
 
 ```ocaml
 module Counter: Irmin.Contents.S with type t = int64 = struct
@@ -48,9 +44,8 @@ module Counter: Irmin.Contents.S with type t = int64 = struct
 ```
 
 Now we need to define a merge function. There is already a `counter`
-implementation available in
-[Irmin.Merge](https://docs.mirage.io/irmin/Irmin/Merge/index.html), so you
-wouldn't actually need to write this yourself:
+implementation available in [Irmin.Merge][irmin.merge], so you wouldn't actually
+need to write this yourself:
 
 ```ocaml
 	let merge ~old a b =
@@ -99,8 +94,7 @@ type car = {
 ```
 
 First, `color` has to be wrapped. Variants are modeled using the
-[variant](https://mirage.github.io/irmin/irmin/Irmin/Type/index.html#val-variant)
-function:
+[variant][irmin.type-variant] function:
 
 ```ocaml
 module Car = struct
@@ -202,9 +196,8 @@ simplifies this process for association lists. In this example we are using
 strings for both the keys and values, however in most other cases `alist` can
 get a bit more complicated since it requires existing merge functions for both
 the key and value types. For a slightly more complicated example you can read
-through `merge_object` and `merge_value` in
-[contents.ml](https://github.com/mirage/irmin/blob/master/src/irmin/contents.ml),
-which are used to implement JSON contents for Irmin.
+through `merge_object` and `merge_value` in [contents.ml][irmin.contents], which
+are used to implement JSON contents for Irmin.
 
 ```ocaml
     let merge_alist =
@@ -301,6 +294,16 @@ let main =
 let () = Lwt_main.run main
 ```
 
-If you'd like another example then check out the
-[custom merge](https://github.com/mirage/irmin/blob/master/examples/custom_merge.ml)
-example in the Irmin repository, which illustrates how to write a mergeable log.
+If you'd like another example then check out the [custom
+merge][examples/custom-merge] example in the Irmin repository, which illustrates
+how to write a mergeable log.
+
+<!-- prettier-ignore-start -->
+[irmin.type]: https://mirage.github.io/irmin/irmin/Irmin/Type/index.html
+[irmin.type-variant]: https://mirage.github.io/irmin/irmin/Irmin/Type/index.html#val-variant
+[irmin.contents]: https://github.com/mirage/irmin/blob/master/src/irmin/contents.ml
+[irmin.contents.s]: https://docs.mirage.io/irmin/Irmin/Contents/module-type-S/index.html
+[irmin.merge]: https://docs.mirage.io/irmin/Irmin/Merge/index.html
+
+[examples/custom-merge]: https://github.com/mirage/irmin/blob/master/examples/custom_merge.ml
+<!-- prettier-ignore-end -->

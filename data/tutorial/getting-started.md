@@ -6,16 +6,10 @@ title: "Getting started with OCaml"
 When setting up an Irmin database in OCaml you will need to consider, at least,
 the content type and storage backend. This is because Irmin has the ability to
 adapt to existing data structures using a convenient type combinator
-([Irmin.Type](https://mirage.github.io/irmin/irmin/Irmin/Type/index.html)),
-which is used to define
-[contents](https://mirage.github.io/irmin/irmin/Irmin/Contents/index.html) for
-your datastore. Irmin provides implementations for
-[String](https://mirage.github.io/irmin/irmin/Irmin/Contents/index.html#module-String),
-[Cstruct](https://mirage.github.io/irmin/irmin/Irmin/Contents/index.html#module-Cstruct),
-[Json](https://mirage.github.io/irmin/irmin/Irmin/Contents/index.html#module-Json)
-and
-[Json_value](https://mirage.github.io/irmin/irmin/Irmin/Contents/index.html#module-Json_value)
-contents, but it is also very easy to make your own!
+([Irmin.Type]), which is used to define [contents][irmin.contents] for your
+datastore. Irmin provides implementations for [String][irmin.contents.string],
+[Cstruct][irmin.contents.cstruct], [Json] and [Json_value] contents, but it is
+also very easy to make your own!
 
 Irmin gives you a few options when it comes to storage:
 
@@ -27,8 +21,7 @@ These packages define the way that the data should be organized, but not any I/O
 routines (with the exception of `irmin-mem`, which does no I/O). Luckily,
 `irmin-unix` implements the I/O routines needed to make Irmin work on Unix-like
 platforms. Additionally, the `irmin-mirage`, `irmin-mirage-git` and
-`irmin-mirage-graphql` packages provide [Mirage](https://mirage.io)-compatible
-interfaces.
+`irmin-mirage-graphql` packages provide [Mirage][mirage]-compatible interfaces.
 
 It's also possible to implement your own storage backend if you'd like -- nearly
 everything in `Irmin` is configurable thanks to the power of functors in OCaml!
@@ -39,8 +32,7 @@ advanced concepts in subsequent sections.
 
 It is important to note that most Irmin functions return `Lwt.t` values, which
 means that you will need to use `Lwt_main.run` to execute them. If you're not
-familiar with [Lwt](https://github.com/ocsigen/lwt) then I suggest
-[this tutorial](https://mirage.io/wiki/tutorial-lwt).
+familiar with [Lwt][lwt] then I suggest [this tutorial][lwt-tutorial].
 
 ## Creating a store
 
@@ -56,11 +48,8 @@ An on-disk git store with JSON contents:
 module Git_store = Irmin_unix.Git.FS.KV(Irmin.Contents.Json)
 ```
 
-These examples are using
-[Irmin.KV](https://mirage.github.io/irmin/irmin/Irmin/module-type-KV/index.html),
-which is a specialization of
-[Irmin.S](https://mirage.github.io/irmin/irmin/Irmin/module-type-S/index.html)
-with string list keys, string branches and no metadata.
+These examples are using [Irmin.KV][irmin.kv], which is a specialization of
+[Irmin.S][irmin.s] with string list keys, string branches and no metadata.
 
 The following example is the same as the first, using `Irmin_mem.Make` instead
 of `Irmin_mem.KV`:
@@ -80,10 +69,9 @@ module Mem_Store =
 Different store types require different configuration options -- an on-disk
 store needs to know where it should be stored in the filesystem, however an
 in-memory store doesn't. This means that each storage backend implements its own
-configuration methods based on
-[Irmin.Private.Conf](https://mirage.github.io/irmin/irmin/Irmin/Private/Conf/index.html)
--- for the examples above there are `Irmin_mem.config`, `Irmin_fs.config` and
-`Irmin_git.config`, each taking slightly different parameters.
+configuration methods based on [Irmin.Private.Conf] -- for the examples above
+there are `Irmin_mem.config`, `Irmin_fs.config` and `Irmin_git.config`, each
+taking slightly different parameters.
 
 ```ocaml
 let git_config = Irmin_git.config ~bare:true "/tmp/irmin"
@@ -93,9 +81,8 @@ let git_config = Irmin_git.config ~bare:true "/tmp/irmin"
 let config = Irmin_mem.config ()
 ```
 
-With this configuration it's very easy to create an
-[Irmin.Repo](https://mirage.github.io/irmin/irmin/Irmin/Repo/index.html) using
-[Repo.v](https://mirage.github.io/irmin/irmin/Irmin/Make/Repo/index.html#val-v):
+With this configuration it's very easy to create an [Irmin.Repo] using
+[Repo.v][irmin.repo.v]:
 
 ```ocaml
 let git_repo = Git_store.Repo.v git_config
@@ -145,10 +132,9 @@ let () = Lwt_main.run main
 
 ## Transactions
 
-[Transactions](https://mirage.github.io/irmin/irmin/Irmin/module-type-S_MAKER/index.html#type-transaction)
-allow you to make many modifications using an in-memory tree then apply them all
-at once. This is done using
-[with_tree](https://mirage.github.io/irmin/irmin/Irmin/module-type-S_MAKER/index.html#val-with_tree):
+[Transactions][irmin.s-transaction] allow you to make many modifications using
+an in-memory tree then apply them all at once. This is done using
+[with_tree][irmin.s-with_tree]:
 
 ```ocaml
 let transaction_example =
@@ -162,11 +148,10 @@ Mem_store.with_tree_exn t [] ~info ~strategy:`Set (fun tree ->
 let () = Lwt_main.run transaction_example
 ```
 
-A tree can be modified using the functions in
-[Irmin.S.Tree](https://mirage.github.io/irmin/irmin/Irmin/module-type-S/Tree/index.html),
-and when it is returned by the `with_tree` callback, it will be applied using
-the transaction's strategy (`` `Set `` in the code above) at the given key (`[]`
-in the code above).
+A tree can be modified using the functions in [Irmin.S.Tree][irmin.s.tree], and
+when it is returned by the `with_tree` callback, it will be applied using the
+transaction's strategy (`` `Set `` in the code above) at the given key (`[]` in
+the code above).
 
 Here is an example `move` function to move files from one path to another:
 
@@ -189,15 +174,12 @@ let () = Lwt_main.run main
 
 ## Sync
 
-[Irmin.Sync](https://docs.mirage.io/irmin/Irmin/Sync/index.html) implements the
-functions needed to interact with remote stores.
+[Irmin.Sync] implements the functions needed to interact with remote stores.
 
-- [fetch](https://docs.mirage.io/irmin/Irmin/Sync/index.html#val-fetch)
-  populates a local store with objects from a remote store
-- [pull](https://docs.mirage.io/irmin/Irmin/Sync/index.html#val-pull) updates a
-  local store with objects from a remote store
-- [push](https://docs.mirage.io/irmin/Irmin/Sync/index.html#val-fpush) updates a
-  remote store with objects from a local store
+- [fetch][irmin.sync.fetch] populates a local store with objects from a remote
+  store
+- [pull][irmin.sync.pull] updates a local store with objects from a remote store
+- [push][irmin.sync.push] updates a remote store with objects from a local store
 
 Each of these also has an `_exn` variant which may raise an exception instead of
 returning `result` value.
@@ -225,12 +207,8 @@ let () = Lwt_main.run main
 Most examples in this tutorial use string contents, so I will provide some
 further information about using JSON values.
 
-There are two types of JSON contents:
-[Json_value](https://mirage.github.io/irmin/irmin/Irmin/Contents/index.html#module-Json_value)
-and
-[Json](https://mirage.github.io/irmin/irmin/Irmin/Contents/index.html#module-Json),
-where `Json` can only store JSON objects and `Json_value` works with any JSON
-value.
+There are two types of JSON contents: [Json_value] and [Json], where `Json` can
+only store JSON objects and `Json_value` works with any JSON value.
 
 Setting up the store is exactly the same as when working with strings:
 
@@ -253,8 +231,7 @@ let main =
 let () = Lwt_main.run main
 ```
 
-An interesting thing about `Json_value` stores is the ability to use
-[Json_tree](https://mirage.github.io/irmin/irmin/Irmin/index.html#module-Json_tree)
+An interesting thing about `Json_value` stores is the ability to use [Json_tree]
 to recursively project values onto a key. This means that using `Json_tree.set`,
 to assign `{"test": {"foo": "bar"}, "x": 1, "y": 2, "z": 3}` to the key `a/b/c`
 will set `a/b/c/x` to `1`, `a/b/c/y` to `2`, `a/b/c/z` to `3` and
@@ -281,3 +258,29 @@ let main =
     assert (Irmin.Type.equal Store.contents_t (`O ["c", value]) x)
 let () = Lwt_main.run main
 ```
+
+<!-- prettier-ignore-start -->
+[irmin.kv]: https://mirage.github.io/irmin/irmin/Irmin/module-type-KV/index.html
+[irmin.s]: https://mirage.github.io/irmin/irmin/Irmin/module-type-S/index.html
+[irmin.s-transaction]: https://mirage.github.io/irmin/irmin/Irmin/module-type-S_MAKER/index.html#type-transaction
+[irmin.s-with_tree]: https://mirage.github.io/irmin/irmin/Irmin/module-type-S_MAKER/index.html#val-with_tree
+[irmin.s.tree]: https://mirage.github.io/irmin/irmin/Irmin/module-type-S/Tree/index.html
+[irmin.type]: https://mirage.github.io/irmin/irmin/Irmin/Type/index.html
+[irmin.contents]: https://mirage.github.io/irmin/irmin/Irmin/Contents/index.html
+[irmin.content.string]: https://mirage.github.io/irmin/irmin/Irmin/Contents/index.html#module-String
+[irmin.private.conf]: https://mirage.github.io/irmin/irmin/Irmin/Private/Conf/index.html
+[irmin.repo]: https://mirage.github.io/irmin/irmin/Irmin/module-type-S/Repo/index.html
+[irmin.repo.v]: https://mirage.github.io/irmin/irmin/Irmin/module-type-S/Repo/index.html#val-v
+[irmin.sync]: https://docs.mirage.io/irmin/Irmin/Sync/index.html
+[irmin.sync.fetch]: https://docs.mirage.io/irmin/Irmin/Sync/index.html#val-fetch
+[irmin.sync.pull]: https://docs.mirage.io/irmin/Irmin/Sync/index.html#val-pull
+[irmin.sync.push]: https://docs.mirage.io/irmin/Irmin/Sync/index.html#val-fpush
+
+[Json]: https://mirage.github.io/irmin/irmin/Irmin/Contents/index.html#module-Json
+[Json_tree]: https://mirage.github.io/irmin/irmin/Irmin/index.html#module-Json_tree
+[Json_value]: https://mirage.github.io/irmin/irmin/Irmin/Contents/index.html#module-Json_value
+
+[mirage]: https://mirage.io
+[lwt]: https://github.com/ocsigen/lwt
+[lwt-tutorial]: https://mirage.io/wiki/tutorial-lwt
+<!-- prettier-ignore-end -->

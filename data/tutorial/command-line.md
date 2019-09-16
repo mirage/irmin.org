@@ -5,8 +5,7 @@ title: "Using the command-line"
 
 ## Installation
 
-These examples requires the `irmin-unix` package to be installed from
-[opam](https://github.com/ocaml/opam):
+These examples requires the `irmin-unix` package to be installed from [opam]:
 
 ```shell
 $ opam install irmin-unix
@@ -89,10 +88,8 @@ See the output of `irmin help irmin.yml` for a list of configurable parameters.
 
 ### Customization
 
-It is possible to extend the `irmin` executable using
-[Irmin_unix.Resolver](https://mirage.github.io/irmin/irmin-unix/Irmin_unix/Resolver/index.html)
-and
-[Irmin_unix.Cli](https://mirage.github.io/irmin/irmin-unix/Irmin_unix/Cli/index.html):
+It is possible to extend the `irmin` executable using [Irmin_unix.Resolver] and
+[Irmin_unix.Cli]:
 
 ```ocaml
 module Cli = Irmin_unix.Cli
@@ -108,8 +105,8 @@ let () =
 
 ## Starting a GraphQL server
 
-`irmin` comes with a built-in [GraphQL](https://graphql.org) server, which can
-be used to easily query/modify a store remotely:
+`irmin` comes with a built-in [GraphQL] server, which can be used to easily
+query/modify a store remotely:
 
 ```shell
 $ irmin graphql --port 8080
@@ -182,3 +179,10 @@ As you can see, the command-line application has many capabilities, but it's
 just a fraction of what's available when using Irmin from OCaml! For more
 information about using Irmin and OCaml, check out the
 [next section](GettingStartedOCaml.html).
+
+<!-- prettier-ignore-start -->
+[Irmin_unix.Resolver]: https://mirage.github.io/irmin/irmin-unix/Irmin_unix/Resolver/index.html
+[Irmin_unix.Cli]: https://mirage.github.io/irmin/irmin-unix/Irmin_unix/Cli/index.html
+[GraphQL]: https://graphql.org
+[opam]: https://github.com/ocaml/opam
+<!-- prettier-ignore-end -->
