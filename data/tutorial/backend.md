@@ -291,7 +291,7 @@ module KV: Irmin.KV_MAKER = functor (C: Irmin.Contents.S) ->
 
 We also have to provide a configuration for our backend specifying the parameters needed when initialising a store. In our example, we start with an empty configuration, which comes with `root` as a parameter. We can then instantiate the store and create a repo:
 
-```ocaml
+```ocaml skip
 let config ?(config = Irmin.Private.Conf.empty) ?root () =
   let module C = Irmin.Private.Conf in
   C.add config C.root root
@@ -310,7 +310,7 @@ $ redis-server /usr/local/etc/redis.conf
 
 or we can run the server from OCaml:
 
-```ocaml
+```ocaml skip
 let start_server () =
   let config = [("port", ["6379"]); ("daemonize", ["no"])] in
   let server = Hiredis.Shell.Server.start ~config 6379 in
