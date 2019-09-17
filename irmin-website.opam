@@ -1,0 +1,36 @@
+opam-version: "2.0"
+name:         "irmin-website"
+synopsis:     "Public homepage of Irmin"
+maintainer:   "Craig Ferguson <me@craigfe.io>"
+authors:      ["Craig Ferguson <me@craigfe.io>"]
+homepage:     "https://github.com/tarides/irmin.io"
+bug-reports:  "https://github.com/tarides/irmin.io/issues"
+dev-repo:     "git+https://github.com/tarides/irmin.io.git"
+
+build: [
+ ["dune" "subst"] {pinned}
+ ["dune" "build" "-p" name "-j" jobs]
+ ["dune" "runtest" "-p" name] {with-test}
+]
+
+depends: [
+  "ocaml"      {>= "4.06.0"}
+  "dune"       {build & >= "1.7.0"}
+  "irmin"
+  "irmin-unix"
+  "digestif"   {= "0.7.3"}
+  "mdx"
+  "lwt"
+  "hiredis"
+]
+
+pin-depends: [
+  ["irmin.dev"         "git+https://github.com/mirage/irmin.git"]
+  ["irmin-unix.dev"    "git+https://github.com/mirage/irmin.git"]
+  ["irmin-mem.dev"     "git+https://github.com/mirage/irmin.git"]
+  ["irmin-git.dev"     "git+https://github.com/mirage/irmin.git"]
+  ["irmin-http.dev"    "git+https://github.com/mirage/irmin.git"]
+  ["irmin-fs.dev"      "git+https://github.com/mirage/irmin.git"]
+  ["irmin-graphql.dev" "git+https://github.com/mirage/irmin.git"]
+  ["mdx.dev"           "git+https://github.com/realworldocaml/mdx.git"]
+]

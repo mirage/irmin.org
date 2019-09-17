@@ -25,7 +25,7 @@ module.exports = {
             options: {
               classPrefix: "language-",
               inlineCodeMarker: null,
-              aliases: { shell: "shell-session" },
+              aliases: { shell: "shell-session", ocamlskip: "ocaml" },
               showLineNumbers: false,
               noInlineHighlight: true
             }

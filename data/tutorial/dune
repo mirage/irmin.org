@@ -1,0 +1,13 @@
+(rule
+ (targets mdx.ml)
+ (deps
+  (:markdown
+   (glob_files *.md)))
+ (action
+  (with-stdout-to
+   %{targets}
+   (bash "echo %{markdown} | xargs -n 1 ocaml-mdx pp"))))
+
+(test
+ (name mdx)
+ (libraries irmin irmin-unix lwt hiredis))
