@@ -3,11 +3,17 @@ path: "/tutorial/contents"
 title: "Custom content types"
 ---
 
-At some point working with `Irmin` you will probably want to move beyond using the default content types.
+At some point working with `Irmin` you will probably want to move beyond using
+the default content types.
 
-This section will explain how custom datatypes can be implemented using [Irmin.Type](https://mirage.github.io/irmin/irmin/Irmin/Type/index.html). Before continuing with these examples make sure to read through the [official documentation](https://docs.mirage.io/irmin/Irmin/Type/index.html), which has information about the predefined types and how they're used.
+This section will explain how custom datatypes can be implemented using
+[Irmin.Type][irmin.type]. Before continuing with these examples make sure to
+read through the [official documentation][irmin.type], which has information
+about the predefined types and how they're used.
 
-Now that you've read through the documentation, let's create some contents by defining the functions required by the [Irmin.Contents.S](https://docs.mirage.io/irmin/Irmin/Contents/module-type-S/index.html) interface. This section will walk you through a few different examples:
+Now that you've read through the documentation, let's create some contents by
+defining the functions required by the [Irmin.Contents.S] interface. This
+section will walk you through a few different examples:
 
 - [Counter](#counter)
 - [Record](#record)
@@ -24,9 +30,12 @@ To create a content type you need to define the following:
 
 ## Counter
 
-A counter is just a simple `int64` value that can be incremented and decremented, when counters are merged the values will be added together.
+A counter is just a simple `int64` value that can be incremented and
+decremented, when counters are merged the values will be added together.
 
-To get started, you will need to define a type `t` and build a value `t` using the functions provided in [Irmin.Type](https://docs.mirage.io/irmin/Irmin/Type/index.html). In this case all we need is the existing `int64` value, but in most cases it won't be this simple!
+To get started, you will need to define a type `t` and build a value `t` using
+the functions provided in [Irmin.Type]. In this case all we need is the existing
+`int64` value, but in most cases it won't be this simple!
 
 ```ocaml
 module Counter: Irmin.Contents.S with type t = int64 = struct
@@ -34,7 +43,9 @@ module Counter: Irmin.Contents.S with type t = int64 = struct
 	let t = Irmin.Type.int64
 ```
 
-Now we need to define a merge function. There is already a `counter` implementation available in [Irmin.Merge](https://docs.mirage.io/irmin/Irmin/Merge/index.html), so you wouldn't actually need to write this yourself:
+Now we need to define a merge function. There is already a `counter`
+implementation available in [Irmin.Merge][irmin.merge], so you wouldn't actually
+need to write this yourself:
 
 ```ocaml
 	let merge ~old a b =
@@ -82,7 +93,8 @@ type car = {
 }
 ```
 
-First, `color` has to be wrapped. Variants are modeled using the [variant](https://mirage.github.io/irmin/irmin/Irmin/Type/index.html#val-variant) function:
+First, `color` has to be wrapped. Variants are modeled using the
+[variant][irmin.type-variant] function:
 
 ```ocaml
 module Car = struct
@@ -99,7 +111,8 @@ module Car = struct
         |> sealv
 ```
 
-This is mapping variant cases to their names in string representation. Records are handled similarly:
+This is mapping variant cases to their names in string representation. Records
+are handled similarly:
 
 ```ocaml
     let t =
@@ -121,7 +134,9 @@ Here's the merge operation:
 end
 ```
 
-Now some examples using `Car` -- we will map Vehicle Identification Number to a car record, this could be used by a tow company or an auto shop to identify cars:
+Now some examples using `Car` -- we will map Vehicle Identification Number to a
+car record, this could be used by a tow company or an auto shop to identify
+cars:
 
 ```ocaml
 open Lwt.Infix
@@ -161,9 +176,12 @@ let () = Lwt_main.run main
 
 ## Association list
 
-In this example we will define an association list that maps string keys to string values. The type itself is not very complicated, but the merge function is even more complex than the previous two examples.
+In this example we will define an association list that maps string keys to
+string values. The type itself is not very complicated, but the merge function
+is even more complex than the previous two examples.
 
-Like the two examples above, you need to define a `t` type and a `t` value of type `Irmin.Type.t` to begin:
+Like the two examples above, you need to define a `t` type and a `t` value of
+type `Irmin.Type.t` to begin:
 
 ```ocaml
 module Object = struct
@@ -173,7 +191,13 @@ module Object = struct
 
 So far so good, Irmin provides a simple way to model a list of pairs!
 
-To write the merge function we can leverage `Irmin.Merge.alist`, which simplifies this process for association lists. In this example we are using strings for both the keys and values, however in most other cases `alist` can get a bit more complicated since it requires existing merge functions for both the key and value types. For a slightly more complicated example you can read through `merge_object` and `merge_value` in [contents.ml](https://github.com/mirage/irmin/blob/master/src/irmin/contents.ml), which are used to implement JSON contents for Irmin.
+To write the merge function we can leverage `Irmin.Merge.alist`, which
+simplifies this process for association lists. In this example we are using
+strings for both the keys and values, however in most other cases `alist` can
+get a bit more complicated since it requires existing merge functions for both
+the key and value types. For a slightly more complicated example you can read
+through `merge_object` and `merge_value` in [contents.ml][irmin.contents], which
+are used to implement JSON contents for Irmin.
 
 ```ocaml
     let merge_alist =
@@ -184,9 +208,12 @@ end
 
 ## LWW register
 
-A last-write-wins register is similar to a basic Irmin store, except on merge the most recently written value will be picked rather than trying to merge the values.
+A last-write-wins register is similar to a basic Irmin store, except on merge
+the most recently written value will be picked rather than trying to merge the
+values.
 
-First, this requires a way to get a timestamp -- we will make this as generic as possible so it can be used on Unix or MirageOS:
+First, this requires a way to get a timestamp -- we will make this as generic as
+possible so it can be used on Unix or MirageOS:
 
 ```ocaml
 module type TIMESTAMP = sig
@@ -217,7 +244,9 @@ A convenience function for adding a timestamp to a `C.t` value:
     let v c = (c, Time.now ())
 ```
 
-The merge operation for `Lww_register` is slightly different than the ones covered so far. It will not attempt to merge any values, instead it will pick the newest value based on the attached timestamp.
+The merge operation for `Lww_register` is slightly different than the ones
+covered so far. It will not attempt to merge any values, instead it will pick
+the newest value based on the attached timestamp.
 
 ```ocaml
     let merge ~old:_ (a, timestamp_a) (b, timestamp_b) =
@@ -265,4 +294,16 @@ let main =
 let () = Lwt_main.run main
 ```
 
-If you'd like another example then check out the [custom merge](https://github.com/mirage/irmin/blob/master/examples/custom_merge.ml) example in the Irmin repository, which illustrates how to write a mergeable log.
+If you'd like another example then check out the [custom
+merge][examples/custom-merge] example in the Irmin repository, which illustrates
+how to write a mergeable log.
+
+<!-- prettier-ignore-start -->
+[irmin.type]: https://mirage.github.io/irmin/irmin/Irmin/Type/index.html
+[irmin.type-variant]: https://mirage.github.io/irmin/irmin/Irmin/Type/index.html#val-variant
+[irmin.contents]: https://github.com/mirage/irmin/blob/master/src/irmin/contents.ml
+[irmin.contents.s]: https://docs.mirage.io/irmin/Irmin/Contents/module-type-S/index.html
+[irmin.merge]: https://docs.mirage.io/irmin/Irmin/Merge/index.html
+
+[examples/custom-merge]: https://github.com/mirage/irmin/blob/master/examples/custom_merge.ml
+<!-- prettier-ignore-end -->

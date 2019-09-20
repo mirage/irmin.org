@@ -5,13 +5,14 @@ title: "Using the command-line"
 
 ## Installation
 
-These examples requires the `irmin-unix` package to be installed from [opam](https://github.com/ocaml/opam):
+These examples requires the `irmin-unix` package to be installed from [opam]:
 
 ```shell
 $ opam install irmin-unix
 ```
 
-After that is finished you should have the `irmin` binary installed! To get a list of commands run:
+After that is finished you should have the `irmin` binary installed! To get a
+list of commands run:
 
 ```shell
 $ irmin help
@@ -37,7 +38,9 @@ My value
 $ irmin remove -s git --root $EXAMPLE "My key"
 ```
 
-We can also list the contents of the store in a couple of ways. `irmin tree` is used to inspect the contents of the store and `irmin list $KEY` is used to list the contents under a specific path.
+We can also list the contents of the store in a couple of ways. `irmin tree` is
+used to inspect the contents of the store and `irmin list $KEY` is used to list
+the contents under a specific path.
 
 ```shell
 $ irmin set -s git --root $EXAMPLE a/b/c 123
@@ -56,7 +59,9 @@ $ irmin tree -s git --root $EXAMPLE
 
 ## Configuration
 
-If you get sick of passing around `--root` all the time, you can create a configuration file called `./irmin.yml` or `~/.irmin/config.yml` with global configuration options:
+If you get sick of passing around `--root` all the time, you can create a
+configuration file called `./irmin.yml` or `~/.irmin/config.yml` with global
+configuration options:
 
 ```yaml
 root: /tmp/irmin/example
@@ -83,7 +88,8 @@ See the output of `irmin help irmin.yml` for a list of configurable parameters.
 
 ### Customization
 
-It is possible to extend the `irmin` executable using [Irmin_unix.Resolver](https://mirage.github.io/irmin/irmin-unix/Irmin_unix/Resolver/index.html) and [Irmin_unix.Cli](https://mirage.github.io/irmin/irmin-unix/Irmin_unix/Cli/index.html):
+It is possible to extend the `irmin` executable using [Irmin_unix.Resolver] and
+[Irmin_unix.Cli]:
 
 ```ocaml
 module Cli = Irmin_unix.Cli
@@ -99,7 +105,8 @@ let () =
 
 ## Starting a GraphQL server
 
-`irmin` comes with a built-in [GraphQL](https://graphql.org) server, which can be used to easily query/modify a store remotely:
+`irmin` comes with a built-in [GraphQL] server, which can be used to easily
+query/modify a store remotely:
 
 ```shell
 $ irmin graphql --port 8080
@@ -112,7 +119,10 @@ $ curl http://localhost:8080/graphql -d '{"query": "query { master { head { hash
 {"data":{"master":{"head":{"hash":"2a16cd7d8e27d134e6194140617d25d977441396"}}}}
 ```
 
-You can also visit [http://localhost:8080/graphql](http://localhost:8080/graphql) for an interactive environment for writing GraphQL queries. Of course, you're also free to use your GraphQL client of choice!
+You can also visit
+[http://localhost:8080/graphql](http://localhost:8080/graphql) for an
+interactive environment for writing GraphQL queries. Of course, you're also free
+to use your GraphQL client of choice!
 
 ## Snapshot/revert
 
@@ -131,7 +141,9 @@ $ irmin revert 7941ae769181f4fbf5056d8b2bfe1cd8e10928bd
 
 ## Git compatibility
 
-`irmin` and `git` can be used interchangeably to inspect and modify a repository. For instance, here are some examples of operations that can be achieved using either `git` or `irmin`.
+`irmin` and `git` can be used interchangeably to inspect and modify a
+repository. For instance, here are some examples of operations that can be
+achieved using either `git` or `irmin`.
 
 ### Cloning a remote repository
 
@@ -163,4 +175,14 @@ $ irmin push -s git $GIT_REPO_URL
 $ git push $GIT_REPO_URL master
 ```
 
-As you can see, the command-line application has many capabilities, but it's just a fraction of what's available when using Irmin from OCaml! For more information about using Irmin and OCaml, check out the [next section](GettingStartedOCaml.html).
+As you can see, the command-line application has many capabilities, but it's
+just a fraction of what's available when using Irmin from OCaml! For more
+information about using Irmin and OCaml, check out the
+[next section](GettingStartedOCaml.html).
+
+<!-- prettier-ignore-start -->
+[Irmin_unix.Resolver]: https://mirage.github.io/irmin/irmin-unix/Irmin_unix/Resolver/index.html
+[Irmin_unix.Cli]: https://mirage.github.io/irmin/irmin-unix/Irmin_unix/Cli/index.html
+[GraphQL]: https://graphql.org
+[opam]: https://github.com/ocaml/opam
+<!-- prettier-ignore-end -->
