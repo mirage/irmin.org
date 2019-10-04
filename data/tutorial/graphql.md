@@ -5,7 +5,7 @@ title: "GraphQL bindings"
 
 `irmin-graphql` provides a nice interface for accessing remote Irmin stores over
 a network. This section will show you how to run an `irmin-graphql` server and
-query it using [irmin-js], or your favorite GraphQL client!
+query it using your favorite GraphQL client!
 
 ## Installation
 
@@ -27,15 +27,6 @@ This will start the server on `localhost:8080` - this can be customized using
 the `--address` and `--port` flags. By default `irmin-graphql` provides an
 GraphiQL editor for writing queries from within the browser which can be
 accessed at [http://localhost:8080/graphql](http://localhost:8080/graphql).
-
-## Available clients
-
-There are several reference client implementations which provide many basic
-queries by default, in addition to simplifying the process of executing
-handwritten queries.
-
-- [irmin-js]
-- [irmin-go]
 
 ## Schema
 
@@ -61,27 +52,6 @@ query {
     }
   }
 }
-```
-
-Using `irmin-js` the same query would be written as:
-
-```javascript
-let ir = new Irmin("http://localhost:8080/graphql");
-ir.master().get("abc").then((res) => {
-    ...
-});
-```
-
-**NOTE**: `irmin-js` can also be used to send execute raw queries:
-
-```javascript
-let ir = new Irmin("http://localhost:8080/graphql");
-ir.execute({
-    body: "query { master { tree { get(key: "abc") } } }",
-    variables: {}
-}).then((res) => {
-    ...
-});
 ```
 
 The following would accomplish the same thing in `my-branch`:
@@ -369,7 +339,5 @@ module Graphql_ext =
 ```
 
 <!-- prettier-ignore-start -->
-[irmin-js]: https://github.com/zshipko/irmin-js
-[irmin-go]: https://github.com/zshipko/irmin-go
 [get-graphql-schema]: https://github.com/prisma/get-graphql-schema
 <!-- prettier-ignore-end -->
