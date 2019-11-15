@@ -20,6 +20,11 @@ export default function Template({ data }) {
       title: "Getting started with OCaml"
     },
     { link: "/tutorial/contents", title: "Custom content types" },
+    {
+      link: "/tutorial/architecture",
+      title: "An overview of the architecture"
+    },
+
     { link: "/tutorial/backend", title: "Writing a storage backend" },
     { link: "/tutorial/graphql", title: "GraphQL bindings" },
     { link: "/tutorial/resources", title: "Resources" }
