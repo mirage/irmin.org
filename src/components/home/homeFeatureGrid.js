@@ -42,7 +42,7 @@ const HomeFeatureGrid = () => {
       alt: "Git compatibility",
       title: "Git compatibility",
       body:
-        "irmin-git uses an on-disk format that can be inspected and modified using Git."
+        "<code>irmin-git</code> uses an on-disk format that can be inspected and modified using Git."
     },
     {
       image: imgBehavior,

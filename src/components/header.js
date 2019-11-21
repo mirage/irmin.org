@@ -10,13 +10,19 @@ const Header = () => (
     <nav className="menu">
       <ul>
         <li>
-          <a href="https://github.com/mirage/irmin">Github</a>
-        </li>
-        <li>
           <Link to="/tutorial/introduction">Tutorial</Link>
         </li>
         <li>
           <a href="https://mirage.github.io/irmin">API</a>
+        </li>
+        <li>
+          <a
+            href="https://github.com/mirage/irmin"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub
+          </a>
         </li>
       </ul>
     </nav>

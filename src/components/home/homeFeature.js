@@ -9,7 +9,7 @@ const HomeFeature = ({ feature }) => {
     <div className="feature">
       <img src={image} alt={alt} />
       <h3>{title}</h3>
-      <p>{body}</p>
+      <p dangerouslySetInnerHTML={{ __html: body }} />
     </div>
   );
 };

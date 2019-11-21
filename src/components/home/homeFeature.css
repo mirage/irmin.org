@@ -1,5 +1,6 @@
 .feature {
   float: left;
+  position: relative;
   width: 25%;
   padding: 0 4%;
   margin-bottom: 30px;
@@ -9,6 +10,7 @@
   font-size: 20px;
   margin-bottom: 0;
   margin-top: 10px;
+  text-align: center;
 }
 
 .feature p {
@@ -17,5 +19,7 @@
 }
 
 .feature img {
+  display: block;
+  margin: 0 auto;
   max-height: 60px;
 }

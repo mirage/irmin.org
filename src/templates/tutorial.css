@@ -59,14 +59,6 @@ section.doc a:hover {
   color: #127c61;
 }
 
-section.doc p code,
-section.doc li code {
-  color: #438680;
-  background: #defff7;
-  font-family: "Ubuntu Mono", monospace;
-  padding: 2px 4px;
-}
-
 section.doc pre {
   background: #212f29;
   border-radius: 2px;
