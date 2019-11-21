@@ -15,8 +15,8 @@ const HomeHeader = ({ pages, currentLink }) => {
         </Link>
         <h1>A distributed database built on the same principles as Git</h1>
         <a href="https://github.com/mirage/irmin" className="button github">
-          <img src={imgGithub} alt="Github" />
-          Github
+          <img src={imgGithub} alt="GitHub" />
+          GitHub
         </a>
         <Link to="/tutorial/introduction" className="button dark">
           Get Started
