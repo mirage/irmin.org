@@ -137,7 +137,7 @@ foo/bar => 'testing 123'`}
             </p>
             <pre>
               <code className="language-shell-session">
-                {`$ jbuilder build examples/trees.exe
+                {`$ dune build examples/trees.exe
 $ _build/default/examples/trees.exe`}
               </code>
             </pre>
