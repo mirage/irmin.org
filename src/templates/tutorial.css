@@ -1,8 +1,8 @@
-body.documentation header.wrapper {
+.documentation header.wrapper {
   padding: 0 45px;
 }
 
-body.documentation section.doc {
+.documentation section.doc {
   margin-left: 325px;
   width: 50%;
   padding-left: 7%;

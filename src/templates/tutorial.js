@@ -26,7 +26,7 @@ export default function Template({ data }) {
   ];
 
   return (
-    <body className="documentation">
+    <div className="documentation">
       <Layout title="Tutorial">
         <TutorialSidebar pages={pages} currentLink={frontmatter.path} />
         <section className="doc">
@@ -35,7 +35,7 @@ export default function Template({ data }) {
           <TutorialFooter pages={pages} currentLink={frontmatter.path} />
         </section>
       </Layout>
-    </body>
+    </div>
   );
 }
 
