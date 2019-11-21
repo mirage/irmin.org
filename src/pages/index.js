@@ -190,7 +190,7 @@ $ irmin get foo/bar`}
               Irmin is part of the <a href="https://mirage.io">MirageOS</a>{" "}
               project and is supported by{" "}
               <a href="https://tarides.com">Tarides</a>,{" "}
-              <a href="https://robur.io">Robur</a> and{" "}
+              <a href="https://robur.coop">Robur</a> and{" "}
               <a href="https://ocamllabs.io">OCaml Labs</a>.
             </p>
           </section>
