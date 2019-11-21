@@ -187,7 +187,8 @@ $ irmin get foo/bar`}
               </a>
             </p>
             <p>
-            Irmin is part of the <a href="https://mirage.io">MirageOS</a> project.
+              Irmin is part of the <a href="https://mirage.io">MirageOS</a>{" "}
+              project.
             </p>
           </section>
         </div>
