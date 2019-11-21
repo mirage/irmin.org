@@ -1,7 +1,7 @@
 import { Link } from "gatsby";
 import React from "react";
 
-import imgLogo from "../../images/logo.png";
+import imgLogo from "../../images/logo.svg";
 import imgGithub from "../../images/icons/github.svg";
 
 import "./homeHeader.css";
