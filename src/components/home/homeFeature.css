@@ -4,13 +4,13 @@
   width: 25%;
   padding: 0 4%;
   margin-bottom: 30px;
+  text-align: center;
 }
 
 .feature h3 {
   font-size: 20px;
-  margin-bottom: 0;
+  margin-bottom: 5px;
   margin-top: 10px;
-  text-align: center;
 }
 
 .feature p {
