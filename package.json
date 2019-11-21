@@ -1,6 +1,6 @@
 {
   "name": "irmin",
-  "description": "irmin.io website",
+  "description": "irmin.org website",
   "version": "1.0.0",
   "author": "Tarides <contact@tarides.com>",
   "dependencies": {
@@ -36,6 +36,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mirage/irmin.io"
+    "url": "https://github.com/mirage/irmin.org"
   }
 }

@@ -3,9 +3,9 @@ name:         "irmin-website"
 synopsis:     "Public homepage of Irmin"
 maintainer:   "Craig Ferguson <me@craigfe.io>"
 authors:      ["Craig Ferguson <me@craigfe.io>"]
-homepage:     "https://github.com/tarides/irmin.io"
-bug-reports:  "https://github.com/tarides/irmin.io/issues"
-dev-repo:     "git+https://github.com/tarides/irmin.io.git"
+homepage:     "https://github.com/tarides/irmin.org"
+bug-reports:  "https://github.com/tarides/irmin.org/issues"
+dev-repo:     "git+https://github.com/tarides/irmin.org.git"
 
 build: [
  ["dune" "subst"] {pinned}
