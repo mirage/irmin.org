@@ -42,14 +42,14 @@ const HomeFeatureGrid = () => {
       alt: "Git compatibility",
       title: "Git compatibility",
       body:
-        "<code>irmin-git</code> uses an on-disk format that can be inspected and modified using Git."
+        "Bi-directional compatibility with Git on-disk format. Irmin state can be inspected and modified using the Git command-line tool."
     },
     {
       image: imgBehavior,
       alt: "Dynamic behavior",
       title: "Dynamic behavior",
       body:
-        "Allows users to define custom merge functions, use in-memory transactions, and create event-driven workflows using a notification mechanism."
+        "Allows users to define custom merge functions and create event-driven workflows using a notification mechanism."
     }
   ];
 
