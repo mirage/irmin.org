@@ -42,7 +42,7 @@ const HomeFeatureGrid = () => {
       alt: "Git compatibility",
       title: "Git compatibility",
       body:
-        "Bi-directional compatibility with Git on-disk format. Irmin state can be inspected and modified using the Git command-line tool."
+        "Bi-directional compatibility with the Git on-disk format. Irmin state can be inspected and modified using the Git command-line tool."
     },
     {
       image: imgBehavior,
