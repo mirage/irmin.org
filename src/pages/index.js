@@ -187,8 +187,7 @@ $ irmin get foo/bar`}
               </a>
             </p>
             <p>
-              Development of Irmin was supported in part by the EU FP7
-              User-Centric Networking project, Grant No. 611001.
+            Irmin is part of the <a href="https://mirage.io">MirageOS</a> project.
             </p>
           </section>
         </div>
