@@ -35,4 +35,6 @@ title: "Resources"
 
 - [tezos](https://tezos.com)
 - [datakit](https://github.com/moby/datakit)
-- [uDNS](https://github.com/roburio/udns)
+- [CalDAV](https://github.com/roburio/caldav)
+- [Canopy](https://github.com/engil/Canopy)
+- [Unikernel Exemples](https://github.com/roburio/unikernels)
