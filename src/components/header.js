@@ -18,9 +18,6 @@ const Header = () => (
         <li>
           <a href="https://mirage.github.io/irmin">API</a>
         </li>
-        <li>
-          <a href="#">News</a>
-        </li>
       </ul>
     </nav>
     <div className="logo">
