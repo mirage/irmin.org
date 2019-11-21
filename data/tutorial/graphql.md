@@ -265,12 +265,13 @@ let run_server () =
 
 ### Customization
 
-It is possible to use a custom JSON representation for `contents` and `metadata`
-values by implementing `Irmin_graphql.Server.PRESENTER`:
+It is possible to use a custom JSON representation for a `type` by implementing
+your own `Schema.typ` value:
 
 ```ocaml
 module Example_type = struct
   type t = {x: string; y: string; z: string}
+
   let t =
     let open Irmin.Type in
     record "Example_type" (fun x y z -> {x; y; z})
@@ -278,51 +279,56 @@ module Example_type = struct
     |+ field "y" string (fun t -> t.y)
     |+ field "z" string (fun t -> t.z)
     |> sealr
+
   let merge = Irmin.Merge.(option (default t))
 end
 
-module Example_presenter = struct
-  type t = Example_type.t
-  type src = Example_type.t
-  let to_src _tree _key t = t
-  let schema_typ =
-    let open Example_type in
-    Irmin_graphql.Server.Schema.(obj "Example"
-      ~fields:(fun _ -> [
-        field "x"
-          ~typ:(non_null string)
-          ~args:[]
-          ~resolve:(fun _ t -> t.x)
-        ;
-        field "y"
-          ~typ:(non_null string)
-          ~args:[]
-          ~resolve:(fun _ t -> t.y)
-        ;
-        field "z"
-          ~typ:(non_null string)
-          ~args:[]
-          ~resolve:(fun _ t -> t.z)
-        ;
-      ])
-    )
-end
+let schema_typ : (unit, Example_type.t option) Irmin_graphql.Server.Schema.typ =
+  let open Example_type in
+  Irmin_graphql.Server.Schema.(obj "Example"
+    ~fields:(fun _ -> [
+      field "x"
+        ~typ:(non_null string)
+        ~args:[]
+        ~resolve:(fun _ t -> t.x)
+      ;
+      field "y"
+        ~typ:(non_null string)
+        ~args:[]
+        ~resolve:(fun _ t -> t.y)
+      ;
+      field "z"
+        ~typ:(non_null string)
+        ~args:[]
+        ~resolve:(fun _ t -> t.z)
+      ;
+    ])
+  )
 ```
 
-(You may also opt to use `Irmin_graphql.Server.Default_presentation`, which can
-be used on any `Irmin.Type.S`)
+(You may also opt to use `Irmin_graphql.Server.Default_types`, which can be used
+on any `Irmin.S`)
 
-Once you've done this for both the `contents` and `metadata` types you need to
-wrap them in `Irmin_graphql.Server.PRESENTATION` before passing them to
+Once you've done this for one or both of `schema_typ` and `arg_type`, you must
+wrap them in `Irmin_graphql.Server.CUSTOM_TYPES` before passing them to
 `Irmin_graphql.Server.Make_ext`:
 
 ```ocaml
-module Example_store = Irmin_mem.KV(Example_type)
+module Store = Irmin_mem.KV (Example_type)
 
-module Presentation = struct
-  module Default = Irmin_graphql.Server.Default_presentation(Example_store)
-  module Metadata = Default.Metadata
-  module Contents = Example_presenter
+module Custom_types = struct
+  module Defaults = Irmin_graphql.Server.Default_types (Store)
+
+  (* Use the default types for most things *)
+  module Key = Defaults.Key
+  module Metadata = Defaults.Metadata
+  module Hash = Defaults.Hash
+  module Branch = Defaults.Branch
+
+  module Contents = struct
+    include Defaults.Contents
+    let schema_type = schema_typ
+  end
 end
 
 module Config = struct
@@ -334,8 +340,8 @@ module Graphql_ext =
   Irmin_graphql.Server.Make_ext
     (Cohttp_lwt_unix.Server)
     (Config)
-    (Example_store)
-    (Presentation)
+    (Store)
+    (Custom_types)
 ```
 
 <!-- prettier-ignore-start -->
