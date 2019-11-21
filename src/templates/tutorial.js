@@ -28,12 +28,17 @@ export default function Template({ data }) {
   return (
     <div className="documentation">
       <Layout title="Tutorial">
-        <TutorialSidebar pages={pages} currentLink={frontmatter.path} />
-        <section className="doc">
-          <h2>{frontmatter.title}</h2>
-          <div className="content" dangerouslySetInnerHTML={{ __html: html }} />
-          <TutorialFooter pages={pages} currentLink={frontmatter.path} />
-        </section>
+        <div class="content-wrapper">
+          <TutorialSidebar pages={pages} currentLink={frontmatter.path} />
+          <section className="doc">
+            <h2>{frontmatter.title}</h2>
+            <div
+              className="content"
+              dangerouslySetInnerHTML={{ __html: html }}
+            />
+            <TutorialFooter pages={pages} currentLink={frontmatter.path} />
+          </section>
+        </div>
       </Layout>
     </div>
   );
