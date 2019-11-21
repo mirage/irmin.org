@@ -119,7 +119,8 @@ class HomePage extends React.Component {
             </pre>
 
             <p>
-              To compile the example above, save it to a file called example.ml
+              To compile the example above, save it to a file called{" "}
+              <code>example.ml</code>
               and run:
             </p>
             <pre>
@@ -157,10 +158,13 @@ $ irmin get foo/bar`}
             </pre>
 
             <p>
-              irmin.yml allows for irmin flags to be set on a per-directory
-              basis. You can also set flags globally using{" "}
-              <code>$HOME/.irmin/config.yml</code>. Run irmin help irmin.yml for
-              further details.
+              <code>irmin.yml</code> allows for irmin flags to be set on a
+              per-directory basis. You can also set flags globally using{" "}
+              <code>$HOME/.irmin/config.yml</code>.{" "}
+            </p>
+
+            <p>
+              Run <code>irmin help irmin.yml</code> for further details.
             </p>
 
             <h2>Explore further</h2>

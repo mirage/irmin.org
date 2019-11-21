@@ -12,6 +12,14 @@ a {
   text-decoration: none;
 }
 
+p code,
+li code {
+  color: #438680;
+  background: #defff7;
+  font-family: "Ubuntu Mono", monospace;
+  padding: 2px 4px;
+}
+
 .wrapper {
   padding: 0 10%;
 }
