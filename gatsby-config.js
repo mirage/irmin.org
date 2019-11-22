@@ -21,6 +21,12 @@ module.exports = {
         plugins: [
           `gatsby-remark-autolink-headers`,
           {
+            resolve: `gatsby-remark-images`,
+            options: {
+              maxWidth: 680
+            }
+          },
+          {
             resolve: `gatsby-remark-prismjs`,
             options: {
               classPrefix: "language-",
