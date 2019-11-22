@@ -7,13 +7,15 @@ This section illustrates how to write a custom storage backend for Irmin using a
 simplified implementation of [irmin-redis] as an example. `irmin-redis` uses a
 Redis server to store Irmin data.
 
-Unlike writing a [custom datatype](Contents.html), there is not a tidy way of
-doing this. A backend is built from a number of lower level stores, where each
-store implements some of the operations needed by the backend. In this example
-we instantiate functors of type [Irmin.CONTENT_ADDRESSABLE_STORE_MAKER] (for the
-block store) and [Irmin.ATOMIC_WRITE_STORE_MAKER] (for the tag store). The two
-are used in creating a module of type [Irmin.S_MAKER], which is in turn used in
-a functor of type [Irmin.KV_MAKER].
+Unlike writing a [custom datatype](/tutorial/contents), there is no tidy way of
+doing this. A backend is built from a number of
+[lower level stores](/tutorial/architecture) (commits, nodes, contents or
+branches), where each store implements some of the operations needed by the
+backend. In this example we instantiate two functors: one of type
+[Irmin.CONTENT_ADDRESSABLE_STORE_MAKER] (for the block store) and
+[Irmin.ATOMIC_WRITE_STORE_MAKER] (for the reference store). The two are used in
+creating a module of type [Irmin.S_MAKER], which is in turn used in a functor of
+type [Irmin.KV_MAKER].
 
 ## Redis client
 
@@ -108,7 +110,7 @@ end
 
 ### The content-addressable store
 
-Next is the content-addressable ([Irmin.CONTENT_ADDRESSABLE_STORE]) interface -
+Next is the content-addressable [Irmin.CONTENT_ADDRESSABLE_STORE] interface -
 the majority of the required methods can be inherited from `Helper`!
 
 ```ocaml
@@ -368,6 +370,7 @@ let stop_server server () = Hiredis.Shell.Server.stop server
 [Irmin.S_MAKER]: https://mirage.github.io/irmin/irmin/Irmin/module-type-S_MAKER/index.html
 [Irmin.KV_MAKER]: https://mirage.github.io/irmin/irmin/Irmin/module-type-KV_MAKER/index.html
 [Irmin.CONTENT_ADDRESSABLE_STORE_MAKER]: https://mirage.github.io/irmin/irmin/Irmin/module-type-CONTENT_ADDRESSABLE_STORE_MAKER/index.html
+[Irmin.CONTENT_ADDRESSABLE_STORE]: https://mirage.github.io/irmin/irmin/Irmin/module-type-CONTENT_ADDRESSABLE_STORE/index.html
 [Irmin.ATOMIC_WRITE_STORE]: https://mirage.github.io/irmin/irmin/Irmin/module-type-ATOMIC_WRITE_STORE/index.html
 [Irmin.ATOMIC_WRITE_STORE_MAKER]: https://mirage.github.io/irmin/irmin/Irmin/module-type-ATOMIC_WRITE_STORE_MAKER/index.html
 
