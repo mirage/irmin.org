@@ -22,9 +22,9 @@ A collection of block stores is available in Irmin, but you can create your own
 using the interface [Irmin.CONTENT_ADDRESSABLE_STORE] as long as the following
 are guaranteed:
 
-- concurrent reads using the same key returns the same value.
+- reads using the same key return the same value.
 
-- concurrent writes of the same value return the same key.
+- writes of the same value return the same key.
 
 ### The reference store
 
@@ -39,20 +39,20 @@ Branches are stored in the reference store as pairs of `(hash(commit), branch)`.
 
 As for the block store, you can choose a reference store from the ones provided
 by Irmin, or you can create your own using the interface
-[Irmin.ATOMIC_WRITE_STORE]. The operations you have to implement need to
-satifisy some constraints:
+[Irmin.ATOMIC_WRITE_STORE]. The operations you have to implement need to satisfy
+some constraints:
 
-- concurrent reads of the same branch name return the same hash, that is the
-  same commit. Updates of a branch name to a given commit should be consistent:
-  subsequent reads of a branch name should always result in the last hash which
-  has been written.
+- concurrent reads of the same branch name return the same hash. Updates of a
+  branch name to a given commit should be sequentially consistent: subsequent
+  reads of a branch name should always result in the last hash which has been
+  written.
 
 - writes are implemented using two operations. `set` updates a branch name to a
   given hash, but provides no guarantees in the case of concurrent writes.
   `test_and_set` is a two step operation: (1) it first checks what is the
   current hash of a branch name and (2) it then updates the branch name to a new
   hash. This two step operation needs to be atomic to guarantee that in case of
-  concurrent writes the _fastest_ write only updates the branch name.
+  concurrent writes only the _fastest_ write updates the branch name.
 
   Ensuring that `test_and_set` is atomic is usually not very easy to do, as the
   POSIX interface does not provide such an operation. [Irmin_unix.FS] uses a
@@ -91,11 +91,10 @@ and the store changes to
 The `master` branch references the latest commit.
 
 As mentioned, Irmin has a few _types_ of stores available: the in-memory store
-and the git store that we have seen in section
-[Getting started](/tutorial/getting-started), but also some other that you can
-explore on [github]. In the next section
-[Writing a storage backend](/tutorial/backend) we will create our own Irmin
-stores.
+and the Git store that we have seen in section
+[Getting started](/tutorial/getting-started), but also some others that you can
+explore on [GitHub][github]. In the [next section](/tutorial/backend) we will
+create our own Irmin stores.
 
 <!-- prettier-ignore-start -->
 [github]: https://github.com/mirage/irmin/tree/master/src
