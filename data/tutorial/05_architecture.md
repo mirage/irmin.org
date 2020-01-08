@@ -40,8 +40,9 @@ nodes in the tree. For instance, the contents we commited to a `Mem_store` in
 the [Getting started](/tutorial/getting-started) section:
 
 ```ocaml
-Store.Repo.v config >>= Store.master >>= fun t ->
-Mem_store.set_exn t ["a"; "b"; "c"] "Hello, Irmin!" ~info:(info "my first commit")
+let main () =
+    Mem_store.Repo.v config >>= Mem_store.master >>= fun t ->
+    Mem_store.set_exn t ["a"; "b"; "c"] "Hello, Irmin!" ~info:(info "my first commit")
 ```
 
 are represented as ![First commit](images/first.png)
@@ -49,7 +50,8 @@ are represented as ![First commit](images/first.png)
 We add a new commit:
 
 ```ocaml
-Mem_store.set_exn t ["d"] "Goodbye!" ~info:(info "my second commit")
+let new_commit t =
+    Mem_store.set_exn t ["d"] "Goodbye!" ~info:(info "my second commit")
 ```
 
 and the store changes to
