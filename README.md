@@ -1,6 +1,6 @@
-# Irmin website &nbsp;&nbsp; [[OCaml-CI status][ocaml-ci-img][ocaml-ci] [![Travis status][travis-img]][travis]
+# Irmin website &nbsp;&nbsp; [![OCaml-CI status][ocaml-ci-img]][ocaml-ci] [![Travis status][travis-img]][travis]
 
-[ocaml-ci]: https://ci.ocamllabs.io/github/mirage/alcotest
+[ocaml-ci]: https://ci.ocamllabs.io/github/mirage/irmin.org
 [ocaml-ci-img]: https://img.shields.io/endpoint?url=https%3A%2F%2Fci.ocamllabs.io%2Fbadge%2Fmirage%2Firmin.org%2Fmaster&logo=ocaml
 [travis]: https://travis-ci.org/mirage/irmin.org/branches
 [travis-img]: https://travis-ci.org/mirage/irmin.org.svg?branch=master
