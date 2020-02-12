@@ -17,3 +17,8 @@
   margin-bottom: 30px;
   margin-top: 20px;
 }
+
+.home-header .build {
+  height: 50px;
+  display: inline-block;
+}
