@@ -33,7 +33,7 @@ export default function Template({ data }) {
   return (
     <div className="documentation">
       <Layout title="Tutorial">
-        <div class="content-wrapper">
+        <div className="content-wrapper">
           <TutorialSidebar pages={pages} currentLink={frontmatter.path} />
           <section className="doc">
             <h2>{frontmatter.title}</h2>
