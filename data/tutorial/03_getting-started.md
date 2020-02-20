@@ -271,10 +271,10 @@ let () = Lwt_main.run main
 [irmin.private.conf]: https://mirage.github.io/irmin/irmin/Irmin/Private/Conf/index.html
 [irmin.repo]: https://mirage.github.io/irmin/irmin/Irmin/module-type-S/Repo/index.html
 [irmin.repo.v]: https://mirage.github.io/irmin/irmin/Irmin/module-type-S/Repo/index.html#val-v
-[irmin.sync]: https://docs.mirage.io/irmin/Irmin/Sync/index.html
-[irmin.sync.fetch]: https://docs.mirage.io/irmin/Irmin/Sync/index.html#val-fetch
-[irmin.sync.pull]: https://docs.mirage.io/irmin/Irmin/Sync/index.html#val-pull
-[irmin.sync.push]: https://docs.mirage.io/irmin/Irmin/Sync/index.html#val-fpush
+[irmin.sync]: https://mirage.github.io/irmin/irmin/Irmin/Sync/index.html
+[irmin.sync.fetch]: https://mirage.github.io/irmin/irmin/Irmin/Sync/index.html#val-fetch
+[irmin.sync.pull]: https://mirage.github.io/irmin/irmin/Irmin/Sync/index.html#val-pull
+[irmin.sync.push]: https://mirage.github.io/irmin/irmin/Irmin/Sync/index.html#val-fpush
 
 [Json]: https://mirage.github.io/irmin/irmin/Irmin/Contents/index.html#module-Json
 [Json_tree]: https://mirage.github.io/irmin/irmin/Irmin/index.html#module-Json_tree
