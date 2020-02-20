@@ -302,8 +302,8 @@ how to write a mergeable log.
 [irmin.type]: https://mirage.github.io/irmin/irmin/Irmin/Type/index.html
 [irmin.type-variant]: https://mirage.github.io/irmin/irmin/Irmin/Type/index.html#val-variant
 [irmin.contents]: https://github.com/mirage/irmin/blob/master/src/irmin/contents.ml
-[irmin.contents.s]: https://docs.mirage.io/irmin/Irmin/Contents/module-type-S/index.html
-[irmin.merge]: https://docs.mirage.io/irmin/Irmin/Merge/index.html
+[irmin.contents.s]: https://mirage.github.io/irmin/irmin/Irmin/Contents/module-type-S/index.html
+[irmin.merge]: https://mirage.github.io/irmin/irmin/Irmin/Merge/index.html
 
 [examples/custom-merge]: https://github.com/mirage/irmin/blob/master/examples/custom_merge.ml
 <!-- prettier-ignore-end -->
