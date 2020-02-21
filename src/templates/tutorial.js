@@ -10,7 +10,9 @@ import TutorialFooter from "../components/tutorial/tutorialFooter";
 import "./tutorial.css";
 
 /** React components which will be allowed inside Mardown files. */
-const components = {};
+const components = {
+  "wizard": Wizard,
+};
 
 // Compile a rehype AST into a React tree.
 const compile = new RehypeReact({
