@@ -28,38 +28,55 @@ li code {
   clear: both;
 }
 
-a.button {
+/* Reset the default style of <button> to allow both <a> and <button> tags. */
+.button {
+  font-family: inherit;
+  font-size: 100%;
+  line-height: 1.15;
+  margin: 0;
+  border: 0 none;
+  text-transform: none;
+  overflow: visible;
+}
+
+.button {
   background-image: linear-gradient(-208deg, #1a3f47 0%, #1a4733 100%);
   box-shadow: 0 1px 6px 2px rgba(0, 0, 0, 0.06);
   border-radius: 2px;
   color: white !important;
   padding: 8px 17px;
-  transition: all 0.1s ease-in-out;
 }
 
-a.button:hover {
+.button:hover {
   background-image: linear-gradient(-208deg, #286951 0%, #286951 100%);
 }
 
-a.button.github {
-  background-image: linear-gradient(-180deg, #ffffff 0%, #fcf8f8 100%);
+.button.light {
+  background-image: linear-gradient(-180deg, #ffffff 0%, #f6f6f6 100%);
   border: 1px solid #e3e3e3;
   box-shadow: 0 0 13px 0 rgba(0, 0, 0, 0.06);
   color: #373737 !important;
+}
+
+.button.light:hover {
+  background: white;
+}
+
+.button.light:active {
+  border-color: #ccc;
+}
+
+.button.github {
   font-weight: 600;
 }
 
-a.button.github img {
+.button.github img {
   width: 17px;
   padding-right: 7px;
   vertical-align: -2px;
 }
 
-a.button.github:hover {
-  background: white;
-}
-
-a.button + a.button {
+.button + .button {
   margin-left: 13px;
 }
 
