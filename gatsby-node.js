@@ -23,8 +23,15 @@ exports.createPages = ({ actions, graphql }) => {
     }
 
     return result.data.allMarkdownRemark.edges.forEach(({ node }) => {
+      let path = node.frontmatter.path;
+
+      // Trim the leading slash when present.
+      if (path.substr(0, 1) == '/') {
+        path = path.substr(1);
+      }
+
       createPage({
-        path: node.frontmatter.path,
+        path,
         component: tutorialTemplate,
         context: {} // additional data can be passed via context
       });
