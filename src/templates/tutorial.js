@@ -41,7 +41,7 @@ export default function Template({ data: { allPages, currentPage } }) {
 
 export const pageQuery = graphql`
   query($path: String!) {
-    allPages: allMarkdownRemark(limit: 1000) {
+    allPages: allMarkdownRemark(sort: {fields: fileAbsolutePath}) {
       edges {
         node {
           frontmatter {
