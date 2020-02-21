@@ -14,7 +14,10 @@ const HomeHeader = ({ pages, currentLink }) => {
           <img className="logo" src={imgLogo} alt="Irmin logo" />
         </Link>
         <h1>A distributed database built on the same principles as Git</h1>
-        <a href="https://github.com/mirage/irmin" className="button light github">
+        <a
+          href="https://github.com/mirage/irmin"
+          className="button light github"
+        >
           <img src={imgGithub} alt="GitHub" />
           GitHub
         </a>

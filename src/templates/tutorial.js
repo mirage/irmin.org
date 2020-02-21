@@ -11,29 +11,31 @@ import "./tutorial.css";
 
 /** React components which will be allowed inside Mardown files. */
 const components = {
-  "wizard": Wizard,
+  wizard: Wizard
 };
 
 // Compile a rehype AST into a React tree.
 const compile = new RehypeReact({
   createElement: React.createElement,
-  components,
+  components
 }).Compiler;
 
 // Remove <p> tags around custom React components.
 const unwrap = tree => {
-  if (tree.type === 'root') {
+  if (tree.type === "root") {
     return {
       ...tree,
       children: tree.children.map(c => {
-        if (c.type === 'element' &&
-            c.tagName === 'p' &&
-            c.children.length === 1 &&
-            c.children[0].type === 'element' &&
-            c.children[0].tagName in components)
-            return c.children[0];
+        if (
+          c.type === "element" &&
+          c.tagName === "p" &&
+          c.children.length === 1 &&
+          c.children[0].type === "element" &&
+          c.children[0].tagName in components
+        )
+          return c.children[0];
         return c;
-      }),
+      })
     };
   } else {
     return tree;
@@ -45,8 +47,12 @@ export default function Template({ data: { allPages, currentPage } }) {
 
   // Fetch the list of pages dynamically.
   const pages = allPages.edges.map(edge => {
-    const {node: {frontmatter: {path: link, title}}} = edge;
-    return {link, title};
+    const {
+      node: {
+        frontmatter: { path: link, title }
+      }
+    } = edge;
+    return { link, title };
   });
 
   return (
@@ -56,9 +62,7 @@ export default function Template({ data: { allPages, currentPage } }) {
           <TutorialSidebar pages={pages} currentLink={frontmatter.path} />
           <section className="doc">
             <h2>{frontmatter.title}</h2>
-            <div className="content">
-              { compile(unwrap(ast)) }
-            </div>
+            <div className="content">{compile(unwrap(ast))}</div>
             <TutorialFooter pages={pages} currentLink={frontmatter.path} />
           </section>
         </div>
@@ -69,7 +73,7 @@ export default function Template({ data: { allPages, currentPage } }) {
 
 export const pageQuery = graphql`
   query($path: String!) {
-    allPages: allMarkdownRemark(sort: {fields: fileAbsolutePath}) {
+    allPages: allMarkdownRemark(sort: { fields: fileAbsolutePath }) {
       edges {
         node {
           frontmatter {
@@ -78,7 +82,7 @@ export const pageQuery = graphql`
           }
         }
       }
-    },
+    }
 
     currentPage: markdownRemark(frontmatter: { path: { eq: $path } }) {
       htmlAst

@@ -26,7 +26,7 @@ exports.createPages = ({ actions, graphql }) => {
       let path = node.frontmatter.path;
 
       // Trim the leading slash when present.
-      if (path.substr(0, 1) == '/') {
+      if (path.substr(0, 1) == "/") {
         path = path.substr(1);
       }
 
