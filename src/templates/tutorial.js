@@ -11,24 +11,14 @@ export default function Template({ data }) {
   const { markdownRemark } = data;
   const { frontmatter, html } = markdownRemark;
 
-  // TODO: get this list dynamically
-  const pages = [
-    { link: "/tutorial/introduction", title: "Introduction" },
-    { link: "/tutorial/command-line", title: "Using the command-line" },
-    {
-      link: "/tutorial/getting-started",
-      title: "Getting started with OCaml"
-    },
-    { link: "/tutorial/contents", title: "Custom content types" },
-    {
-      link: "/tutorial/architecture",
-      title: "An overview of the architecture"
-    },
+export default function Template({ data: { allPages, currentPage } }) {
+  const { frontmatter, html } = currentPage;
 
-    { link: "/tutorial/backend", title: "Writing a storage backend" },
-    { link: "/tutorial/graphql", title: "GraphQL bindings" },
-    { link: "/tutorial/resources", title: "Resources" }
-  ];
+  // Fetch the list of pages dynamically.
+  const pages = allPages.edges.map(edge => {
+    const {node: {frontmatter: {path: link, title}}} = edge;
+    return {link, title};
+  });
 
   return (
     <div className="documentation">
@@ -51,7 +41,18 @@ export default function Template({ data }) {
 
 export const pageQuery = graphql`
   query($path: String!) {
-    markdownRemark(frontmatter: { path: { eq: $path } }) {
+    allPages: allMarkdownRemark(limit: 1000) {
+      edges {
+        node {
+          frontmatter {
+            path
+            title
+          }
+        }
+      }
+    },
+
+    currentPage: markdownRemark(frontmatter: { path: { eq: $path } }) {
       html
       frontmatter {
         path
