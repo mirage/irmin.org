@@ -7,3 +7,4 @@ node_modules/
 *.install
 *.merlin
 .#*
+.DS_STORE
