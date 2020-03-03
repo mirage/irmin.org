@@ -7,6 +7,7 @@ module.exports = {
     author: "@tarides_"
   },
   plugins: [
+    "gatsby-plugin-sharp",
     "gatsby-plugin-react-helmet",
     {
       resolve: `gatsby-source-filesystem`,
