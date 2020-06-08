@@ -19,11 +19,7 @@ depends: [
   "irmin"      {= "2.0.0"}
   "irmin-unix"
   "digestif"   {= "0.7.3"}
-  "mdx"
+  "mdx"        {>= "1.6.0"}
   "lwt"
   "hiredis"
-]
-
-pin-depends: [
-  ["mdx.dev"           "git+https://github.com/realworldocaml/mdx.git"]
 ]
