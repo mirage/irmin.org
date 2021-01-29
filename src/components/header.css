@@ -2,10 +2,16 @@ header {
   position: sticky;
   top: 0;
   z-index: 100;
+  display: flex;
+  justify-content: space-between;
 
   background-image: linear-gradient(-189deg, #1a3f47 0%, #1a4733 100%);
   height: 60px;
   padding: 0 45px;
+}
+
+header .logo {
+  margin-right: 3em;
 }
 
 header .logo a img {
@@ -18,10 +24,16 @@ header .logo a:hover img {
   opacity: 0.7;
 }
 
+nav.menu {
+  flex-grow: 1;
+  max-width: 15em;
+}
+
 nav.menu ul {
+  padding-left: 0;
   list-style-type: none;
   display: flex;
-  float: right;
+  justify-content: space-between;
   margin-top: 21px;
   font-size: 15px;
 }
@@ -29,7 +41,6 @@ nav.menu ul {
 nav.menu ul li a {
   color: white;
   display: block;
-  margin-left: 30px;
   transition: color 0.1s ease-in-out;
 }
 
