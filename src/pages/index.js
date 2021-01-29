@@ -119,28 +119,21 @@ class HomePage extends React.Component {
             </pre>
 
             <p>
-              To compile the example above, save it to a file called{" "}
-              <code>example.ml</code>
-              and run:
+              The example is contained in <code>examples/readme.ml</code>. It
+              can be compiled and executed with dune:
             </p>
             <pre>
               <code className="language-shell-session">
-                {`$ ocamlfind ocamlopt example.ml -o example -package irmin-unix,lwt.unix -linkpkg
-$ ./example
+                {`$ dune build examples/readme.exe
+$ dune exec examples/readme.exe
 foo/bar => 'testing 123'`}
               </code>
             </pre>
 
             <p>
-              The examples directory contains some more advanced examples. The
-              build them, run:
+              The examples directory contains more advanced examples, which can
+              be executed in the same way.
             </p>
-            <pre>
-              <code className="language-shell-session">
-                {`$ dune build examples/trees.exe
-$ _build/default/examples/trees.exe`}
-              </code>
-            </pre>
 
             <h2>Command-line</h2>
             <p>
