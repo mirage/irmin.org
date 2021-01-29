@@ -3,7 +3,8 @@
 }
 
 .home-feature-grid .list {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, auto);
   flex-wrap: wrap;
   margin-top: 60px;
 }
@@ -12,4 +13,16 @@
   font-size: 27px;
   font-weight: normal;
   text-align: center;
+}
+
+@media (max-width: 750px) {
+  .home-feature-grid .list {
+    grid-template-columns: repeat(2, auto);
+  }
+}
+
+@media (max-width: 400px) {
+  .home-feature-grid .list {
+    grid-template-columns: repeat(1, auto);
+  }
 }
