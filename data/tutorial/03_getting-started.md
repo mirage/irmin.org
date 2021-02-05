@@ -265,7 +265,7 @@ let () = Lwt_main.run main
 [irmin.s-transaction]: https://mirage.github.io/irmin/irmin/Irmin/module-type-S_MAKER/index.html#type-transaction
 [irmin.s-with_tree]: https://mirage.github.io/irmin/irmin/Irmin/module-type-S_MAKER/index.html#val-with_tree
 [irmin.s.tree]: https://mirage.github.io/irmin/irmin/Irmin/module-type-S/Tree/index.html
-[irmin.type]: https://mirage.github.io/irmin/irmin/Irmin/Type/index.html
+[irmin.type]: https://mirage.github.io/repr/repr/Repr/index.html
 [irmin.contents]: https://mirage.github.io/irmin/irmin/Irmin/Contents/index.html
 [irmin.content.string]: https://mirage.github.io/irmin/irmin/Irmin/Contents/index.html#module-String
 [irmin.private.conf]: https://mirage.github.io/irmin/irmin/Irmin/Private/Conf/index.html
