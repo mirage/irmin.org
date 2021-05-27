@@ -16,8 +16,9 @@ with Git, Irmin can be used to interact with Git repositories directly from
 within your application.
 
 Take a moment to skim the [README][irmin-readme] to familiarize yourself with
-some of the concepts. Also, if you find that anything is missing or unclear in
-this tutorial then please file [an issue][irmin-issues]!
+some of the concepts. This tutorial should always be up to date with the latest
+opam release. If you find that anything is outdated, missing or unclear then
+please file [an issue][irmin-issues]!
 
 <!-- prettier-ignore-start -->
 [irmin]: https://github.com/mirage/irmin
