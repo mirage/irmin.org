@@ -252,7 +252,7 @@ the newest value based on the attached timestamp.
     let merge ~old:_ (a, timestamp_a) (b, timestamp_b) =
         match Int64.compare timestamp_a timestamp_b with
         | 0 ->
-            if Irmin.Type.equal C.t a b then
+            if Irmin.Type.(unstage (equal C.t)) a b then
                 Irmin.Merge.ok (a, timestamp_a)
             else
                 let msg = "Conflicting entries have the same timestamp but different values" in

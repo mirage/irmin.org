@@ -221,13 +221,14 @@ For example, using `Men_store_json_value` we can assign
 `{"x": 1, "y": 2, "z": 3}` to the key `a/b/c`:
 
 ```ocaml
+let contents_equal = Irmin.Type.(unstage (equal Mem_store_json_value.contents_t))
 let main =
     let module Store = Mem_store_json_value in
     Store.Repo.v config >>= Store.master >>= fun t ->
     let value = `O ["x", `Float 1.; "y", `Float 2.; "z", `Float 3.] in
     Store.set_exn t ["a"; "b"; "c"] value ~info:(info "set a/b/c") >>= fun () ->
     Store.get t ["a"; "b"; "c"] >|= fun x ->
-    assert (Irmin.Type.equal Store.contents_t value x)
+    assert (contents_equal value x)
 let () = Lwt_main.run main
 ```
 
@@ -251,11 +252,11 @@ let main =
     let value = `O ["test", `O ["foo", `String "bar"]; "x", `Float 1.; "y", `Float 2.; "z", `Float 3.] in
     Proj.set t ["a"; "b"; "c"] value ~info:(info "set a/b/c") >>= fun () ->
     Store.get t ["a"; "b"; "c"; "x"] >>= fun x ->
-    assert (Irmin.Type.equal Store.contents_t (`Float 1.) x);
+    assert (contents_equal (`Float 1.) x);
     Store.get t ["a"; "b"; "c"; "test"; "foo"] >>= fun x ->
-    assert (Irmin.Type.equal Store.contents_t (`String "bar") x);
+    assert (contents_equal (`String "bar") x);
     Proj.get t ["a"; "b"] >|= fun x ->
-    assert (Irmin.Type.equal Store.contents_t (`O ["c", value]) x)
+    assert (contents_equal (`O ["c", value]) x)
 let () = Lwt_main.run main
 ```
 
