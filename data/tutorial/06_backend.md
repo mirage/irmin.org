@@ -39,6 +39,10 @@ open Hiredis
 ```
 
 ```ocaml
+let ignore_prefix ~prefix s =
+  let len = String.length prefix in
+  String.sub s len (String.length s - len)
+
 module Helper (K: Irmin.Type.S) (V: Irmin.Type.S) = struct
   type 'a t = (string * Client.t) (* Store type: Redis prefix and client *)
   type key = K.t                  (* Key type *)
@@ -105,6 +109,19 @@ be decoded correctly then `find` returns `None`:
           | Ok s -> Lwt.return_some s
           | _ -> Lwt.return_none)
       | _ -> Lwt.return_none
+```
+
+`clear` is used to cleanup any data in the store:
+
+```ocaml
+  let clear (prefix, client) =
+    match Client.run client [| "KEYS"; prefix ^ "*" |] with
+      | Array arr ->
+          Lwt.wrap (fun () ->
+            Array.iter (fun s ->
+                let s = Value.to_string s |> ignore_prefix ~prefix in
+                ignore (Client.run client [| "DEL"; s |])) arr)
+      | _ -> Lwt.return_unit
 end
 ```
 
@@ -126,8 +143,9 @@ This module needs an `add` function, which takes a value, hashes it, stores the
 association and returns the hash:
 
 ```ocaml
+  let encode_value = Irmin.Type.(unstage (to_bin_string V.t))
   let add (prefix, client) value =
-      let hash = K.hash (fun f -> f @@ Irmin.Type.to_bin_string V.t value) in
+      let hash = K.hash (fun f -> f (encode_value value)) in
       let key = Irmin.Type.to_string K.t hash in
       let value = Irmin.Type.to_string V.t value in
       ignore (Client.run client [| "SET"; prefix ^ key; value |]);
@@ -233,7 +251,8 @@ command then convert them from strings to `Store.key` values:
       match Client.run client [| "KEYS"; prefix ^ "*" |] with
       | Array arr ->
           Array.map (fun k ->
-            Irmin.Type.of_string K.t (Value.to_string k)
+            let k = Value.to_string k |> ignore_prefix ~prefix in
+            Irmin.Type.of_string K.t k
           ) arr
           |> Array.to_list
           |> Lwt_list.filter_map_s (function
@@ -270,6 +289,8 @@ requires an atomic check and set, which can be done using `WATCH`, `MULTI` and
 `EXEC` in Redis:
 
 ```ocaml
+  let value_equal = Irmin.Type.(unstage (equal (option V.t)))
+
   let test_and_set t key ~test ~set:set_value =
     (* A helper function to execute a command in a Redis transaction *)
     let txn client args =
@@ -284,7 +305,7 @@ requires an atomic check and set, which can be done using `WATCH`, `MULTI` and
     (* Get the existing value *)
     find t key >>= fun v ->
     (* Check it against [test] *)
-    if Irmin.Type.(equal (option V.t)) test v then (
+    if value_equal test v then (
       (match set_value with
         | None -> (* Remove the key *)
             if txn client [| "DEL"; prefix ^ key' |] then
@@ -307,9 +328,12 @@ requires an atomic check and set, which can be done using `WATCH`, `MULTI` and
     )
 ```
 
-Finally, we need another `close` function:
+Finally, we need to pull in `clear` from our `Helper` implementation and add
+another `close` function:
 
 ```ocaml
+  let clear {t; _} = H.clear t
+
   let close _t = Lwt.return_unit
 end
 ```
