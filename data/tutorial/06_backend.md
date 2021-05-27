@@ -39,6 +39,10 @@ open Hiredis
 ```
 
 ```ocaml
+let ignore_prefix ~prefix s =
+  let len = String.length prefix in
+  String.sub s len (String.length s - len)
+
 module Helper (K: Irmin.Type.S) (V: Irmin.Type.S) = struct
   type 'a t = (string * Client.t) (* Store type: Redis prefix and client *)
   type key = K.t                  (* Key type *)
@@ -115,7 +119,8 @@ be decoded correctly then `find` returns `None`:
       | Array arr ->
           Lwt.wrap (fun () ->
             Array.iter (fun s ->
-                ignore (Client.run client [| "DEL"; (Value.to_string s) |])) arr)
+                let s = Value.to_string s |> ignore_prefix ~prefix in
+                ignore (Client.run client [| "DEL"; s |])) arr)
       | _ -> Lwt.return_unit
 end
 ```
@@ -246,7 +251,8 @@ command then convert them from strings to `Store.key` values:
       match Client.run client [| "KEYS"; prefix ^ "*" |] with
       | Array arr ->
           Array.map (fun k ->
-            Irmin.Type.of_string K.t (Value.to_string k)
+            let k = Value.to_string k |> ignore_prefix ~prefix in
+            Irmin.Type.of_string K.t k
           ) arr
           |> Array.to_list
           |> Lwt_list.filter_map_s (function
