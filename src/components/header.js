@@ -7,6 +7,11 @@ import "./header.css";
 
 const Header = () => (
   <header>
+    <div className="logo">
+      <Link to="/">
+        <img src={Logo} alt="Irmin logo" />
+      </Link>
+    </div>
     <nav className="menu">
       <ul>
         <li>
@@ -26,11 +31,6 @@ const Header = () => (
         </li>
       </ul>
     </nav>
-    <div className="logo">
-      <Link to="/">
-        <img src={Logo} alt="Irmin logo" />
-      </Link>
-    </div>
   </header>
 );
 
