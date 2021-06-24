@@ -46,6 +46,17 @@ module.exports = {
       options: {
         fonts: [`Ubuntu Mono`, `Titillium Web:400,600,700`]
       }
-    }
+    },
+    {
+      resolve: `gatsby-source-strapi`,
+      options: {
+        apiURL: `https://narrate.ocamllabs.io`,
+        singleTypes: [
+          {
+            name: 'irmin-about',
+          },
+        ],
+      },
+    },
   ]
 };
