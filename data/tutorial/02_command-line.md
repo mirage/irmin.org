@@ -98,7 +98,7 @@ module R = Irmin_unix.Resolver
 let () =
   R.Contents.add "my-content-type" (module Irmin.Contents.String);
   R.Store.add "my-store-type" (R.Store.Fixed_hash (fun (module Contents) ->
-    R.Store.v (module Irmin_mem.KV(Contents)))
+    R.Store.v (module Irmin_mem.KV.Make(Contents)))
   );
   Cli.(run ~default commands)
 ```

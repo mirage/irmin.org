@@ -70,7 +70,7 @@ let merge = Irmin.Merge.(option counter)
 Now this `Counter` module can be used as the contents of an Irmin store:
 
 ```ocaml
-module Counter_mem_store = Irmin_mem.KV(Counter)
+module Counter_mem_store = Irmin_mem.KV.Make(Counter)
 ```
 
 ## Record
@@ -140,7 +140,8 @@ cars:
 
 ```ocaml
 open Lwt.Infix
-module Car_store = Irmin_mem.KV(Car)
+module Car_store = Irmin_mem.KV.Make(Car)
+module Car_info = Irmin_unix.Info(Car_store.Info)
 
 let car_a = {
     color = Other "green";
@@ -159,7 +160,7 @@ let car_b = {
 }
 
 let add_car store car_number car =
-    let info = Irmin_unix.info "added %s" car_number in
+    let info = Car_info.v "added %s" car_number in
     Car_store.set_exn store [car_number] car ~info
 
 let main =
@@ -268,7 +269,8 @@ An example using `Lww_register`:
 ```ocaml
 open Lwt.Infix
 module Value = Lww_register (Timestamp) (Irmin.Contents.String)
-module S = Irmin_mem.KV (Value)
+module S = Irmin_mem.KV.Make (Value)
+module I = Irmin_unix.Info(S.Info)
 
 let main =
     (* Configure the repo *)
@@ -276,13 +278,13 @@ let main =
     (* Access the master branch *)
     S.Repo.v cfg >>= S.master >>= fun master ->
     (* Set [foo] to ["bar"] on master branch *)
-    S.set_exn master ["foo"] (Value.v "bar") ~info:(Irmin_unix.info "set foo on master branch") >>= fun () ->
+    S.set_exn master ["foo"] (Value.v "bar") ~info:(I.v "set foo on master branch") >>= fun () ->
     (* Access example branch *)
     S.Repo.v cfg >>= fun repo -> S.of_branch repo "example" >>= fun example ->
     (* Set [foo] to ["baz"] on example branch *)
-    S.set_exn example ["foo"] (Value.v "baz") ~info:(Irmin_unix.info "set foo on example branch") >>= fun () ->
+    S.set_exn example ["foo"] (Value.v "baz") ~info:(I.v "set foo on example branch") >>= fun () ->
     (* Merge the example into master branch *)
-    S.merge_into ~into:master example ~info:(Irmin_unix.info "merge example into master") >>= function
+    S.merge_into ~into:master example ~info:(I.v "merge example into master") >>= function
     | Ok () ->
         (* Check that [foo] is set to ["baz"] after the merge *)
         S.get master ["foo"] >|= fun (foo, _) ->

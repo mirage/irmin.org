@@ -12,10 +12,10 @@ doing this. A backend is built from a number of
 [lower level stores](/tutorial/architecture) (commits, nodes, contents or
 branches), where each store implements some of the operations needed by the
 backend. In this example we instantiate two functors: one of type
-[Irmin.CONTENT_ADDRESSABLE_STORE_MAKER] (for the block store) and
-[Irmin.ATOMIC_WRITE_STORE_MAKER] (for the reference store). The two are used in
-creating a module of type [Irmin.S_MAKER], which is in turn used in a functor of
-type [Irmin.KV_MAKER].
+[Irmin.Content_addressable.Maker] (for the block store) and
+[Irmin.Atomic_write.Maker] (for the reference store). The two are used in
+creating a module of type [Irmin.Maker], which is in turn used in a functor of
+type [Irmin.KV_maker].
 
 ## Redis client
 
@@ -131,7 +131,7 @@ Next is the content-addressable [Irmin.CONTENT_ADDRESSABLE_STORE] interface -
 the majority of the required methods can be inherited from `Helper`!
 
 ```ocaml
-module Content_addressable : Irmin.CONTENT_ADDRESSABLE_STORE_MAKER = functor
+module Content_addressable : Irmin.Content_addressable.Maker = functor
     (K: Irmin.Hash.S)
     (V: Irmin.Type.S) -> struct
 
@@ -182,7 +182,7 @@ defined than the previous examples, but luckily this is the last step!
 To start off we can use the `Helper` functor defined above:
 
 ```ocaml
-module Atomic_write: Irmin.ATOMIC_WRITE_STORE_MAKER = functor
+module Atomic_write: Irmin.Atomic_write.Maker = functor
     (K: Irmin.Type.S)
     (V: Irmin.Type.S) -> struct
 
@@ -342,15 +342,26 @@ Now, let's use the `Make` and `KV` functors for creating Redis-backed Irmin
 stores:
 
 ```ocaml
-module Make: Irmin.S_MAKER = Irmin.Make (Content_addressable) (Atomic_write)
+module Maker: Irmin.Maker = Irmin.Maker (Content_addressable) (Atomic_write)
 
-module KV: Irmin.KV_MAKER = functor (C: Irmin.Contents.S) ->
-  Make
-    (Irmin.Metadata.None)
-    (C)
-    (Irmin.Path.String_list)
-    (Irmin.Branch.String)
-    (Irmin.Hash.SHA1)
+module KV = struct
+  type endpoint = unit
+  type metadata = unit
+
+  module Make(C: Irmin.Contents.S) = struct
+    include Maker.Make
+      (struct
+        module Info = Irmin.Info.Default
+        module Metadata = Irmin.Metadata.None
+        module Contents = C
+        module Path = Irmin.Path.String_list
+        module Branch = Irmin.Branch.String
+        module Hash = Irmin.Hash.SHA1
+        module Node = Irmin.Node.Make(Hash)(Path)(Metadata)
+        module Commit = Irmin.Commit.Make(Hash)
+      end)
+  end
+end
 ```
 
 We also have to provide a configuration for our backend specifying the

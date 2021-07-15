@@ -314,7 +314,7 @@ wrap them in `Irmin_graphql.Server.CUSTOM_TYPES` before passing them to
 `Irmin_graphql.Server.Make_ext`:
 
 ```ocaml
-module Store = Irmin_mem.KV (Example_type)
+module Store = Irmin_mem.KV.Make (Example_type)
 
 module Custom_types = struct
   module Defaults = Irmin_graphql.Server.Default_types (Store)
@@ -332,8 +332,12 @@ module Custom_types = struct
 end
 
 module Config = struct
+  module Info = Irmin_unix.Info(Store.Info)
+
   let remote = None
-  let info = Irmin_unix.info
+
+  type info = Info.t
+  let info = Info.v
 end
 
 module Graphql_ext =
