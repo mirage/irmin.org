@@ -13,7 +13,6 @@ depends: [
   "digestif" {= "1.0.0"}
   "mdx" {>= "1.8.1"}
   "lwt" {with-test}
-  "hiredis" {with-test}
 ]
 build: [
   ["dune" "subst"] {pinned}

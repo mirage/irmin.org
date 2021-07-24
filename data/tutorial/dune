@@ -10,4 +10,4 @@
 
 (test
  (name mdx)
- (libraries irmin irmin-unix lwt hiredis))
+ (libraries irmin irmin-unix lwt))

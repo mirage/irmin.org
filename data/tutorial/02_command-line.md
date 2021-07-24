@@ -95,10 +95,12 @@ It is possible to extend the `irmin` executable using [Irmin_unix.Resolver] and
 module Cli = Irmin_unix.Cli
 module R = Irmin_unix.Resolver
 
+let config_spec = Irmin.Private.Conf.Spec.v "my-config-spec"
+
 let () =
   R.Contents.add "my-content-type" (module Irmin.Contents.String);
   R.Store.add "my-store-type" (R.Store.Fixed_hash (fun (module Contents) ->
-    R.Store.v (module Irmin_mem.KV.Make(Contents)))
+    R.Store.v config_spec (module Irmin_mem.KV.Make(Contents)))
   );
   Cli.(run ~default commands)
 ```
