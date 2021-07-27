@@ -19,7 +19,7 @@ or nodes) are stored as a pair `(hash(value), value)` and therefore a value can
 be accessed using its hash.
 
 A collection of block stores is available in Irmin, but you can create your own
-using the interface [Irmin.CONTENT_ADDRESSABLE_STORE] as long as the following
+using the interface [Irmin.Content_addressable.S] as long as the following
 are guaranteed:
 
 - reads using the same key return the same value.
@@ -39,7 +39,7 @@ Branches are stored in the reference store as pairs of `(hash(commit), branch)`.
 
 As for the block store, you can choose a reference store from the ones provided
 by Irmin, or you can create your own using the interface
-[Irmin.ATOMIC_WRITE_STORE]. The operations you have to implement need to satisfy
+[Irmin.Atomic_write.S]. The operations you have to implement need to satisfy
 some constraints:
 
 - concurrent reads of the same branch name return the same hash. Updates of a
@@ -98,9 +98,9 @@ create our own Irmin stores.
 
 <!-- prettier-ignore-start -->
 [github]: https://github.com/mirage/irmin/tree/master/src
-[Irmin.CONTENT_ADDRESSABLE_STORE]: https://mirage.github.io/irmin/irmin/Irmin/module-type-CONTENT_ADDRESSABLE_STORE/index.html
-[Irmin.ATOMIC_WRITE_STORE]: https://mirage.github.io/irmin/irmin/Irmin/module-type-ATOMIC_WRITE_STORE/index.html
+[Irmin.Content_addressable.S]: https://mirage.github.io/irmin/irmin/Irmin/module-type-Content_addressable/module-type-S/index.html
+[Irmin.ATOMIC_WRITE_STORE]: https://mirage.github.io/irmin/irmin/Irmin/module-type-Atomic_write/module-type-S/index.html
 [dotlocking]: http://wiki.call-cc.org/eggref/4/dot-locking
-[Irmin_unix.FS]: https://mirage.github.io/irmin/irmin-fs/Irmin_fs/index.html
+[Irmin_unix.FS]: https://mirage.github.io/irmin/irmin-unix/Irmin_unix/FS/index.html
 
 <!-- prettier-ignore-end -->

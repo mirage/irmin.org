@@ -146,7 +146,7 @@ end
 
 ## The atomic-write store
 
-The [Irmin.ATOMIC_WRITE_STORE] has many more types and values that need to be
+[Irmin.Atomic_write.S] has many more types and values that need to be
 defined than the previous examples, but luckily this is the last step!
 
 To start off we can use the `Helper` functor defined above:
@@ -316,8 +316,8 @@ let _repo = Store.Repo.v (config ())
 <!-- prettier-ignore-start -->
 [Irmin.Maker.S]: https://mirage.github.io/irmin/irmin/Irmin/module-type-S_MAKER/index.html
 [Irmin.KV_maker]: https://mirage.github.io/irmin/irmin/Irmin/module-type-KV_MAKER/index.html
-[Irmin.Content_addressable.S]: https://mirage.github.io/irmin/irmin/Irmin/module-type-CONTENT_ADDRESSABLE_STORE/index.html
-[Irmin.Atomic_write.S]: https://mirage.github.io/irmin/irmin/Irmin/module-type-ATOMIC_WRITE_STORE/index.html
+[Irmin.Content_addressable.S]: https://mirage.github.io/irmin/irmin/Irmin/Content_addressable/module-type-S/index.html
+[Irmin.Atomic_write.S]: https://mirage.github.io/irmin/irmin/Irmin/Atomic_write/module-type-S/index.html
 
 [irmin-watcher]: https://github.com/mirage/irmin-watcher
 <!-- prettier-ignore-end -->

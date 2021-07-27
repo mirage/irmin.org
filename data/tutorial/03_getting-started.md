@@ -8,14 +8,14 @@ the content type and storage backend. This is because Irmin has the ability to
 adapt to existing data structures using a convenient type combinator
 ([Irmin.Type]), which is used to define [contents][irmin.contents] for your
 datastore. Irmin provides implementations for [String][irmin.contents.string],
-[Cstruct][irmin.contents.cstruct], [Json] and [Json_value] contents, but it is
-also very easy to make your own!
+[Json] and [Json_value] contents, but it is also very easy to make your own!
 
 Irmin gives you a few options when it comes to storage:
 
 - an in-memory store (`irmin-mem`)
 - a filesystem store (`irmin-fs`)
 - git-compatible filesystem/in-memory stores (`irmin-git`)
+- an optimized on-disk store (`irmin-pack`)
 
 These packages define the way that the data should be organized, but not any I/O
 routines (with the exception of `irmin-mem`, which does no I/O). Luckily,
@@ -141,7 +141,7 @@ let () = Lwt_main.run main
 
 ## Transactions
 
-[Transactions][irmin.s-transaction] allow you to make many modifications using
+Transactions allow you to make many modifications using
 an in-memory tree then apply them all at once. This is done using
 [with_tree][irmin.s-with_tree]:
 
@@ -274,8 +274,7 @@ let () = Lwt_main.run main
 <!-- prettier-ignore-start -->
 [irmin.kv]: https://mirage.github.io/irmin/irmin/Irmin/module-type-KV/index.html
 [irmin.s]: https://mirage.github.io/irmin/irmin/Irmin/module-type-S/index.html
-[irmin.s-transaction]: https://mirage.github.io/irmin/irmin/Irmin/module-type-S_MAKER/index.html#type-transaction
-[irmin.s-with_tree]: https://mirage.github.io/irmin/irmin/Irmin/module-type-S_MAKER/index.html#val-with_tree
+[irmin.s-with_tree]: https://mirage.github.io/irmin/irmin/Irmin/module-type-S/index.html#val-with_tree
 [irmin.s.tree]: https://mirage.github.io/irmin/irmin/Irmin/module-type-S/Tree/index.html
 [irmin.type]: https://mirage.github.io/repr/repr/Repr/index.html
 [irmin.contents]: https://mirage.github.io/irmin/irmin/Irmin/Contents/index.html
