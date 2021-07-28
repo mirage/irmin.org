@@ -23,7 +23,7 @@ $ irmin help
 Now you can do things like create an in-memory store and serve it over HTTP:
 
 ```shell
-$ irmin init --daemon --store mem --address http://127.0.0.1:8888
+$ irmin http --store mem --address http://127.0.0.1:8888
 ```
 
 Or create a new store on-disk and manipulate it directly from the terminal:
