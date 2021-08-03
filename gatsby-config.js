@@ -37,6 +37,12 @@ module.exports = {
               showLineNumbers: false,
               noInlineHighlight: true
             }
+          },
+          {
+            resolve: `gatsby-plugin-favicon`,
+            options: {
+                logo: "./src/images/favicon.png",
+            },
           }
         ]
       }
