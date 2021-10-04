@@ -96,7 +96,7 @@ It is possible to extend the `irmin` executable using [Irmin_unix.Resolver] and
 module Cli = Irmin_unix.Cli
 module R = Irmin_unix.Resolver
 
-let config_spec = Irmin.Private.Conf.Spec.v "my-config-spec"
+let config_spec = Irmin.Backend.Conf.Spec.v "my-config-spec"
 
 let () =
   R.Contents.add "my-content-type" (module Irmin.Contents.String);

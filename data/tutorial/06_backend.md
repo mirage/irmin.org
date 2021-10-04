@@ -53,17 +53,17 @@ Additionally, it requires a few functions:
 - `mem`: checks whether or not a key exists
 - `find`: returns the value associated with a key (if it exists)
 
-When creating a new backend, you can utilize the functions in `Irmin.Private.Conf` to
+When creating a new backend, you can utilize the functions in `Irmin.Backend.Conf` to
 work with `Irmin.config` values. Additionally, each backend should register a new
-config specification using `Irmin.Private.Conf.Spec`:
+config specification using `Irmin.Backend.Conf.Spec`:
 
 ```ocaml
-  let spec = Irmin.Private.Conf.Spec.v "tutorial"
+  let spec = Irmin.Backend.Conf.Spec.v "tutorial"
 
-  let init_size = Irmin.Private.Conf.key ~spec "init-size" Irmin.Type.int 8
+  let init_size = Irmin.Backend.Conf.key ~spec "init-size" Irmin.Type.int 8
 
   let v config =
-    let module C = Irmin.Private.Conf in
+    let module C = Irmin.Backend.Conf in
     let init_size = C.get config init_size in
     Lwt.return (Tbl.create init_size)
 ```
@@ -165,7 +165,7 @@ this is used to send notifications when the store has been updated.
 [irmin-watcher] has some more information on watchers.
 
 ```ocaml
-  module W = Irmin.Private.Watch.Make(K)(V)
+  module W = Irmin.Backend.Watch.Make(K)(V)
   type t = { t: [`Write] H.t; w: W.t }  (* Store type *)
   type key = H.key                      (* Key type *)
   type value = H.value                  (* Value type *)
@@ -305,8 +305,8 @@ empty configuration, which comes with `root` as a parameter. We can then
 instantiate the store and create a repo:
 
 ```ocaml skip
-let config ?(config = Irmin.Private.Conf.empty) ?root () =
-  let module C = Irmin.Private.Conf in
+let config ?(config = Irmin.Backend.Conf.empty) ?root () =
+  let module C = Irmin.Backend.Conf in
   C.add config C.root root
 
 module Store = KV (Irmin.Contents.String)
