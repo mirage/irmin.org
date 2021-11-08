@@ -165,7 +165,7 @@ let add_car store car_number car =
 
 let main =
     let config = Irmin_mem.config () in
-    Car_store.Repo.v config >>= Car_store.master >>= fun t ->
+    Car_store.Repo.v config >>= Car_store.main >>= fun t ->
     add_car t "5Y2SR67049Z456146" car_a >>= fun () ->
     add_car t "2FAFP71W65X110910" car_b >>= fun () ->
     Car_store.get t ["2FAFP71W65X110910"] >|= fun car ->
@@ -275,19 +275,19 @@ module I = Irmin_unix.Info(S.Info)
 let main =
     (* Configure the repo *)
     let cfg = Irmin_mem.config () in
-    (* Access the master branch *)
-    S.Repo.v cfg >>= S.master >>= fun master ->
-    (* Set [foo] to ["bar"] on master branch *)
-    S.set_exn master ["foo"] (Value.v "bar") ~info:(I.v "set foo on master branch") >>= fun () ->
+    (* Access the main branch *)
+    S.Repo.v cfg >>= S.main >>= fun main ->
+    (* Set [foo] to ["bar"] on main branch *)
+    S.set_exn main ["foo"] (Value.v "bar") ~info:(I.v "set foo on main branch") >>= fun () ->
     (* Access example branch *)
     S.Repo.v cfg >>= fun repo -> S.of_branch repo "example" >>= fun example ->
     (* Set [foo] to ["baz"] on example branch *)
     S.set_exn example ["foo"] (Value.v "baz") ~info:(I.v "set foo on example branch") >>= fun () ->
-    (* Merge the example into master branch *)
-    S.merge_into ~into:master example ~info:(I.v "merge example into master") >>= function
+    (* Merge the example into main branch *)
+    S.merge_into ~into:main example ~info:(I.v "merge example into main") >>= function
     | Ok () ->
         (* Check that [foo] is set to ["baz"] after the merge *)
-        S.get master ["foo"] >|= fun (foo, _) ->
+        S.get main ["foo"] >|= fun (foo, _) ->
         assert (foo = "baz")
     | Error conflict ->
         let fmt = Irmin.Type.pp_json Irmin.Merge.conflict_t in
@@ -303,9 +303,9 @@ how to write a mergeable log.
 <!-- prettier-ignore-start -->
 [irmin.type]: https://mirage.github.io/repr/repr/Repr/index.html
 [irmin.type-variant]: https://mirage.github.io/repr/repr/Repr/index.html#val-variant
-[irmin.contents]: https://github.com/mirage/irmin/blob/master/src/irmin/contents.ml
+[irmin.contents]: https://github.com/mirage/irmin/blob/main/src/irmin/contents.ml
 [irmin.contents.s]: https://mirage.github.io/irmin/irmin/Irmin/Contents/module-type-S/index.html
 [irmin.merge]: https://mirage.github.io/irmin/irmin/Irmin/Merge/index.html
 
-[examples/custom-merge]: https://github.com/mirage/irmin/blob/master/examples/custom_merge.ml
+[examples/custom-merge]: https://github.com/mirage/irmin/blob/main/examples/custom_merge.ml
 <!-- prettier-ignore-end -->

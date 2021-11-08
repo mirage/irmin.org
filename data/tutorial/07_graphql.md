@@ -46,7 +46,7 @@ To start off we will create a query to retrieve the value stored at the path
 
 ```graphql
 query {
-  master {
+  main {
     tree {
       get(key: "abc")
     }
@@ -97,12 +97,12 @@ this will set `a` to "testing" and remove the value associated with `b`.
 
 ### Branch info
 
-Using `master`/`branch` queries we are able to find lots of information about
+Using `main`/`branch` queries we are able to find lots of information about
 the attached Irmin store:
 
 ```graphql
 query {
-  master {
+  main {
     head {
       hash
       info
@@ -126,7 +126,7 @@ Using this new information, it is possible to list every key/value pair using:
 
 ```graphql
 query {
-  master {
+  main {
     head {
       tree {
         list_contents_recursively {
@@ -143,7 +143,7 @@ Which can also be augmented using `get_tree` to return a specific subtree:
 
 ```graphql
 query {
-  master {
+  main {
     head {
       tree {
         get_tree(key: "a") {
@@ -320,7 +320,7 @@ module Custom_types = struct
   module Defaults = Irmin_graphql.Server.Default_types (Store)
 
   (* Use the default types for most things *)
-  module Key = Defaults.Key
+  module Path = Defaults.Path
   module Metadata = Defaults.Metadata
   module Hash = Defaults.Hash
   module Branch = Defaults.Branch

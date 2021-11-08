@@ -16,8 +16,8 @@ let main =
   (* Open the repo *)
   Store.Repo.v config >>=
 
-  (* Load the master branch *)
-  Store.master >>= fun t ->
+  (* Load the main branch *)
+  Store.main >>= fun t ->
 
   (* Set key "foo/bar" to "testing 123" *)
   Store.set_exn t ~info:(info "Updating foo/bar") ["foo"; "bar"] "testing 123" >>= fun () ->
