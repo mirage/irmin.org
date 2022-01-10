@@ -162,7 +162,7 @@ Thus, dictionary is passed explicitly to the decode/encode functions, which are 
 
 ### Pack values
 
-The pack store contains a sequence of pack values. 
+The pack store contains a sequence (?) of pack values. 
 
 ```
 (pack_store_intf.ml)
@@ -183,82 +183,17 @@ module type S = sig
 
   val unsafe_add : 'a t -> hash -> value -> key Lwt.t
   (** Overwrite [unsafe_add] to work with a read-only database handler. *)
-
-  val index_direct : _ t -> hash -> key option
-
-  val unsafe_append :
-    ensure_unique:bool -> overcommit:bool -> 'a t -> hash -> value -> key
-
-  val unsafe_mem : 'a t -> key -> bool
-  val unsafe_find : check_integrity:bool -> 'a t -> key -> value option
-end
+  ...
 ```
 
-And 
+NOTE type `'a t` is the type of the store. FIXME why can `add` work with a read-only store?
 
-```
-(irmin/.../indexable_intf.ml)
-module type S_without_key_impl = sig
-  include Read_only.S
-  (** @inline *)
-
-  type hash
-  (** The type of hashes of [value]. *)
-
-  val add : [> write ] t -> value -> key Lwt.t
-  (** Write the contents of a value to the store, and obtain its key. *)
-
-  val unsafe_add : [> write ] t -> hash -> value -> key Lwt.t
-  (** Same as {!add} but allows specifying the value's hash directly. The
-      backend might choose to discard that hash and/or can be corrupt if the
-      hash is not consistent. *)
-
-  val index : [> read ] t -> hash -> key option Lwt.t
-  (** Indexing maps the hash of a value to a corresponding key of that value in
-      the store. For stores that are addressed by hashes directly, this is
-      typically [fun _t h -> Lwt.return (Key.of_hash h)]; for stores with more
-      complex addressing schemes, [index] may attempt a lookup operation in the
-      store.
-
-      In general, indexing is best-effort and reveals no information about the
-      membership of the value in the store. In particular:
-
-      - [index t hash = Some key] doesn't guarantee [mem t key]: the value with
-        hash [hash] may still be absent from the store;
-
-      - [index t hash = None] doesn't guarantee that there is no [key] such that
-        [mem t key] and [Key.to_hash key = hash]: the value may still be present
-        in the store under a key that is not indexed. *)
-
-  include Clearable with type 'a t := 'a t
-  (** @inline *)
-
-  include Batch with type 'a t := 'a t
-  (** @inline *)
-end
-
-module type S = sig
-  (** An {i indexable} store is a read-write store in which values can be added
-      and later found via their keys.
-
-      Keys are not necessarily portable between different stores, so each store
-      provides an {!val-index} mechanism to find keys by the hashes of the
-      values they reference. *)
-
-  include S_without_key_impl (* @inline *)
-
-  module Key : Key.S with type t = key and type hash = hash
-end
-```
-
-
-
-
-
-The encoding and decoding of these values is somewhat complicated.
+Here, type `value` is used as a `Pack_value.Persistent.t`.
 
 ```
 (pack_value_intf.ml)
+type length_header = [ `Varint ] option
+
 module type S = sig
   include Irmin.Type.S
 
@@ -287,12 +222,102 @@ module type S = sig
 
   val decode_bin_length : string -> int -> int
 end
+
+module type Persistent = sig
+  type hash
+
+  include S with type hash := hash and type key = hash Pack_key.t
+end
 ```
 
 FIXME we should comment this file further
 
+The encoding and decoding of these values -- via `encode_bin` and `decode_bin` -- is somewhat complicated.
 
+Let's first look at the kinds of object:
 
+```
+(pack_value_intf.ml)
+  module Kind : sig
+    type t =
+      | Commit_v1
+      | Commit_v2
+      | Contents
+      | Inode_v1_unstable
+      | Inode_v1_stable
+      | Inode_v2_root
+      | Inode_v2_nonroot
+    [@@deriving irmin]
+    ...
+    val to_magic : t -> char
+```
+
+Here, there is a "magic char" associated with each type of object that can occur in the pack file.
+
+```
+(pack_value.ml)
+  let to_magic = function
+    | Commit_v1 -> 'C'
+    | Commit_v2 -> 'D'
+    | Contents -> 'B'
+    | Inode_v1_unstable -> 'I'
+    | Inode_v1_stable -> 'N'
+    | Inode_v2_root -> 'R'
+    | Inode_v2_nonroot -> 'O'
+```
+
+OK. So what does the encoding of a particular pack value actually look like? 
+
+**Encoding/decoding of contents** In `pack_value.ml` there is code for dealing with contents and commit objects. For contents we have: 
+
+```
+(pack_value.ml)
+type ('h, 'a) value = { hash : 'h; kind : Kind.t; v : 'a } [@@deriving irmin]
+...
+module Of_contents ... =
+struct
+  ...
+  let encode_bin ~dict:_ ~offset_of_key:_ hash v f =
+    encode_value { kind; hash; v } f
+
+  let decode_bin ~dict:_ ~key_of_offset:_ ~key_of_hash:_ s off =
+    let t = decode_value s off in
+    t.v
+
+  let decode_bin_length = get_dynamic_sizer_exn value
+```
+
+NOTE that the code relies on values of type `('h,'a)value` being written out as `hash` followed by `kind` followed by `v` (this can be seen, for example, in later code which tries to access the kind tag by adding the hash length to a given offset).
+
+**Important point:** All encoded values in the pack file start with the hash, followed by a kind magic char: `[hash|kind_char|...]`
+
+NOTE that `get_dynamic_sizer_exn` is a way to establish the length of an encoding, typically fixed/static (for example, all objects of a given type might have a fixed length encoding as bytes), or dynamic (looking at the data at a given point in a file, where an object has been encoded, we can work out the length... perhaps by just decoding it and seeing which bytes we consume... which might be quite expensive), or possibly "unknown":
+
+```
+(pack_value.ml)
+let get_dynamic_sizer_exn : type a. a Irmin.Type.t -> string -> int -> int =
+ fun typ ->
+  match Irmin.Type.(Size.of_encoding typ) with
+  | Unknown ->
+      Fmt.failwith "Type must have a recoverable encoded length: %a"
+        Irmin.Type.pp_ty typ
+  | Static n -> fun _ _ -> n
+  | Dynamic f -> f
+```
+
+**Encoding/decoding of commits** 
+
+There are two versions of commit objects (from the kinds listed above, `Commit_v1` and `Commit_v2`). For a `Commit_v2` we have:
+
+```
+(pack_value.ml)
+      type data = { length : int; v : Commit_direct.t } [@@deriving irmin]
+      type t = (hash, data) value [@@deriving irmin ~encode_bin ~decode_bin]
+```
+
+That is, commits are encoded as: `[hash|kind_char|len|Commit_direct.t encoding]`
+
+What about the encoding of the other objects, like `Inode_v2` etc?
 
 
 
