@@ -324,6 +324,9 @@ module Custom_types = struct
   module Metadata = Defaults.Metadata
   module Hash = Defaults.Hash
   module Branch = Defaults.Branch
+  module Contents_key = Defaults.Contents_key
+  module Node_key = Defaults.Node_key
+  module Commit_key = Defaults.Commit_key
 
   module Contents = struct
     include Defaults.Contents
