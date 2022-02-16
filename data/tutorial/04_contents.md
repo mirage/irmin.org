@@ -50,10 +50,10 @@ need to write this yourself:
 ```ocaml
 	let merge ~old a b =
 	    let open Irmin.Merge.Infix in
-		old () >|=* fun old ->
-        let old = match old with None -> 0L | Some o -> o in
-        let (+) = Int64.add and (-) = Int64.sub in
-        a + b - old
+		  old () >|=* fun old ->
+      let old = match old with None -> 0L | Some o -> o in
+      let (+) = Int64.add and (-) = Int64.sub in
+      a + b - old
 ```
 
 ```ocaml
@@ -139,7 +139,7 @@ car record, this could be used by a tow company or an auto shop to identify
 cars:
 
 ```ocaml
-open Lwt.Infix
+open Lwt.Syntax
 module Car_store = Irmin_mem.KV.Make(Car)
 module Car_info = Irmin_unix.Info(Car_store.Info)
 
@@ -165,10 +165,11 @@ let add_car store car_number car =
 
 let main =
     let config = Irmin_mem.config () in
-    Car_store.Repo.v config >>= Car_store.main >>= fun t ->
-    add_car t "5Y2SR67049Z456146" car_a >>= fun () ->
-    add_car t "2FAFP71W65X110910" car_b >>= fun () ->
-    Car_store.get t ["2FAFP71W65X110910"] >|= fun car ->
+    let* repo = Car_store.Repo.v config in
+    let* t = Car_store.main repo in
+    let* () = add_car t "5Y2SR67049Z456146" car_a in
+    let* () = add_car t "2FAFP71W65X110910" car_b in
+    let+ car = Car_store.get t ["2FAFP71W65X110910"] in
     assert (car.license = car_b.license);
     assert (car.year = car_b.year)
 
@@ -267,7 +268,7 @@ end
 An example using `Lww_register`:
 
 ```ocaml
-open Lwt.Infix
+open Lwt.Syntax
 module Value = Lww_register (Timestamp) (Irmin.Contents.String)
 module S = Irmin_mem.KV.Make (Value)
 module I = Irmin_unix.Info(S.Info)
@@ -276,18 +277,20 @@ let main =
     (* Configure the repo *)
     let cfg = Irmin_mem.config () in
     (* Access the main branch *)
-    S.Repo.v cfg >>= S.main >>= fun main ->
+    let* repo = S.Repo.v cfg in
+    let* main = S.main repo in
     (* Set [foo] to ["bar"] on main branch *)
-    S.set_exn main ["foo"] (Value.v "bar") ~info:(I.v "set foo on main branch") >>= fun () ->
+    let* () = S.set_exn main ["foo"] (Value.v "bar") ~info:(I.v "set foo on main branch") in
     (* Access example branch *)
-    S.Repo.v cfg >>= fun repo -> S.of_branch repo "example" >>= fun example ->
+    let* example = S.of_branch repo "example" in
     (* Set [foo] to ["baz"] on example branch *)
-    S.set_exn example ["foo"] (Value.v "baz") ~info:(I.v "set foo on example branch") >>= fun () ->
+    let* () = S.set_exn example ["foo"] (Value.v "baz") ~info:(I.v "set foo on example branch") in
     (* Merge the example into main branch *)
-    S.merge_into ~into:main example ~info:(I.v "merge example into main") >>= function
+    let* m = S.merge_into ~into:main example ~info:(I.v "merge example into main") in
+    match m with
     | Ok () ->
         (* Check that [foo] is set to ["baz"] after the merge *)
-        S.get main ["foo"] >|= fun (foo, _) ->
+        let+ (foo, _) = S.get main ["foo"] in
         assert (foo = "baz")
     | Error conflict ->
         let fmt = Irmin.Type.pp_json Irmin.Merge.conflict_t in

@@ -13,12 +13,10 @@ title: "Resources"
 ### Servers
 
 - [irmin-graphql](https://github.com/mirage/irmin) - A GraphQL server
-- [irmin-rpc](https://github.com/zshipko/irmin-rpc) - A capnproto-rpc
-  client/server
 - [irmin-http](https://github.com/mirage/irmin) - A simple HTTP server that
   comes with `irmin-unix`
-- [irmin-web](https://github.com/zshipko/irmin-web) - A HTTP server with
-  built-in Javascript bindings for communicating with `irmin-graphql`
+- [irmin-server](https://github.com/mirage/irmin-server) - A client/server
+  using irmin's repr encoding
 
 ### Backends
 

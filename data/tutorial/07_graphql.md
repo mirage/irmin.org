@@ -251,7 +251,7 @@ The following code will initialize and run the server:
 ```ocaml
 let run_server () =
   (* Set up the Irmin store *)
-  Graphql_store.Repo.v (Irmin_git.config "/tmp/irmin") >>= fun repo ->
+  let* repo = Graphql_store.Repo.v (Irmin_git.config "/tmp/irmin") in
 
   (* Initialize the GraphQL server *)
   let server = Graphql.v repo in

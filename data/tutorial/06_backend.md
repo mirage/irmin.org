@@ -28,7 +28,7 @@ and the atomic-write store:
 - `value`: the value/content type
 
 ```ocaml
-open Lwt.Infix
+open Lwt.Syntax
 ```
 
 ```ocaml
@@ -116,7 +116,7 @@ association and returns the hash:
 
   let add t value =
       let hash = K.hash (fun f -> f (encode_value value)) in
-      unsafe_add t hash value >|= fun () ->
+      let+ () = unsafe_add t hash value in
       hash
 ```
 
@@ -128,10 +128,11 @@ the most basic implementation with a global lock:
 
   let batch t f =
     Mutex.lock lock;
-    Lwt.catch (fun () -> f t)
-    (fun exn ->
-      Mutex.unlock lock;
-      raise exn) >|= fun x ->
+    let+ x = Lwt.catch (fun () -> f t)
+      (fun exn ->
+        Mutex.unlock lock;
+        raise exn)
+    in
     Mutex.unlock lock;
     x
 ```
@@ -183,7 +184,7 @@ Again, we need a `v` function for creating a value of type `t`:
 
 ```ocaml
   let v config =
-    H.v config >>= fun t ->
+    let* t = H.v config in
     Lwt.return {t; w = watches }
 ```
 
@@ -256,7 +257,7 @@ requires an atomic check and set:
           | None ->
             H.Tbl.remove t key
         in
-        W.notify w key set_value >>= fun () ->
+        let* () = W.notify w key set_value in
         Lwt.return_true
     ) else Lwt.return_false
 ```
