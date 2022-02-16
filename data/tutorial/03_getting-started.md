@@ -148,8 +148,7 @@ an in-memory tree then apply them all at once. This is done using
 
 ```ocaml
 let transaction_example =
-    let* repo = Mem_store.Repo.v config in
-    let* t = Mem_store.main repo in
+    let* t = main_branch config in
     let info = info "example transaction" in
     Mem_store.with_tree_exn t [] ~info ~strategy:`Set (fun tree ->
         let tree = match tree with Some t -> t | None -> Mem_store.Tree.empty () in
@@ -179,8 +178,7 @@ let move t ~src ~dest =
         | None -> Lwt.return_none
     )
 let main =
-    let* repo = Mem_store.Repo.v config in
-    let* t = Mem_store.main repo in
+    let* t = main_branch config in
     let info = info "move a -> foo" in
     move t ~src:["a"] ~dest:["foo"] ~info
 let () = Lwt_main.run main
