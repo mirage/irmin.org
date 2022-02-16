@@ -8,14 +8,14 @@ the content type and storage backend. This is because Irmin has the ability to
 adapt to existing data structures using a convenient type combinator
 ([Irmin.Type]), which is used to define [contents][irmin.contents] for your
 datastore. Irmin provides implementations for [String][irmin.contents.string],
-[Cstruct][irmin.contents.cstruct], [Json] and [Json_value] contents, but it is
-also very easy to make your own!
+[Json] and [Json_value] contents, but it is also very easy to make your own!
 
 Irmin gives you a few options when it comes to storage:
 
 - an in-memory store (`irmin-mem`)
 - a filesystem store (`irmin-fs`)
 - git-compatible filesystem/in-memory stores (`irmin-git`)
+- an optimized on-disk store (`irmin-pack`)
 
 These packages define the way that the data should be organized, but not any I/O
 routines (with the exception of `irmin-mem`, which does no I/O). Luckily,
@@ -39,7 +39,7 @@ familiar with [Lwt][lwt] then I suggest [this tutorial][lwt-tutorial].
 An in-memory store with string contents:
 
 ```ocaml
-module Mem_store = Irmin_mem.KV(Irmin.Contents.String)
+module Mem_store = Irmin_mem.KV.Make(Irmin.Contents.String)
 ```
 
 An on-disk git store with JSON contents:
@@ -55,13 +55,20 @@ The following example is the same as the first, using `Irmin_mem.Make` instead
 of `Irmin_mem.KV`:
 
 ```ocaml
+module Mem_schema = struct
+  module Info = Irmin.Info.Default
+  module Metadata = Irmin.Metadata.None
+  module Contents = Irmin.Contents.Json
+  module Path = Irmin.Path.String_list
+  module Branch = Irmin.Branch.String
+  module Hash = Irmin.Hash.SHA1
+  module Node = Irmin.Node.Make(Hash)(Path)(Metadata)
+  module Commit = Irmin.Commit.Make(Hash)
+end
+
 module Mem_Store =
     Irmin_mem.Make
-        (Irmin.Metadata.None)
-        (Irmin.Contents.Json)
-        (Irmin.Path.String_list)
-        (Irmin.Branch.String)
-        (Irmin.Hash.SHA1)
+        (Mem_schema)
 ```
 
 ## Configuring and creating a repo
@@ -96,20 +103,21 @@ let repo = Mem_store.Repo.v config
 
 Once a repo has been created, you can access a branch and start to modify it.
 
-To get access to the `master` branch:
+To get access to the `main` branch:
 
 ```ocaml
-open Lwt.Infix
+open Lwt.Syntax
 
-let master config =
-    Mem_store.Repo.v config >>= Mem_store.master
+let main_branch config =
+    let* repo = Mem_store.Repo.v config in
+    Mem_store.main repo
 ```
 
 To get access to a named branch:
 
 ```ocaml
 let branch config name =
-    Mem_store.Repo.v config >>= fun repo ->
+    let* repo = Mem_store.Repo.v config in
     Mem_store.of_branch repo name
 ```
 
@@ -118,33 +126,36 @@ let branch config name =
 Now you can begin to interact with the store using `get` and `set`.
 
 ```ocaml
-let info message = Irmin_unix.info ~author:"Example" "%s" message
+module Mem_info = Irmin_unix.Info(Mem_store.Info)
+
+let info message = Mem_info.v ~author:"Example" "%s" message
 
 let main =
-    Mem_store.Repo.v config >>= Mem_store.master >>= fun t ->
+    let* t = main_branch config in
     (* Set a/b/c to "Hello, Irmin!" *)
-    Mem_store.set_exn t ["a"; "b"; "c"] "Hello, Irmin!" ~info:(info "my first commit") >>= fun () ->
+    let* () = Mem_store.set_exn t ["a"; "b"; "c"] "Hello, Irmin!" ~info:(info "my first commit") in
     (* Get a/b/c *)
-    Mem_store.get t ["a"; "b"; "c"] >|= fun s ->
+    let+ s = Mem_store.get t ["a"; "b"; "c"] in
     assert (s = "Hello, Irmin!")
 let () = Lwt_main.run main
 ```
 
 ## Transactions
 
-[Transactions][irmin.s-transaction] allow you to make many modifications using
+Transactions allow you to make many modifications using
 an in-memory tree then apply them all at once. This is done using
 [with_tree][irmin.s-with_tree]:
 
 ```ocaml
 let transaction_example =
-Mem_store.Repo.v config >>= Mem_store.master >>= fun t ->
-let info = Irmin_unix.info "example transaction" in
-Mem_store.with_tree_exn t [] ~info ~strategy:`Set (fun tree ->
-    let tree = match tree with Some t -> t | None -> Mem_store.Tree.empty in
-    Mem_store.Tree.remove tree ["foo"; "bar"] >>= fun tree ->
-    Mem_store.Tree.add tree ["a"; "b"; "c"] "123" >>= fun tree ->
-    Mem_store.Tree.add tree ["d"; "e"; "f"] "456" >>= Lwt.return_some)
+    let* t = main_branch config in
+    let info = info "example transaction" in
+    Mem_store.with_tree_exn t [] ~info ~strategy:`Set (fun tree ->
+        let tree = match tree with Some t -> t | None -> Mem_store.Tree.empty () in
+        let* tree = Mem_store.Tree.remove tree ["foo"; "bar"] in
+        let* tree = Mem_store.Tree.add tree ["a"; "b"; "c"] "123" in
+        let* tree = Mem_store.Tree.add tree ["d"; "e"; "f"] "456" in
+        Lwt.return_some tree)
 let () = Lwt_main.run transaction_example
 ```
 
@@ -157,17 +168,18 @@ Here is an example `move` function to move files from one path to another:
 
 ```ocaml
 let move t ~src ~dest =
-    Mem_store.with_tree_exn t Mem_store.Key.empty ~strategy:`Set (fun tree ->
+    Mem_store.with_tree_exn t Mem_store.Path.empty ~strategy:`Set (fun tree ->
         match tree with
         | Some tr ->
-            Mem_store.Tree.get_tree tr src >>= fun v ->
-            Mem_store.Tree.remove tr src >>= fun _ ->
-            Mem_store.Tree.add_tree tr dest v >>= Lwt.return_some
+            let* v = Mem_store.Tree.get_tree tr src in
+            let* tr = Mem_store.Tree.remove tr src in
+            let* tree = Mem_store.Tree.add_tree tr dest v in
+            Lwt.return_some tree
         | None -> Lwt.return_none
     )
 let main =
-    Mem_store.Repo.v config >>= Mem_store.master >>= fun t ->
-    let info = Irmin_unix.info "move a -> foo" in
+    let* t = main_branch config in
+    let info = info "move a -> foo" in
     move t ~src:["a"] ~dest:["foo"] ~info
 let () = Lwt_main.run main
 ```
@@ -192,13 +204,14 @@ module Git_mem_store = Git.Mem.KV(Irmin.Contents.String)
 module Sync = Irmin.Sync(Git_mem_store)
 let remote = Git_mem_store.remote "git://github.com/mirage/irmin.git"
 let main =
-    Git_mem_store.Repo.v config >>= Git_mem_store.master >>= fun t ->
-    Sync.pull_exn t remote `Set >>= fun _ ->
-    Git_mem_store.list t [] >|= List.iter (fun (step, kind) ->
+    let* repo = Git_mem_store.Repo.v config in
+    let* t = Git_mem_store.main in
+    let* () = Sync.pull_exn t remote `Set in
+    let* list = Git_mem_store.list t [] in
+    List.iter (fun (step, kind) ->
         match kind with
         | `Contents -> Printf.printf "FILE %s\n" step
-        | `Node -> Printf.printf "DIR %s\n" step
-    )
+        | `Node -> Printf.printf "DIR %s\n" step) list
 let () = Lwt_main.run main
 ```
 
@@ -213,8 +226,8 @@ only store JSON objects and `Json_value` works with any JSON value.
 Setting up the store is exactly the same as when working with strings:
 
 ```ocaml
-module Mem_store_json = Irmin_mem.KV(Irmin.Contents.Json)
-module Mem_store_json_value = Irmin_mem.KV(Irmin.Contents.Json_value)
+module Mem_store_json = Irmin_mem.KV.Make(Irmin.Contents.Json)
+module Mem_store_json_value = Irmin_mem.KV.Make(Irmin.Contents.Json_value)
 ```
 
 For example, using `Men_store_json_value` we can assign
@@ -224,10 +237,12 @@ For example, using `Men_store_json_value` we can assign
 let contents_equal = Irmin.Type.(unstage (equal Mem_store_json_value.contents_t))
 let main =
     let module Store = Mem_store_json_value in
-    Store.Repo.v config >>= Store.master >>= fun t ->
+    let module Info = Irmin_unix.Info(Store.Info) in
+    let* repo = Store.Repo.v config in
+    let* t = Store.main repo in
     let value = `O ["x", `Float 1.; "y", `Float 2.; "z", `Float 3.] in
-    Store.set_exn t ["a"; "b"; "c"] value ~info:(info "set a/b/c") >>= fun () ->
-    Store.get t ["a"; "b"; "c"] >|= fun x ->
+    let* () = Store.set_exn t ["a"; "b"; "c"] value ~info:(Info.v "set a/b/c") in
+    let+ x = Store.get t ["a"; "b"; "c"] in
     assert (contents_equal value x)
 let () = Lwt_main.run main
 ```
@@ -247,15 +262,17 @@ the key `a/b` we will get the following object back:
 ```ocaml
 let main =
     let module Store = Mem_store_json_value in
+    let module Info = Irmin_unix.Info(Store.Info) in
     let module Proj = Irmin.Json_tree(Store) in
-    Store.Repo.v config >>= Store.master >>= fun t ->
+    let* repo = Store.Repo.v config in
+    let* t = Store.main repo in
     let value = `O ["test", `O ["foo", `String "bar"]; "x", `Float 1.; "y", `Float 2.; "z", `Float 3.] in
-    Proj.set t ["a"; "b"; "c"] value ~info:(info "set a/b/c") >>= fun () ->
-    Store.get t ["a"; "b"; "c"; "x"] >>= fun x ->
+    let* () = Proj.set t ["a"; "b"; "c"] value ~info:(Info.v "set a/b/c") in
+    let* x = Store.get t ["a"; "b"; "c"; "x"] in
     assert (contents_equal (`Float 1.) x);
-    Store.get t ["a"; "b"; "c"; "test"; "foo"] >>= fun x ->
+    let* x = Store.get t ["a"; "b"; "c"; "test"; "foo"] in
     assert (contents_equal (`String "bar") x);
-    Proj.get t ["a"; "b"] >|= fun x ->
+    let+ x = Proj.get t ["a"; "b"] in
     assert (contents_equal (`O ["c", value]) x)
 let () = Lwt_main.run main
 ```
@@ -263,8 +280,7 @@ let () = Lwt_main.run main
 <!-- prettier-ignore-start -->
 [irmin.kv]: https://mirage.github.io/irmin/irmin/Irmin/module-type-KV/index.html
 [irmin.s]: https://mirage.github.io/irmin/irmin/Irmin/module-type-S/index.html
-[irmin.s-transaction]: https://mirage.github.io/irmin/irmin/Irmin/module-type-S_MAKER/index.html#type-transaction
-[irmin.s-with_tree]: https://mirage.github.io/irmin/irmin/Irmin/module-type-S_MAKER/index.html#val-with_tree
+[irmin.s-with_tree]: https://mirage.github.io/irmin/irmin/Irmin/module-type-S/index.html#val-with_tree
 [irmin.s.tree]: https://mirage.github.io/irmin/irmin/Irmin/module-type-S/Tree/index.html
 [irmin.type]: https://mirage.github.io/repr/repr/Repr/index.html
 [irmin.contents]: https://mirage.github.io/irmin/irmin/Irmin/Contents/index.html

@@ -7,7 +7,7 @@ title: "Introduction"
 that for existing Git users it provides many familiar features:
 branching/merging, history and the ability to restore to any previous state.
 
-Typically Irmin is accessed by embedding it into an OCaml application, but can
+Typically Irmin is used by embedding it into an OCaml application, but can
 also be accessed using HTTP using `irmin-http` or GraphQL using `irmin-graphql`.
 It is most often used to store application data, like configuration values,
 shared state or checkpoint data, but there is nothing stopping you from using it
@@ -23,5 +23,5 @@ please file [an issue][irmin-issues]!
 <!-- prettier-ignore-start -->
 [irmin]: https://github.com/mirage/irmin
 [irmin-issues]: https://github.com/mirage/irmin.org/issues
-[irmin-readme]: https://github.com/mirage/irmin/blob/master/README.md
+[irmin-readme]: https://github.com/mirage/irmin/blob/main/README.md
 <!-- prettier-ignore-end -->

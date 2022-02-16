@@ -50,14 +50,14 @@ need to write this yourself:
 ```ocaml
 	let merge ~old a b =
 	    let open Irmin.Merge.Infix in
-		old () >|=* fun old ->
-        let old = match old with None -> 0L | Some o -> o in
-        let (+) = Int64.add and (-) = Int64.sub in
-        a + b - old
+		  old () >|=* fun old ->
+      let old = match old with None -> 0L | Some o -> o in
+      let (+) = Int64.add and (-) = Int64.sub in
+      a + b - old
 ```
 
 ```ocaml
-    let merge = Irmin.Merge.(option (v t merge))
+  let merge = Irmin.Merge.(option (v t merge))
 end
 ```
 
@@ -70,7 +70,7 @@ let merge = Irmin.Merge.(option counter)
 Now this `Counter` module can be used as the contents of an Irmin store:
 
 ```ocaml
-module Counter_mem_store = Irmin_mem.KV(Counter)
+module Counter_mem_store = Irmin_mem.KV.Make(Counter)
 ```
 
 ## Record
@@ -139,8 +139,9 @@ car record, this could be used by a tow company or an auto shop to identify
 cars:
 
 ```ocaml
-open Lwt.Infix
-module Car_store = Irmin_mem.KV(Car)
+open Lwt.Syntax
+module Car_store = Irmin_mem.KV.Make(Car)
+module Car_info = Irmin_unix.Info(Car_store.Info)
 
 let car_a = {
     color = Other "green";
@@ -159,15 +160,16 @@ let car_b = {
 }
 
 let add_car store car_number car =
-    let info = Irmin_unix.info "added %s" car_number in
+    let info = Car_info.v "added %s" car_number in
     Car_store.set_exn store [car_number] car ~info
 
 let main =
     let config = Irmin_mem.config () in
-    Car_store.Repo.v config >>= Car_store.master >>= fun t ->
-    add_car t "5Y2SR67049Z456146" car_a >>= fun () ->
-    add_car t "2FAFP71W65X110910" car_b >>= fun () ->
-    Car_store.get t ["2FAFP71W65X110910"] >|= fun car ->
+    let* repo = Car_store.Repo.v config in
+    let* t = Car_store.main repo in
+    let* () = add_car t "5Y2SR67049Z456146" car_a in
+    let* () = add_car t "2FAFP71W65X110910" car_b in
+    let+ car = Car_store.get t ["2FAFP71W65X110910"] in
     assert (car.license = car_b.license);
     assert (car.year = car_b.year)
 
@@ -266,26 +268,29 @@ end
 An example using `Lww_register`:
 
 ```ocaml
-open Lwt.Infix
+open Lwt.Syntax
 module Value = Lww_register (Timestamp) (Irmin.Contents.String)
-module S = Irmin_mem.KV (Value)
+module S = Irmin_mem.KV.Make (Value)
+module I = Irmin_unix.Info(S.Info)
 
 let main =
     (* Configure the repo *)
     let cfg = Irmin_mem.config () in
-    (* Access the master branch *)
-    S.Repo.v cfg >>= S.master >>= fun master ->
-    (* Set [foo] to ["bar"] on master branch *)
-    S.set_exn master ["foo"] (Value.v "bar") ~info:(Irmin_unix.info "set foo on master branch") >>= fun () ->
+    (* Access the main branch *)
+    let* repo = S.Repo.v cfg in
+    let* main = S.main repo in
+    (* Set [foo] to ["bar"] on main branch *)
+    let* () = S.set_exn main ["foo"] (Value.v "bar") ~info:(I.v "set foo on main branch") in
     (* Access example branch *)
-    S.Repo.v cfg >>= fun repo -> S.of_branch repo "example" >>= fun example ->
+    let* example = S.of_branch repo "example" in
     (* Set [foo] to ["baz"] on example branch *)
-    S.set_exn example ["foo"] (Value.v "baz") ~info:(Irmin_unix.info "set foo on example branch") >>= fun () ->
-    (* Merge the example into master branch *)
-    S.merge_into ~into:master example ~info:(Irmin_unix.info "merge example into master") >>= function
+    let* () = S.set_exn example ["foo"] (Value.v "baz") ~info:(I.v "set foo on example branch") in
+    (* Merge the example into main branch *)
+    let* m = S.merge_into ~into:main example ~info:(I.v "merge example into main") in
+    match m with
     | Ok () ->
         (* Check that [foo] is set to ["baz"] after the merge *)
-        S.get master ["foo"] >|= fun (foo, _) ->
+        let+ (foo, _) = S.get main ["foo"] in
         assert (foo = "baz")
     | Error conflict ->
         let fmt = Irmin.Type.pp_json Irmin.Merge.conflict_t in
@@ -301,9 +306,9 @@ how to write a mergeable log.
 <!-- prettier-ignore-start -->
 [irmin.type]: https://mirage.github.io/repr/repr/Repr/index.html
 [irmin.type-variant]: https://mirage.github.io/repr/repr/Repr/index.html#val-variant
-[irmin.contents]: https://github.com/mirage/irmin/blob/master/src/irmin/contents.ml
+[irmin.contents]: https://github.com/mirage/irmin/blob/main/src/irmin/contents.ml
 [irmin.contents.s]: https://mirage.github.io/irmin/irmin/Irmin/Contents/module-type-S/index.html
 [irmin.merge]: https://mirage.github.io/irmin/irmin/Irmin/Merge/index.html
 
-[examples/custom-merge]: https://github.com/mirage/irmin/blob/master/examples/custom_merge.ml
+[examples/custom-merge]: https://github.com/mirage/irmin/blob/main/examples/custom_merge.ml
 <!-- prettier-ignore-end -->

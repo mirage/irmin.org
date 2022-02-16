@@ -23,7 +23,7 @@ $ irmin help
 Now you can do things like create an in-memory store and serve it over HTTP:
 
 ```shell
-$ irmin init --daemon --store mem --address http://127.0.0.1:8888
+$ irmin http --store mem --address http://127.0.0.1:8888
 ```
 
 Or create a new store on-disk and manipulate it directly from the terminal:
@@ -69,7 +69,8 @@ store: git
 contents: string
 ```
 
-See the output of `irmin help irmin.yml` for a list of configurable parameters.
+See the output of `irmin help irmin.yml` for a list of configurable parameters and
+the output of `irmin options` for a list of backend-specific configuration options.
 
 ## Parameters
 
@@ -95,10 +96,12 @@ It is possible to extend the `irmin` executable using [Irmin_unix.Resolver] and
 module Cli = Irmin_unix.Cli
 module R = Irmin_unix.Resolver
 
+let config_spec = Irmin.Backend.Conf.Spec.v "my-config-spec"
+
 let () =
   R.Contents.add "my-content-type" (module Irmin.Contents.String);
   R.Store.add "my-store-type" (R.Store.Fixed_hash (fun (module Contents) ->
-    R.Store.v (module Irmin_mem.KV(Contents)))
+    R.Store.v config_spec (module Irmin_mem.KV.Make(Contents)))
   );
   Cli.(run ~default commands)
 ```
@@ -115,8 +118,8 @@ $ irmin graphql --port 8080
 To verify the GraphQL server is up and running, you can try the following query:
 
 ```shell
-$ curl http://localhost:8080/graphql -d '{"query": "query { master { head { hash } } }"}'
-{"data":{"master":{"head":{"hash":"2a16cd7d8e27d134e6194140617d25d977441396"}}}}
+$ curl http://localhost:8080/graphql -d '{"query": "query { main { head { hash } } }"}'
+{"data":{"main":{"head":{"hash":"2a16cd7d8e27d134e6194140617d25d977441396"}}}}
 ```
 
 You can also visit
@@ -172,7 +175,7 @@ $ irmin push -s git $GIT_REPO_URL
 ```
 
 ```shell
-$ git push $GIT_REPO_URL master
+$ git push $GIT_REPO_URL main
 ```
 
 As you can see, the command-line application has many capabilities, but it's

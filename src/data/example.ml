@@ -1,4 +1,4 @@
-open Lwt.Infix
+open Lwt.Syntax
 
 (* Irmin store with string contents *)
 module Store = Irmin_unix.Git.FS.KV(Irmin.Contents.String)
@@ -14,16 +14,16 @@ let info fmt = Irmin_unix.info ~author fmt
 
 let main =
   (* Open the repo *)
-  Store.Repo.v config >>=
+  let* repo = Store.Repo.v config in
 
-  (* Load the master branch *)
-  Store.master >>= fun t ->
+  (* Load the main branch *)
+  let* t = Store.main repo in
 
   (* Set key "foo/bar" to "testing 123" *)
-  Store.set_exn t ~info:(info "Updating foo/bar") ["foo"; "bar"] "testing 123" >>= fun () ->
+  let* () = Store.set_exn t ~info:(info "Updating foo/bar") ["foo"; "bar"] "testing 123" in
 
   (* Get key "foo/bar" and print it to stdout *)
-  Store.get t ["foo"; "bar"] >|= fun x ->
+  let+ x = Store.get t ["foo"; "bar"] in
   Printf.printf "foo/bar => '%s'\n" x
 
 (* Run the program *)
