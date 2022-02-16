@@ -40,7 +40,7 @@ class HomePage extends React.Component {
               </pre>
 
               <p>
-                A minimal installation, with no storage backends can be
+                A minimal installation, with only the in-memory storage backend can be
                 installed by running:
               </p>
               <pre>
@@ -49,12 +49,6 @@ class HomePage extends React.Component {
                 </code>
               </pre>
 
-              <p>To only install the in-memory storage backend:</p>
-              <pre>
-                <code className="language-shell-session">
-                  $ opam install irmin-mem
-                </code>
-              </pre>
               <br />
               <br />
               <br />
@@ -68,24 +62,26 @@ class HomePage extends React.Component {
 
               <ul>
                 <li>
-                  <code>irmin</code> - the base package, no storage
-                  implementations
+                  <code>irmin</code> - the base package, including an
+                  in-memory storage implementation
                 </li>
                 <li>
                   <code>irmin-chunk</code> - chunked storage
                 </li>
                 <li>
-                  <code>irmin-fs</code> - filesystem-based storage using
-                  bin_prot
+                  <code>irmin-fs</code> - filesystem-based storage
                 </li>
                 <li>
                   <code>irmin-git</code> - Git compatible storage
                 </li>
                 <li>
+                  <code>irmin-pack</code> - pack-file based storage
+                </li>
+                <li>
                   <code>irmin-http</code> - a simple REST interface
                 </li>
                 <li>
-                  <code>irmin-mem</code> - in-memory storage implementation
+                  <code>irmin-graphql</code> - a GraphQL server
                 </li>
                 <li>
                   <code>irmin-mirage</code> - mirage compatibility
@@ -174,7 +170,7 @@ $ irmin get foo/bar`}
               </a>
               <a
                 className="button license"
-                href="https://github.com/mirage/irmin/blob/master/LICENSE.md"
+                href="https://github.com/mirage/irmin/blob/main/LICENSE.md"
               >
                 <img src={imgLicense} alt="" /> License
               </a>
