@@ -57,7 +57,7 @@ need to write this yourself:
 ```
 
 ```ocaml
-    let merge = Irmin.Merge.(option (v t merge))
+  let merge = Irmin.Merge.(option (v t merge))
 end
 ```
 
