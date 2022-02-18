@@ -89,6 +89,9 @@ class HomePage extends React.Component {
                 <li>
                   <code>irmin-unix</code> - unix compatibility
                 </li>
+                <li>
+                  <code>libirmin</code> - C bindings to the irmin API
+                </li>
               </ul>
 
               <p>

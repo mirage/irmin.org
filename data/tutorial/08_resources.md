@@ -24,6 +24,11 @@ title: "Resources"
 
 ### Language bindings
 
+- [libirmin](https://github.com/mirage/irmin) - C bindings
+- [irmin-rs](https://github.com/mirage/irmin-rs) - Direct Rust bindings
+  using `libirmin`
+- [irmin-py](https://github.com/mirage/irmin-py) - Direct Python bindings
+  using `libirmin`
 - [irmin-js](https://github.com/zshipko/irmin-js) - Javascript bindings to
   `irmin-graphql`
 - [irmin-go](https://github.com/zshipko/irmin-go) - Go bindings to
