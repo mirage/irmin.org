@@ -29,12 +29,6 @@ and the atomic-write store:
 
 ```ocaml
 open Lwt.Syntax
-```
-
-```ocaml
-let ignore_prefix ~prefix s =
-  let len = String.length prefix in
-  String.sub s len (String.length s - len)
 
 module Helper (K: Irmin.Type.S) (V: Irmin.Type.S) = struct
   module Tbl = Hashtbl.Make(struct
