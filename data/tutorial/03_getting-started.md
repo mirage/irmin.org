@@ -45,7 +45,7 @@ module Mem_store = Irmin_mem.KV.Make(Irmin.Contents.String)
 An on-disk git store with JSON contents:
 
 ```ocaml
-module Git_store = Irmin_unix.Git.FS.KV(Irmin.Contents.Json)
+module Git_store = Irmin_git_unix.FS.KV(Irmin.Contents.Json)
 ```
 
 These examples are using [Irmin.KV][irmin.kv], which is a specialization of
@@ -199,8 +199,7 @@ returning `result` value.
 For example, you can pull a repo and list the files in the root of the project:
 
 ```ocaml skip
-open Irmin_unix
-module Git_mem_store = Git.Mem.KV(Irmin.Contents.String)
+module Git_mem_store = Irmin_git_unix.Mem.KV(Irmin.Contents.String)
 module Sync = Irmin.Sync(Git_mem_store)
 let remote = Git_mem_store.remote "git://github.com/mirage/irmin.git"
 let main =

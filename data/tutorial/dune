@@ -10,4 +10,4 @@
 
 (test
  (name mdx)
- (libraries irmin irmin-unix lwt))
+ (libraries irmin irmin-cli lwt))
