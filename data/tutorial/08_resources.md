@@ -14,7 +14,7 @@ title: "Resources"
 
 - [irmin-graphql](https://github.com/mirage/irmin) - A GraphQL server
 - [irmin-http](https://github.com/mirage/irmin) - A simple HTTP server that
-  comes with `irmin-unix`
+  comes with `irmin-cli`
 - [irmin-server](https://github.com/mirage/irmin-server) - A client/server
   using irmin's repr encoding
 

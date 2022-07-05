@@ -18,10 +18,11 @@ Irmin gives you a few options when it comes to storage:
 - an optimized on-disk store (`irmin-pack`)
 
 These packages define the way that the data should be organized, but not any I/O
-routines (with the exception of `irmin-mem`, which does no I/O). Luckily,
-`irmin-unix` implements the I/O routines needed to make Irmin work on Unix-like
-platforms. Additionally, the `irmin-mirage`, `irmin-mirage-git` and
-`irmin-mirage-graphql` packages provide [Mirage][mirage]-compatible interfaces.
+routines (with the exception of `irmin-mem`, which does no I/O). Each backend has
+a `unix` submodule - for example, `irmin-git.unix` implements the I/O routines needed 
+to make `irmin-git` work on Unix-like platforms. Additionally, the `irmin-mirage`, 
+`irmin-mirage-git` and `irmin-mirage-graphql` packages provide [Mirage][mirage]-compatible 
+interfaces.
 
 It's also possible to implement your own storage backend if you'd like -- nearly
 everything in `Irmin` is configurable thanks to the power of functors in OCaml!

@@ -5,10 +5,10 @@ title: "Using the command-line"
 
 ## Installation
 
-These examples requires the `irmin-unix` package to be installed from [opam]:
+These examples requires the `irmin-cli` package to be installed from [opam]:
 
 ```shell
-$ opam install irmin-unix
+$ opam install irmin-cli
 ```
 
 After that is finished you should have the `irmin` binary installed! To get a
