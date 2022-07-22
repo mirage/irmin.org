@@ -8,9 +8,9 @@ bug-reports: "https://github.com/tarides/irmin.org/issues"
 depends: [
   "ocaml" {>= "4.06.0"}
   "dune" {>= "1.7.0"}
-  "irmin" {= "3.0.0" & with-test}
-  "irmin-unix" {with-test}
-  "digestif" {= "1.0.0"}
+  "irmin" {= "dev" & with-test}
+  "irmin-cli" {with-test}
+  "digestif" {>= "1.0.0"}
   "mdx" {>= "1.8.1"}
   "lwt" {with-test}
 ]
@@ -20,3 +20,15 @@ build: [
   ["dune" "runtest" "-p" name] {with-test}
 ]
 dev-repo: "git+https://github.com/tarides/irmin.org.git"
+pin-depends: [
+  ["irmin-graphql.dev" "git+https://github.com/mirage/irmin#3b18b671889fdbd1c8d1b2510dd48c55f3f29744"]
+  ["irmin-cli.dev" "git+https://github.com/mirage/irmin#3b18b671889fdbd1c8d1b2510dd48c55f3f29744"]
+  ["irmin.dev" "git+https://github.com/mirage/irmin#3b18b671889fdbd1c8d1b2510dd48c55f3f29744"]
+  ["irmin-pack.dev" "git+https://github.com/mirage/irmin#3b18b671889fdbd1c8d1b2510dd48c55f3f29744"]
+  ["irmin-git.dev" "git+https://github.com/mirage/irmin#3b18b671889fdbd1c8d1b2510dd48c55f3f29744"]
+  ["irmin-fs.dev" "git+https://github.com/mirage/irmin#3b18b671889fdbd1c8d1b2510dd48c55f3f29744"]
+  ["irmin-http.dev" "git+https://github.com/mirage/irmin#3b18b671889fdbd1c8d1b2510dd48c55f3f29744"]
+  ["irmin-tezos.dev" "git+https://github.com/mirage/irmin#3b18b671889fdbd1c8d1b2510dd48c55f3f29744"]
+  ["irmin-test.dev" "git+https://github.com/mirage/irmin#3b18b671889fdbd1c8d1b2510dd48c55f3f29744"]
+  ["ppx_irmin.dev" "git+https://github.com/mirage/irmin#3b18b671889fdbd1c8d1b2510dd48c55f3f29744"]
+]
