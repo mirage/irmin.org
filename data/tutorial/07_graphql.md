@@ -286,7 +286,7 @@ end
 let schema_typ : (unit, Example_type.t option) Irmin_graphql.Server.Schema.typ =
   let open Example_type in
   Irmin_graphql.Server.Schema.(obj "Example"
-    ~fields:(fun _ -> [
+    ~fields:[
       field "x"
         ~typ:(non_null string)
         ~args:[]
@@ -302,7 +302,7 @@ let schema_typ : (unit, Example_type.t option) Irmin_graphql.Server.Schema.typ =
         ~args:[]
         ~resolve:(fun _ t -> t.z)
       ;
-    ])
+    ]
   )
 ```
 
