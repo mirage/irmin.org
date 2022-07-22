@@ -5,10 +5,10 @@ title: "Using the command-line"
 
 ## Installation
 
-These examples requires the `irmin-unix` package to be installed from [opam]:
+These examples requires the `irmin-cli` package to be installed from [opam]:
 
 ```shell
-$ opam install irmin-unix
+$ opam install irmin-cli
 ```
 
 After that is finished you should have the `irmin` binary installed! To get a
@@ -20,10 +20,10 @@ $ irmin help
 
 ## Working with stores
 
-Now you can do things like create an in-memory store and serve it over HTTP:
+Now you can do things like create an in-memory store and serve it over GraphQL:
 
 ```shell
-$ irmin http --store mem --address http://127.0.0.1:8888
+$ irmin graphql --store mem --address http://127.0.0.1 --port 8888
 ```
 
 Or create a new store on-disk and manipulate it directly from the terminal:

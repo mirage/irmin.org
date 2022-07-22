@@ -102,6 +102,6 @@ create our own Irmin stores.
 [Irmin.Content_addressable.S]: https://mirage.github.io/irmin/irmin/Irmin/module-type-Content_addressable/module-type-S/index.html
 [Irmin.ATOMIC_WRITE_STORE]: https://mirage.github.io/irmin/irmin/Irmin/module-type-Atomic_write/module-type-S/index.html
 [dotlocking]: http://wiki.call-cc.org/eggref/4/dot-locking
-[Irmin_fs_unix]: https://mirage.github.io/irmin/irmin-unix/Irmin_fs_unix/index.html
+[Irmin_fs_unix]: https://mirage.github.io/irmin/irmin-fs/Irmin_fs_unix/index.html
 
 <!-- prettier-ignore-end -->
