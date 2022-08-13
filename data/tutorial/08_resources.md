@@ -29,9 +29,9 @@ title: "Resources"
   using `libirmin`
 - [irmin-py](https://github.com/mirage/irmin-py) - Direct Python bindings
   using `libirmin`
-- [irmin-js](https://github.com/zshipko/irmin-js) - Javascript bindings to
+- [irmin-graphql-js](https://github.com/zshipko/irmin-graphql-js) - Javascript bindings to
   `irmin-graphql`
-- [irmin-go](https://github.com/zshipko/irmin-go) - Go bindings to
+- [irmin-graphql-go](https://github.com/zshipko/irmin-graphql-go) - Go bindings to
   `irmin-graphql`
 
 ## Users of Irmin
