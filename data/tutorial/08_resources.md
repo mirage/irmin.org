@@ -20,7 +20,7 @@ title: "Resources"
 
 ### Backends
 
-- [wodan](https://github.com/g2p/wodan) - A filesystem library for MirageOS
+- [wodan](https://github.com/mirage/wodan) - A filesystem library for MirageOS
 
 ### Language bindings
 
