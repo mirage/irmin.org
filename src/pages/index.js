@@ -35,7 +35,7 @@ class HomePage extends React.Component {
               </p>
               <pre>
                 <code className="language-shell-session">
-                  $ opam install irmin-unix
+                  $ opam install irmin-cli
                 </code>
               </pre>
 
@@ -87,7 +87,7 @@ class HomePage extends React.Component {
                   <code>irmin-mirage</code> - mirage compatibility
                 </li>
                 <li>
-                  <code>irmin-unix</code> - unix compatibility
+                  <code>irmin-cli</code> - command line tool
                 </li>
                 <li>
                   <code>libirmin</code> - C bindings to the irmin API

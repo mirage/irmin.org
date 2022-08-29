@@ -20,7 +20,7 @@ Irmin gives you a few options when it comes to storage:
 These packages define the way that the data should be organized, but not any I/O
 routines (with the exception of `irmin-mem`, which does no I/O). These packages
 also provide `.unix` packages that provide the I/O routines needed to make Irmin 
-work on Unix-like platforms. For example, you can use `irmin-git.unix` to without
+work on Unix-like platforms. For example, you can use `irmin-git.unix` without
 having to implement any of the low-level I/O routines. Additionally, the 
 `irmin-mirage`, `irmin-mirage-git` and `irmin-mirage-graphql` packages 
 provide [Mirage][mirage]-compatible interfaces.
