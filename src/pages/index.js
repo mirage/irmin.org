@@ -40,8 +40,8 @@ class HomePage extends React.Component {
               </pre>
 
               <p>
-                A minimal installation, with only the in-memory storage backend can be
-                installed by running:
+                A minimal installation, with only the in-memory storage backend
+                can be installed by running:
               </p>
               <pre>
                 <code className="language-shell-session">
@@ -62,8 +62,8 @@ class HomePage extends React.Component {
 
               <ul>
                 <li>
-                  <code>irmin</code> - the base package, including an
-                  in-memory storage implementation
+                  <code>irmin</code> - the base package, including an in-memory
+                  storage implementation
                 </li>
                 <li>
                   <code>irmin-chunk</code> - chunked storage
