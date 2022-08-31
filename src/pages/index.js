@@ -137,7 +137,8 @@ foo/bar => 'testing 123'`}
             <h2>Command-line</h2>
             <p>
               The same thing can also be accomplished using irmin, the
-              command-line application installed with irmin-unix, by running:
+              command-line application installed with <code>irmin-cli</code>, by
+              running:
             </p>
 
             <pre>
