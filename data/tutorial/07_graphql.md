@@ -12,7 +12,7 @@ query it using your favorite GraphQL client!
 `irmin-graphql` is part of the latest `irmin` release, so all that's needed is:
 
 ```shell
-$ opam install irmin-unix
+$ opam install irmin-cli
 ```
 
 ## Running the server
@@ -238,12 +238,12 @@ value associated with `testing` - all other values will be left as-is.
 It is also possible to use the `irmin-graphql` OCaml interface to embed a
 GraphQL server in any application!
 
-Using `Irmin_unix.Graphql.Server.Make` you can convert an existing `Irmin.S`
+Using `Irmin_graphql_unix.Server.Make` you can convert an existing `Irmin.S`
 typed module into a GraphQL server:
 
 ```ocaml
-module Graphql_store = Irmin_unix.Git.Mem.KV(Irmin.Contents.String)
-module Graphql = Irmin_unix.Graphql.Server.Make(Graphql_store)(struct let remote = Some Graphql_store.remote end)
+module Graphql_store = Irmin_git_unix.Mem.KV(Irmin.Contents.String)
+module Graphql = Irmin_graphql_unix.Server.Make(Graphql_store)(struct let remote = Some Graphql_store.remote end)
 ```
 
 The following code will initialize and run the server:
@@ -286,7 +286,7 @@ end
 let schema_typ : (unit, Example_type.t option) Irmin_graphql.Server.Schema.typ =
   let open Example_type in
   Irmin_graphql.Server.Schema.(obj "Example"
-    ~fields:(fun _ -> [
+    ~fields:[
       field "x"
         ~typ:(non_null string)
         ~args:[]
@@ -302,7 +302,7 @@ let schema_typ : (unit, Example_type.t option) Irmin_graphql.Server.Schema.typ =
         ~args:[]
         ~resolve:(fun _ t -> t.z)
       ;
-    ])
+    ]
   )
 ```
 

@@ -18,10 +18,12 @@ Irmin gives you a few options when it comes to storage:
 - an optimized on-disk store (`irmin-pack`)
 
 These packages define the way that the data should be organized, but not any I/O
-routines (with the exception of `irmin-mem`, which does no I/O). Luckily,
-`irmin-unix` implements the I/O routines needed to make Irmin work on Unix-like
-platforms. Additionally, the `irmin-mirage`, `irmin-mirage-git` and
-`irmin-mirage-graphql` packages provide [Mirage][mirage]-compatible interfaces.
+routines (with the exception of `irmin-mem`, which does no I/O). These packages
+also provide `.unix` packages that provide the I/O routines needed to make Irmin 
+work on Unix-like platforms. For example, you can use `irmin-git.unix` without
+having to implement any of the low-level I/O routines. Additionally, the 
+`irmin-mirage`, `irmin-mirage-git` and `irmin-mirage-graphql` packages 
+provide [Mirage][mirage]-compatible interfaces.
 
 It's also possible to implement your own storage backend if you'd like -- nearly
 everything in `Irmin` is configurable thanks to the power of functors in OCaml!
@@ -45,7 +47,7 @@ module Mem_store = Irmin_mem.KV.Make(Irmin.Contents.String)
 An on-disk git store with JSON contents:
 
 ```ocaml
-module Git_store = Irmin_unix.Git.FS.KV(Irmin.Contents.Json)
+module Git_store = Irmin_git_unix.FS.KV(Irmin.Contents.Json)
 ```
 
 These examples are using [Irmin.KV][irmin.kv], which is a specialization of
@@ -199,8 +201,7 @@ returning `result` value.
 For example, you can pull a repo and list the files in the root of the project:
 
 ```ocaml skip
-open Irmin_unix
-module Git_mem_store = Git.Mem.KV(Irmin.Contents.String)
+module Git_mem_store = Irmin_git_unix.Mem.KV(Irmin.Contents.String)
 module Sync = Irmin.Sync(Git_mem_store)
 let remote = Git_mem_store.remote "git://github.com/mirage/irmin.git"
 let main =

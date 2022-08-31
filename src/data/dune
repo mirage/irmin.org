@@ -1,6 +1,6 @@
 (executable
  (name example)
- (libraries irmin-unix))
+ (libraries irmin-git.unix))
 
 (alias
  (name runtest)

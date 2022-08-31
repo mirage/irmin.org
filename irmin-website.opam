@@ -8,9 +8,9 @@ bug-reports: "https://github.com/tarides/irmin.org/issues"
 depends: [
   "ocaml" {>= "4.06.0"}
   "dune" {>= "1.7.0"}
-  "irmin" {= "3.0.0" & with-test}
-  "irmin-unix" {with-test}
-  "digestif" {= "1.0.0"}
+  "irmin" {= "3.4.0" & with-test}
+  "irmin-cli" {with-test}
+  "digestif" {>= "1.0.0"}
   "mdx" {>= "1.8.1"}
   "lwt" {with-test}
 ]

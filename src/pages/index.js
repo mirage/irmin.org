@@ -35,13 +35,13 @@ class HomePage extends React.Component {
               </p>
               <pre>
                 <code className="language-shell-session">
-                  $ opam install irmin-unix
+                  $ opam install irmin-cli
                 </code>
               </pre>
 
               <p>
-                A minimal installation, with only the in-memory storage backend can be
-                installed by running:
+                A minimal installation, with only the in-memory storage backend
+                can be installed by running:
               </p>
               <pre>
                 <code className="language-shell-session">
@@ -62,8 +62,8 @@ class HomePage extends React.Component {
 
               <ul>
                 <li>
-                  <code>irmin</code> - the base package, including an
-                  in-memory storage implementation
+                  <code>irmin</code> - the base package, including an in-memory
+                  storage implementation
                 </li>
                 <li>
                   <code>irmin-chunk</code> - chunked storage
@@ -87,7 +87,7 @@ class HomePage extends React.Component {
                   <code>irmin-mirage</code> - mirage compatibility
                 </li>
                 <li>
-                  <code>irmin-unix</code> - unix compatibility
+                  <code>irmin-cli</code> - command line tool
                 </li>
                 <li>
                   <code>libirmin</code> - C bindings to the irmin API
@@ -137,7 +137,8 @@ foo/bar => 'testing 123'`}
             <h2>Command-line</h2>
             <p>
               The same thing can also be accomplished using irmin, the
-              command-line application installed with irmin-unix, by running:
+              command-line application installed with <code>irmin-cli</code>, by
+              running:
             </p>
 
             <pre>

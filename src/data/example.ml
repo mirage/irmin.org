@@ -1,7 +1,7 @@
 open Lwt.Syntax
 
 (* Irmin store with string contents *)
-module Store = Irmin_unix.Git.FS.KV(Irmin.Contents.String)
+module Store = Irmin_git_unix.FS.KV(Irmin.Contents.String)
 
 (* Database configuration *)
 let config = Irmin_git.config ~bare:true "/tmp/irmin/test"
@@ -10,7 +10,7 @@ let config = Irmin_git.config ~bare:true "/tmp/irmin/test"
 let author = "Example <example@example.com>"
 
 (* Commit information *)
-let info fmt = Irmin_unix.info ~author fmt
+let info fmt = Irmin_git_unix.info ~author fmt
 
 let main =
   (* Open the repo *)

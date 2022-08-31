@@ -5,10 +5,10 @@ title: "Using the command-line"
 
 ## Installation
 
-These examples requires the `irmin-unix` package to be installed from [opam]:
+These examples requires the `irmin-cli` package to be installed from [opam]:
 
 ```shell
-$ opam install irmin-unix
+$ opam install irmin-cli
 ```
 
 After that is finished you should have the `irmin` binary installed! To get a
@@ -20,10 +20,10 @@ $ irmin help
 
 ## Working with stores
 
-Now you can do things like create an in-memory store and serve it over HTTP:
+Now you can do things like create an in-memory store and serve it over GraphQL:
 
 ```shell
-$ irmin http --store mem --address http://127.0.0.1:8888
+$ irmin graphql --store mem --address http://127.0.0.1 --port 8888
 ```
 
 Or create a new store on-disk and manipulate it directly from the terminal:
@@ -89,12 +89,11 @@ the output of `irmin options` for a list of backend-specific configuration optio
 
 ### Customization
 
-It is possible to extend the `irmin` executable using [Irmin_unix.Resolver] and
-[Irmin_unix.Cli]:
+It is possible to extend the `irmin` executable using [Irmin_cli.Resolver] and
+[Irmin_cli]:
 
 ```ocaml
-module Cli = Irmin_unix.Cli
-module R = Irmin_unix.Resolver
+module R = Irmin_cli.Resolver
 
 let config_spec = Irmin.Backend.Conf.Spec.v "my-config-spec"
 
@@ -103,7 +102,7 @@ let () =
   R.Store.add "my-store-type" (R.Store.Fixed_hash (fun (module Contents) ->
     R.Store.v config_spec (module Irmin_mem.KV.Make(Contents)))
   );
-  Cli.(run ~default commands)
+  Irmin_cli.(run ~default commands)
 ```
 
 ## Starting a GraphQL server
@@ -183,8 +182,8 @@ just a fraction of what's available when using Irmin from OCaml! For more
 information about using Irmin and OCaml, check out the next section.
 
 <!-- prettier-ignore-start -->
-[Irmin_unix.Resolver]: https://mirage.github.io/irmin/irmin-unix/Irmin_unix/Resolver/index.html
-[Irmin_unix.Cli]: https://mirage.github.io/irmin/irmin-unix/Irmin_unix/Cli/index.html
+[Irmin_cli.Resolver]: https://mirage.github.io/irmin/irmin-cli/Irmin_cli/Resolver/index.html
+[Irmin_cli]: https://mirage.github.io/irmin/irmin-cli/Irmin_cli/index.html
 [GraphQL]: https://graphql.org
 [opam]: https://github.com/ocaml/opam
 <!-- prettier-ignore-end -->

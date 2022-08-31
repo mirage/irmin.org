@@ -55,7 +55,7 @@ some constraints:
   concurrent writes only the _fastest_ write updates the branch name.
 
   Ensuring that `test_and_set` is atomic is usually not very easy to do, as the
-  POSIX interface does not provide such an operation. [Irmin_unix.FS] uses a
+  POSIX interface does not provide such an operation. [Irmin_fs_unix] uses a
   [dotlocking] optimistic strategy (using the fact that creating a file can be
   done atomically on POSIX filesystems).
 
@@ -102,6 +102,6 @@ create our own Irmin stores.
 [Irmin.Content_addressable.S]: https://mirage.github.io/irmin/irmin/Irmin/module-type-Content_addressable/module-type-S/index.html
 [Irmin.ATOMIC_WRITE_STORE]: https://mirage.github.io/irmin/irmin/Irmin/module-type-Atomic_write/module-type-S/index.html
 [dotlocking]: http://wiki.call-cc.org/eggref/4/dot-locking
-[Irmin_unix.FS]: https://mirage.github.io/irmin/irmin-unix/Irmin_unix/FS/index.html
+[Irmin_fs_unix]: https://mirage.github.io/irmin/irmin-fs/Irmin_fs_unix/index.html
 
 <!-- prettier-ignore-end -->
