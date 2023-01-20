@@ -23,7 +23,7 @@ $ irmin help
 Now you can do things like create an in-memory store and serve it over GraphQL:
 
 ```shell
-$ irmin graphql --store mem --address http://127.0.0.1 --port 8888
+$ irmin graphql --store mem --address 127.0.0.1 --port 8888
 ```
 
 Or create a new store on-disk and manipulate it directly from the terminal:
