@@ -50,8 +50,8 @@ export default function Template({ data }) {
 }
 
 export const pageQuery = graphql`
-  query($path: String!) {
-    markdownRemark(frontmatter: { path: { eq: $path } }) {
+  query ($id: String!) {
+    markdownRemark(frontmatter: { path: { eq: $id } }) {
       html
       frontmatter {
         path
