@@ -19,8 +19,8 @@ or nodes) are stored as a pair `(hash(value), value)` and therefore a value can
 be accessed using its hash.
 
 A collection of block stores is available in Irmin, but you can create your own
-using the interface [Irmin.Content_addressable.S] as long as the following
-are guaranteed:
+using the interface [Irmin.Content_addressable.S] as long as the following are
+guaranteed:
 
 - reads using the same key return the same value.
 
@@ -29,18 +29,17 @@ are guaranteed:
 ### The reference store
 
 It is a mutable store, used for _branches_. As in Git, branches are tags added
-to commits. A default branch is always available in Irmin, the `main`.
-Branches are useful when multiple processes access the store, to keep track of
-the state of each process. This type of store is also called an **atomic write**
-store: two independent processes can do some local modifications, but updating
-the same branch is an atomic and concurrent operation.
+to commits. A default branch is always available in Irmin, the `main`. Branches
+are useful when multiple processes access the store, to keep track of the state
+of each process. This type of store is also called an **atomic write** store:
+two independent processes can do some local modifications, but updating the same
+branch is an atomic and concurrent operation.
 
 Branches are stored in the reference store as pairs of `(hash(commit), branch)`.
 
 As for the block store, you can choose a reference store from the ones provided
-by Irmin, or you can create your own using the interface
-[Irmin.Atomic_write.S]. The operations you have to implement need to satisfy
-some constraints:
+by Irmin, or you can create your own using the interface [Irmin.Atomic_write.S].
+The operations you have to implement need to satisfy some constraints:
 
 - concurrent reads of the same branch name return the same hash. Updates of a
   branch name to a given commit should be sequentially consistent: subsequent

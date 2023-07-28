@@ -97,8 +97,8 @@ this will set `a` to "testing" and remove the value associated with `b`.
 
 ### Branch info
 
-Using `main`/`branch` queries we are able to find lots of information about
-the attached Irmin store:
+Using `main`/`branch` queries we are able to find lots of information about the
+attached Irmin store:
 
 ```graphql
 query {

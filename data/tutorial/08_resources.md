@@ -13,8 +13,8 @@ title: "Resources"
 ### Servers
 
 - [irmin-graphql](https://github.com/mirage/irmin) - A GraphQL server
-- [irmin-server](https://github.com/mirage/irmin-server) - A client/server
-  using irmin's repr encoding
+- [irmin-server](https://github.com/mirage/irmin-server) - A client/server using
+  irmin's repr encoding
 
 ### Backends
 
@@ -23,14 +23,14 @@ title: "Resources"
 ### Language bindings
 
 - [libirmin](https://github.com/mirage/irmin) - C bindings
-- [irmin-rs](https://github.com/mirage/irmin-rs) - Direct Rust bindings
-  using `libirmin`
-- [irmin-py](https://github.com/mirage/irmin-py) - Direct Python bindings
-  using `libirmin`
-- [irmin-graphql-js](https://github.com/zshipko/irmin-graphql-js) - Javascript bindings to
-  `irmin-graphql`
-- [irmin-graphql-go](https://github.com/zshipko/irmin-graphql-go) - Go bindings to
-  `irmin-graphql`
+- [irmin-rs](https://github.com/mirage/irmin-rs) - Direct Rust bindings using
+  `libirmin`
+- [irmin-py](https://github.com/mirage/irmin-py) - Direct Python bindings using
+  `libirmin`
+- [irmin-graphql-js](https://github.com/zshipko/irmin-graphql-js) - Javascript
+  bindings to `irmin-graphql`
+- [irmin-graphql-go](https://github.com/zshipko/irmin-graphql-go) - Go bindings
+  to `irmin-graphql`
 
 ## Users of Irmin
 

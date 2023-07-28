@@ -14,7 +14,7 @@ class Layout extends React.Component {
     return (
       <StaticQuery
         query={detailsQuery}
-        render={data => {
+        render={(data) => {
           const siteTitle = data.site.siteMetadata.title;
           const description = data.site.siteMetadata.description;
           const author = data.site.siteMetadata.author;
@@ -28,36 +28,36 @@ class Layout extends React.Component {
                 meta={[
                   {
                     property: "og:type",
-                    content: "website"
+                    content: "website",
                   },
                   {
                     property: "og:title",
-                    content: title
+                    content: title,
                   },
                   {
                     name: "description",
-                    content: description
+                    content: description,
                   },
                   {
                     property: "og:description",
-                    content: description
+                    content: description,
                   },
                   {
                     name: "twitter:card",
-                    content: "summary"
+                    content: "summary",
                   },
                   {
                     name: "twitter:creator",
-                    content: author
+                    content: author,
                   },
                   {
                     name: "twitter:title",
-                    content: title
+                    content: title,
                   },
                   {
                     name: "twitter:description",
-                    content: description
-                  }
+                    content: description,
+                  },
                 ]}
               />
               <Header />
@@ -71,7 +71,7 @@ class Layout extends React.Component {
 }
 
 Layout.propTypes = {
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
 };
 
 export default Layout;
