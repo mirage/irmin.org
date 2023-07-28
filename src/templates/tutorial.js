@@ -4,6 +4,7 @@ import { graphql } from "gatsby";
 import Layout from "../components/layout";
 import TutorialSidebar from "../components/tutorial/tutorialSidebar";
 import TutorialFooter from "../components/tutorial/tutorialFooter";
+import Seo from "../components/seo";
 
 import "./tutorial.css";
 
@@ -32,7 +33,7 @@ export default function Template({ data }) {
 
   return (
     <div className="documentation">
-      <Layout title="Tutorial">
+      <Layout>
         <div className="content-wrapper">
           <TutorialSidebar pages={pages} currentLink={frontmatter.path} />
           <section className="doc">
@@ -48,6 +49,12 @@ export default function Template({ data }) {
     </div>
   );
 }
+
+export const Head = ({ data }) => {
+  const { markdownRemark } = data;
+  const { frontmatter } = markdownRemark;
+  return <Seo title={`Tutorial: ${frontmatter.title}`} />;
+};
 
 export const pageQuery = graphql`
   query ($id: String!) {

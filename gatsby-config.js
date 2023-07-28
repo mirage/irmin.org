@@ -4,11 +4,10 @@ module.exports = {
   siteMetadata: {
     title: "Irmin",
     description: "",
-    author: "@tarides_",
+    twitterUsername: "@tarides_",
   },
   plugins: [
     "gatsby-plugin-sharp",
-    "gatsby-plugin-react-helmet",
     {
       resolve: `gatsby-source-filesystem`,
       options: {
