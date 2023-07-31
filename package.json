@@ -7,6 +7,7 @@
     "gatsby": "^5.11.0",
     "gatsby-plugin-google-fonts": "^1.0.1",
     "gatsby-plugin-manifest": "^5.11.0",
+    "gatsby-plugin-pnpm": "^1.2.10",
     "gatsby-plugin-sharp": "^5.11.0",
     "gatsby-remark-autolink-headers": "^6.11.0",
     "gatsby-remark-images": "^7.11.0",
@@ -21,12 +22,12 @@
   "keywords": [
     "gatsby"
   ],
-  "private": "true",
   "scripts": {
     "build": "gatsby build",
     "serve": "gatsby serve",
+    "clean": "gatsby clean",
     "develop": "gatsby develop",
-    "start": "npm run develop",
+    "start": "pnpm run develop",
     "format": "prettier --write \"*.{js,json,yml}\" \"{src,data}/**/*.{css,js,json,md,yml}\"",
     "lint": "prettier --check \"*.{js,json,yml}\" \"{src,data}/**/*.{css,js,json,md,yml}\"",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -39,5 +40,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/mirage/irmin.org"
+  },
+  "packageManager": "pnpm@8.6.11",
+  "engines": {
+    "node": ">=18"
   }
 }

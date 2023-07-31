@@ -7,6 +7,7 @@ module.exports = {
     twitterUsername: "@tarides_",
   },
   plugins: [
+    `gatsby-plugin-pnpm`,
     "gatsby-plugin-sharp",
     {
       resolve: `gatsby-source-filesystem`,
