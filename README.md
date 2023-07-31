@@ -14,6 +14,11 @@ All contributions are welcome! The tutorial files can be found in [`data/tutoria
 
 ### Building the website locally
 
+The minimum version of Node required to build/run the site is 18. Packages are
+managed with [`pnpm`][pnpm]. Since we use Node > 16, `corepack` is the recommended
+way to manage `pnpm`. See [`pnpm`'s installation instructions][pnpm-install] for
+more information.
+
 The website is generated using [GatsbyJS][gatsby]. The following commands run an instance of the
 website locally:
 
@@ -21,22 +26,24 @@ website locally:
 git clone https://github.com/mirage/irmin.org
 cd irmin.org
 
-yarn install    # Install build dependencies
-yarn run build  # Build the website
-yarn run serve  # Serve the build at `localhost:9000`
+pnpm install # Install build dependencies
+pnpm build   # Build the website
+pnpm serve   # Serve the build at `localhost:9000`
 ```
 
-When working on the website, an incremental development server can be run with `yarn run develop`,
+When working on the website, an incremental development server can be run with `pnpm develop`,
 but beware that this may show stale artefacts.
 
 ### Running tests/linting
 
-- The source code is formatted with [Prettier][prettier], and this is enforced in the CI. 
-- Any incorrectly formatted code will be reported by `yarn run lint`.
-- Use `yarn run format` to apply the changes.
+- The source code is formatted with [Prettier][prettier]. 
+- Any incorrectly formatted code will be reported by `pnpm lint`.
+- Use `pnpm format` to apply the changes.
 
 [irmin]: https://github.com/mirage/irmin/
 [irmin.org]: https://irmin.org/
 [tutorial-dir]: https://github.com/mirage/irmin.org/tree/master/data/tutorial/
 [prettier]: https://github.com/prettier/prettier/
 [gatsby]: https://www.gatsbyjs.org/
+[pnpm]: https://pnpm.io/
+[pnpm-install]: https://pnpm.io/installation#using-corepack
