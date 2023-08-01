@@ -3,8 +3,8 @@ path: "/tutorial/backend"
 title: "Writing a storage backend"
 ---
 
-This section illustrates how to write a custom storage backend for Irmin using an
-in-memory store as an example.
+This section illustrates how to write a custom storage backend for Irmin using
+an in-memory store as an example.
 
 Unlike writing a [custom datatype](/tutorial/contents), there is no tidy way of
 doing this. A backend is built from a number of
@@ -47,9 +47,10 @@ Additionally, it requires a few functions:
 - `mem`: checks whether or not a key exists
 - `find`: returns the value associated with a key (if it exists)
 
-When creating a new backend, you can utilize the functions in `Irmin.Backend.Conf` to
-work with `Irmin.config` values. Additionally, each backend should register a new
-config specification using `Irmin.Backend.Conf.Spec`:
+When creating a new backend, you can utilize the functions in
+`Irmin.Backend.Conf` to work with `Irmin.config` values. Additionally, each
+backend should register a new config specification using
+`Irmin.Backend.Conf.Spec`:
 
 ```ocaml
   let spec = Irmin.Backend.Conf.Spec.v "tutorial"
@@ -87,8 +88,8 @@ end
 
 ### The content-addressable store
 
-Next is the content-addressable [Irmin.Content_addressable.S] interface -
-the majority of the required methods can be inherited from `Helper`!
+Next is the content-addressable [Irmin.Content_addressable.S] interface - the
+majority of the required methods can be inherited from `Helper`!
 
 ```ocaml
 module Content_addressable : Irmin.Content_addressable.Maker = functor
@@ -141,8 +142,8 @@ end
 
 ## The atomic-write store
 
-[Irmin.Atomic_write.S] has many more types and values that need to be
-defined than the previous examples, but luckily this is the last step!
+[Irmin.Atomic_write.S] has many more types and values that need to be defined
+than the previous examples, but luckily this is the last step!
 
 To start off we can use the `Helper` functor defined above:
 
@@ -216,8 +217,8 @@ The `list` implementation will get a list of keys in the store:
       Lwt.return keys
 ```
 
-`set` stores a key/value pair in the store. When this operation updates
-the store, the watchers have to be notified:
+`set` stores a key/value pair in the store. When this operation updates the
+store, the watchers have to be notified:
 
 ```ocaml
   let set {t; w} key value =
@@ -268,8 +269,7 @@ another `close` function:
 end
 ```
 
-Now, let's use the `Make` and `KV` functors for creating in-memory Irmin
-stores:
+Now, let's use the `Make` and `KV` functors for creating in-memory Irmin stores:
 
 ```ocaml
 module Maker: Irmin.Maker = Irmin.Maker (Content_addressable) (Atomic_write)

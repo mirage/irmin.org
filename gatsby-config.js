@@ -4,29 +4,28 @@ module.exports = {
   siteMetadata: {
     title: "Irmin",
     description: "",
-    author: "@tarides_"
+    twitterUsername: "@tarides_",
   },
   plugins: [
+    `gatsby-plugin-pnpm`,
     "gatsby-plugin-sharp",
-    "gatsby-plugin-react-helmet",
     {
       resolve: `gatsby-source-filesystem`,
       options: {
         path: `${__dirname}/data/tutorial/`,
-        name: `tutorial`
-      }
+        name: `tutorial`,
+      },
     },
     {
       resolve: `gatsby-transformer-remark`,
       options: {
-        pedantic: false,
         plugins: [
           `gatsby-remark-autolink-headers`,
           {
             resolve: `gatsby-remark-images`,
             options: {
-              maxWidth: 680
-            }
+              maxWidth: 680,
+            },
           },
           {
             resolve: `gatsby-remark-prismjs`,
@@ -35,23 +34,23 @@ module.exports = {
               inlineCodeMarker: null,
               aliases: { shell: "shell-session", ocamlskip: "ocaml" },
               showLineNumbers: false,
-              noInlineHighlight: true
-            }
-          },
-          {
-            resolve: `gatsby-plugin-favicon`,
-            options: {
-                logo: "./src/images/favicon.png",
+              noInlineHighlight: true,
             },
-          }
-        ]
-      }
+          },
+        ],
+      },
+    },
+    {
+      resolve: "gatsby-plugin-manifest",
+      options: {
+        icon: "src/images/icon.png",
+      },
     },
     {
       resolve: `gatsby-plugin-google-fonts`,
       options: {
-        fonts: [`Ubuntu Mono`, `Titillium Web:400,600,700`]
-      }
-    }
-  ]
+        fonts: [`Ubuntu Mono`, `Titillium Web:400,600,700`],
+      },
+    },
+  ],
 };

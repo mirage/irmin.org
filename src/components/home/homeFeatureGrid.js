@@ -17,40 +17,38 @@ const HomeFeatureGrid = () => {
       image: imgSnapshot,
       alt: "Built-in snapshotting",
       title: "Built-in snapshotting",
-      body: "Backup and restore your data at any point in time."
+      body: "Backup and restore your data at any point in time.",
     },
     {
       image: imgStorage,
       alt: "Storage agnostic",
       title: "Storage agnostic",
-      body: "You can use Irmin on top of your own storage layer."
+      body: "You can use Irmin on top of your own storage layer.",
     },
     {
       image: imgDatatype,
       alt: "Custom datatypes",
       title: "Custom datatypes",
-      body: "Automatic (de)serialization for custom data types."
+      body: "Automatic (de)serialization for custom data types.",
     },
     {
       image: imgPortable,
       alt: "Highly portable",
       title: "Highly portable",
-      body: "Runs anywhere from Linux to web browsers and Xen unikernels."
+      body: "Runs anywhere from Linux to web browsers and Xen unikernels.",
     },
     {
       image: imgGit,
       alt: "Git compatibility",
       title: "Git compatibility",
-      body:
-        "Bi-directional compatibility with the Git on-disk format. Irmin state can be inspected and modified using the Git command-line tool."
+      body: "Bi-directional compatibility with the Git on-disk format. Irmin state can be inspected and modified using the Git command-line tool.",
     },
     {
       image: imgBehavior,
       alt: "Dynamic behavior",
       title: "Dynamic behavior",
-      body:
-        "Allows users to define custom merge functions and create event-driven workflows using a notification mechanism."
-    }
+      body: "Allows users to define custom merge functions and create event-driven workflows using a notification mechanism.",
+    },
   ];
 
   return (
@@ -60,7 +58,7 @@ const HomeFeatureGrid = () => {
         data stores.
       </h2>
       <div className="list">
-        {features.map(f => {
+        {features.map((f) => {
           return <HomeFeature key={f.title} feature={f} />;
         })}
       </div>

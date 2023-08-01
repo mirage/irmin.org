@@ -69,8 +69,9 @@ store: git
 contents: string
 ```
 
-See the output of `irmin help irmin.yml` for a list of configurable parameters and
-the output of `irmin options` for a list of backend-specific configuration options.
+See the output of `irmin help irmin.yml` for a list of configurable parameters
+and the output of `irmin options` for a list of backend-specific configuration
+options.
 
 ## Parameters
 
