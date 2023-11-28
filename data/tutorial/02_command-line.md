@@ -115,10 +115,13 @@ query/modify a store remotely:
 $ irmin graphql --port 8080
 ```
 
-To verify the GraphQL server is up and running, you can try the following query:
+To verify the GraphQL server is up and running, you can try the following queries:
 
 ```shell
-$ curl http://localhost:8080/graphql -d '{"query": "query { main { head { hash } } }"}'
+$ curl http://localhost:8080/graphql -d 'query { main { head { hash } } }' -H 'Content-Type: application/graphql'
+{"data":{"main":{"head":{"hash":"2a16cd7d8e27d134e6194140617d25d977441396"}}}}
+
+$ curl http://localhost:8080/graphql -d '{"query": "query { main { head { hash } } }"}' -H 'Content-Type: application/json'
 {"data":{"main":{"head":{"hash":"2a16cd7d8e27d134e6194140617d25d977441396"}}}}
 ```
 
