@@ -284,7 +284,7 @@ let () = Lwt_main.run main
 [irmin.s.tree]: https://mirage.github.io/irmin/irmin/Irmin/module-type-S/Tree/index.html
 [irmin.type]: https://mirage.github.io/repr/repr/Repr/index.html
 [irmin.contents]: https://mirage.github.io/irmin/irmin/Irmin/Contents/index.html
-[irmin.content.string]: https://mirage.github.io/irmin/irmin/Irmin/Contents/index.html#module-String
+[irmin.contents.string]: https://mirage.github.io/irmin/irmin/Irmin/Contents/index.html#module-String
 [irmin.private.conf]: https://mirage.github.io/irmin/irmin/Irmin/Private/Conf/index.html
 [irmin.repo]: https://mirage.github.io/irmin/irmin/Irmin/module-type-S/Repo/index.html
 [irmin.repo.v]: https://mirage.github.io/irmin/irmin/Irmin/module-type-S/Repo/index.html#val-v
