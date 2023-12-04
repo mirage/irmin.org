@@ -5852,7 +5852,7 @@ packages:
       gatsby-core-utils: 4.11.0
       gatsby-plugin-utils: 4.11.0(gatsby@5.11.0)(graphql@16.8.1)
       semver: 7.5.4
-      sharp: 0.32.4
+      sharp: 0.32.6
     transitivePeerDependencies:
       - graphql
     dev: false
@@ -5910,7 +5910,7 @@ packages:
       lodash: 4.17.21
       probe-image-size: 7.2.3
       semver: 7.5.4
-      sharp: 0.32.4
+      sharp: 0.32.6
     transitivePeerDependencies:
       - graphql
       - supports-color
@@ -6039,7 +6039,7 @@ packages:
     resolution: {integrity: sha512-zJbN3JVCFur8Ilwn1scf7o8AN69//shpJhYqt3uhuwhhkU6ZMCMmVVNKHSiUiWkVqhwSRJ4y7c/I3Ys9xMxsIw==}
     engines: {node: '>=18.0.0'}
     dependencies:
-      sharp: 0.32.4
+      sharp: 0.32.6
     dev: false
 
   /gatsby-source-filesystem@5.11.0(gatsby@5.11.0):
@@ -9715,8 +9715,8 @@ packages:
     resolution: {integrity: sha512-LUMFi+RppPlrHzbqmFnINTrazo0lPNwhcgzuAXVVcfy/mqPDrQmHAyz5bvV0gDAuRFrk804V0HpQ6u9sZ0tBeg==}
     dev: false
 
-  /sharp@0.32.4:
-    resolution: {integrity: sha512-exUnZewqVZC6UXqXuQ8fyJJv0M968feBi04jb9GcUHrWtkRoAKnbJt8IfwT4NJs7FskArbJ14JAFGVuooszoGg==}
+  /sharp@0.32.6:
+    resolution: {integrity: sha512-KyLTWwgcR9Oe4d9HwCwNM2l7+J0dUQwn/yf7S0EnTtb0eVS4RxO0eUSvxPtzT4F3SY+C4K6fqdv/DO27sJ/v/w==}
     engines: {node: '>=14.15.0'}
     requiresBuild: true
     dependencies:
