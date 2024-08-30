@@ -48,7 +48,7 @@ To start off we will create a query to retrieve the value stored at the path
 query {
   main {
     tree {
-      get(key: "abc")
+      get(path: "abc")
     }
   }
 }
@@ -60,33 +60,33 @@ The following would accomplish the same thing in `my-branch`:
 query {
   branch(name: "my-branch") {
     tree {
-      get(key: "a/b/c")
+      get(path: "a/b/c")
     }
   }
 }
 ```
 
-It's also possible to set or update multiple keys using the `set_tree` and
+It's also possible to set or update multiple paths using the `set_tree` and
 `update_tree` mutations. The following will set `/a` to "foo" and `/b` to "bar":
 
 ```graphql
 mutation {
   set_tree(
-    key: "/"
-    tree: [{ key: "a", value: "foo" }, { key: "b", value: "bar" }]
+    path: "/"
+    tree: [{ path: "a", value: "foo" }, { path: "b", value: "bar" }]
   ) {
     hash
   }
 }
 ```
 
-And updating multiple keys is similar:
+And updating multiple paths is similar:
 
 ```graphql
 mutation {
   update_tree(
-    key: "/"
-    tree: [{ key: "a", value: "testing" }, { key: "b", value: null }]
+    path: "/"
+    tree: [{ path: "a", value: "testing" }, { path: "b", value: null }]
   ) {
     hash
   }
@@ -118,7 +118,7 @@ Due to difficulties representing infinitely recursive datatypes in GraphQL, an
 Irmin tree is represented using the `[TreeItem!]` type. `TreeItem` has the
 following keys:
 
-- `key`
+- `path`
 - `value`
 - `metadata`
 
@@ -130,7 +130,7 @@ query {
     head {
       tree {
         list_contents_recursively {
-          key
+          path
           value
         }
       }
@@ -146,9 +146,9 @@ query {
   main {
     head {
       tree {
-        get_tree(key: "a") {
+        get_tree(path: "a") {
           list_contents_recursively {
-            key
+            path
             value
           }
         }
@@ -165,11 +165,11 @@ side-effects.
 
 ### Set
 
-For example, setting a key is easy:
+For example, setting a path is easy:
 
 ```graphql
 mutation {
-  set(key: "a/b/c", value: "123") {
+  set(path: "a/b/c", value: "123") {
     hash
   }
 }
@@ -203,8 +203,8 @@ provided. For example:
 ```graphql
 mutation {
   set_tree(
-    key: "/"
-    tree: [{ key: "a/b/c", value: "123" }, { key: "d/e/f", value: "456" }]
+    path: "/"
+    tree: [{ path: "a/b/c", value: "123" }, { path: "d/e/f", value: "456" }]
   ) {
     hash
   }
@@ -218,11 +218,11 @@ used:
 ```graphql
 mutation {
   update_tree(
-    key: "/"
+    path: "/"
     tree: [
-      { key: "a/b/c", value: "123" }
-      { key: "d/e/f", value: "456" }
-      { key: "testing", value: null }
+      { path: "a/b/c", value: "123" }
+      { path: "d/e/f", value: "456" }
+      { path: "testing", value: null }
     ]
   ) {
     hash
