@@ -143,6 +143,7 @@ foo/bar => 'testing 123'`}
 $ irmin init
 $ irmin set foo/bar "testing 123"
 $ irmin get foo/bar`}
+testing 123
                 </code>
               </pre>
 
