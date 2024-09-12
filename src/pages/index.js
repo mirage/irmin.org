@@ -130,7 +130,7 @@ foo/bar => 'testing 123'`}
                 can be executed in the same way.
               </p>
 
-              <h2>Command-line</h2>
+              <h2>Command-Line</h2>
               <p>
                 The same thing can also be accomplished using Irmin, the
                 command-line application installed with <code>irmin-cli</code>,
