@@ -1,6 +1,6 @@
 ---
 path: "/tutorial/command-line"
-title: "Using the command-line"
+title: "Using the Command-Line"
 ---
 
 ## Installation
