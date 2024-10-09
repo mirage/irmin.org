@@ -116,7 +116,7 @@ let () =
 
 ## Starting a GraphQL Server
 
-`irmin` comes with a built-in [GraphQL] server, which can be used to easily
+Irmin comes with a built-in [GraphQL] server, which can be used to easily
 query/modify a store remotely:
 
 ```shell
