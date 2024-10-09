@@ -17,7 +17,7 @@ section will walk you through a few different examples:
 
 - [Counter](#counter)
 - [Record](#record)
-- [Association list](#association-list)
+- [Association List](#association-list)
 - [LWW register](#lww-register)
 
 ## Overview
