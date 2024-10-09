@@ -1,26 +1,26 @@
 ---
 path: "/tutorial/backend"
-title: "Writing a storage backend"
+title: "Writing a Storage Backend"
 ---
 
 This section illustrates how to write a custom storage backend for Irmin using
 an in-memory store as an example.
 
 Unlike writing a [custom datatype](/tutorial/contents), there is no tidy way of
-doing this. A backend is built from a number of
-[lower level stores](/tutorial/architecture) (commits, nodes, contents or
+doing writing a custom storage backend. A backend is built from a number of
+[lower level stores](/tutorial/architecture) (commits, nodes, contents, or
 branches), where each store implements some of the operations needed by the
-backend. In this example we instantiate two functors: one of type
-[Irmin.Content_addressable.Maker] (for the block store) and
-[Irmin.Atomic_write.Maker] (for the reference store). The two are used in
-creating a module of type [Irmin.Maker], which is in turn used in a functor of
-type [Irmin.KV_maker].
+backend. In this example, we instantiate two functors: one of type
+[`Irmin.Content_addressable.Maker`] (for the block store) and
+[`Irmin.Atomic_write.Maker`] (for the reference store). The two are used in
+creating a module of type [`Irmin.Maker`], which is in turn used in a functor of
+type [`Irmin.KV_maker`].
 
-## The readonly store
+## The Read-Only Store
 
-The process for writing a backend for Irmin requires implementing a few functors
--- to accomplish this, we can start off by writing a helper module that provides
-a generic implementation that can be re-used by the content-addressable store
+The process for writing an Irmin backend requires implementing a few functors. 
+To accomplish this, let's start by writing a helper module to provide
+a generic implementation that can be reused by the content-addressable store
 and the atomic-write store:
 
 - `t`: the store type
@@ -47,7 +47,7 @@ Additionally, it requires a few functions:
 - `mem`: checks whether or not a key exists
 - `find`: returns the value associated with a key (if it exists)
 
-When creating a new backend, you can utilize the functions in
+When creating a new backend, utilise the functions in
 `Irmin.Backend.Conf` to work with `Irmin.config` values. Additionally, each
 backend should register a new config specification using
 `Irmin.Backend.Conf.Spec`:
@@ -86,9 +86,9 @@ backend should register a new config specification using
 end
 ```
 
-### The content-addressable store
+### The Content-Addressable Store
 
-Next is the content-addressable [Irmin.Content_addressable.S] interface - the
+Next is the content-addressable [`Irmin.Content_addressable.S`] interface. The
 majority of the required methods can be inherited from `Helper`!
 
 ```ocaml
@@ -100,7 +100,7 @@ module Content_addressable : Irmin.Content_addressable.Maker = functor
 ```
 
 This module needs an `add` function, which takes a value, hashes it, stores the
-association and returns the hash:
+association, and returns the hash:
 
 ```ocaml
   let encode_value = Irmin.Type.(unstage (to_bin_string V.t))
@@ -115,7 +115,7 @@ association and returns the hash:
       hash
 ```
 
-Then a `batch` function, which can be used to group writes together. We will use
+Let's add a `batch` function, which can be used to group writes together. We will use
 the most basic implementation with a global lock:
 
 ```ocaml
@@ -140,12 +140,12 @@ backend. In our case, this can be a simple no-op:
 end
 ```
 
-## The atomic-write store
+## The Atomic-Write Store
 
-[Irmin.Atomic_write.S] has many more types and values that need to be defined
+[`Irmin.Atomic_write.S`] has many more types and values that need to be defined
 than the previous examples, but luckily this is the last step!
 
-To start off we can use the `Helper` functor defined above:
+To begin, we can use the `Helper` functor defined above:
 
 ```ocaml
 module Atomic_write: Irmin.Atomic_write.Maker = functor
@@ -155,10 +155,10 @@ module Atomic_write: Irmin.Atomic_write.Maker = functor
   module H = Helper(K)(V)
 ```
 
-There are a few types we need to declare next. `key` and `value` should match
-`H.key` and `H.value` and `watch` is used to declare the type of the watcher --
-this is used to send notifications when the store has been updated.
-[irmin-watcher] has some more information on watchers.
+Next, we need to declare a few types. `key` and `value` should match
+`H.key` and `H.value`. `watch` declares the type of the watcher.
+This is used to send notifications when the store has been updated.
+[`irmin-watcher`] has some more information on watchers.
 
 ```ocaml
   module W = Irmin.Backend.Watch.Make(K)(V)
@@ -191,7 +191,7 @@ implementations in `H`:
   let mem t  = H.mem t.t
 ```
 
-A few more simple functions: `watch_key`, `watch` and `unwatch`, used to created
+The simple functions `watch_key`, `watch`, and `unwatch` are used to create
 or destroy watches:
 
 ```ocaml
@@ -205,11 +205,11 @@ We will need to implement a few more functions:
 - `list`, lists files at a specific path.
 - `set`, writes a value to the store.
 - `remove`, deletes a value from the store.
-- `test_and_set`, modifies a key only if the `test` value matches the current
+- `test_and_set`, modifies a key, only if the `test` value matches the current
   value for the given key.
 - `close`, closes any resources held by the backend.
 
-The `list` implementation will get a list of keys in the store:
+The `list` implementation gets a list of keys in the store:
 
 ```ocaml
   let list {t; _} =
@@ -236,7 +236,7 @@ store, the watchers have to be notified:
       W.notify w key None
 ```
 
-`test_and_set` will modify a key if the current value is equal to `test`. This
+`test_and_set` will modify a key, if the current value is equal to `test`. This
 requires an atomic check and set:
 
 ```ocaml
@@ -257,7 +257,7 @@ requires an atomic check and set:
     ) else Lwt.return_false
 ```
 
-Finally, we need to pull in `clear` from our `Helper` implementation and add
+Finally, we must pull in `clear` from our `Helper` implementation and add
 another `close` function:
 
 ```ocaml
@@ -294,7 +294,7 @@ module KV = struct
 end
 ```
 
-We also have to provide a configuration for our backend specifying the
+We also have to provide a configuration for our backend, specifying the
 parameters needed when initialising a store. In our example, we start with an
 empty configuration, which comes with `root` as a parameter. We can then
 instantiate the store and create a repo:
