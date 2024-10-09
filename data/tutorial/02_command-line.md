@@ -148,7 +148,7 @@ $ irmin snapshot
 7941ae769181f4fbf5056d8b2bfe1cd8e10928bd
 ```
 
-And to restore to that point:
+Use the returned sequence and `irmin revert` to restore to that point:
 
 ```shell
 $ irmin revert 7941ae769181f4fbf5056d8b2bfe1cd8e10928bd
