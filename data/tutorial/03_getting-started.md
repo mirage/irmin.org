@@ -1,57 +1,57 @@
 ---
 path: "/tutorial/getting-started"
-title: "Getting started with OCaml"
+title: "Getting Started With OCaml"
 ---
 
-When setting up an Irmin database in OCaml you will need to consider, at least,
+When setting up an Irmin database in OCaml, you must at least consider
 the content type and storage backend. This is because Irmin has the ability to
 adapt to existing data structures using a convenient type combinator
-([Irmin.Type]), which is used to define [contents][irmin.contents] for your
-datastore. Irmin provides implementations for [String][irmin.contents.string],
-[Json] and [Json_value] contents, but it is also very easy to make your own!
+([`Irmin.Type`]), which defines your datastore [contents][irmin.contents]. 
+Irmin provides implementations for [String][irmin.contents.string],
+[JSON], and [JSON_value] contents, but it is also very easy to make your own!
 
 Irmin gives you a few options when it comes to storage:
 
-- an in-memory store (`irmin-mem`)
-- a filesystem store (`irmin-fs`)
-- git-compatible filesystem/in-memory stores (`irmin-git`)
-- an optimized on-disk store (`irmin-pack`)
+- In-memory store (`irmin-mem`)
+- AFilesystem store (`irmin-fs`)
+- Git-compatible filesystem/in-memory stores (`irmin-git`)
+- Optimised on-disk store (`irmin-pack`)
 
-These packages define the way that the data should be organized, but not any I/O
+These packages define the way to organise the data but not any I/O
 routines (with the exception of `irmin-mem`, which does no I/O). These packages
 also provide `.unix` packages that provide the I/O routines needed to make Irmin
 work on Unix-like platforms. For example, you can use `irmin-git.unix` without
 having to implement any of the low-level I/O routines. Additionally, the
-`irmin-mirage`, `irmin-mirage-git` and `irmin-mirage-graphql` packages provide
+`irmin-mirage`, `irmin-mirage-git`, and `irmin-mirage-graphql` packages provide
 [Mirage][mirage]-compatible interfaces.
 
-It's also possible to implement your own storage backend if you'd like -- nearly
-everything in `Irmin` is configurable thanks to the power of functors in OCaml!
-This includes the hash function, branch, key and metadata types. Because of this
-flexibility there are a lot of different options to pick from; I will do my best
-to explain the most basic usage in this section and begin introducing more
-advanced concepts in subsequent sections.
+It's also possible to implement your own storage backend, if you'd like. Nearly
+everything in Irmin is configurable, thanks to the power of functors in OCaml!
+This includes the hash function, branch, key, and metadata types. Due to this
+flexibility, there are many different options. The most basic usage is described 
+in this section, and more
+advanced concepts will be introduced in subsequent sections.
 
 It is important to note that most Irmin functions return `Lwt.t` values, which
-means that you will need to use `Lwt_main.run` to execute them. If you're not
-familiar with [Lwt][lwt] then I suggest [this tutorial][lwt-tutorial].
+means you must use `Lwt_main.run` to execute them. If you're not
+familiar with [Lwt][lwt], then I suggest [this tutorial][lwt-tutorial].
 
-## Creating a store
+## Creating a Store
 
-An in-memory store with string contents:
+To create an in-memory store with string contents, run:
 
 ```ocaml
 module Mem_store = Irmin_mem.KV.Make(Irmin.Contents.String)
 ```
 
-An on-disk git store with JSON contents:
+An on-disk Git store with JSON contents:
 
 ```ocaml
 module Git_store = Irmin_git_unix.FS.KV(Irmin.Contents.Json)
 ```
 
-These examples are using [Irmin.KV][irmin.kv], which is a specialization of
-[Irmin.S][irmin.s] with string list keys, string branches and no metadata.
+These examples use [`Irmin.KV`][irmin.kv], which is an [`Irmin.S`][irmin.s] specialisation 
+with string list keys, string branches, and no metadata.
 
 The following example is the same as the first, using `Irmin_mem.Make` instead
 of `Irmin_mem.KV`:
@@ -73,13 +73,13 @@ module Mem_Store =
         (Mem_schema)
 ```
 
-## Configuring and creating a repo
+## Configuring and Creating a Repo
 
-Different store types require different configuration options -- an on-disk
-store needs to know where it should be stored in the filesystem, however an
+Different store types require different configuration options. An on-disk
+store needs to know where it should be stored in the filesystem; however, an
 in-memory store doesn't. This means that each storage backend implements its own
-configuration methods based on [Irmin.Private.Conf] -- for the examples above
-there are `Irmin_mem.config`, `Irmin_fs.config` and `Irmin_git.config`, each
+configuration methods based on [`Irmin.Private.Conf`]. For the examples above,
+there are `Irmin_mem.config`, `Irmin_fs.config`, and `Irmin_git.config`, each
 taking slightly different parameters.
 
 ```ocaml
@@ -90,8 +90,8 @@ let git_config = Irmin_git.config ~bare:true "/tmp/irmin"
 let config = Irmin_mem.config ()
 ```
 
-With this configuration it's very easy to create an [Irmin.Repo] using
-[Repo.v][irmin.repo.v]:
+With this configuration, it's very easy to create an [`Irmin.Repo`] using
+[`Repo.v`][irmin.repo.v]:
 
 ```ocaml
 let git_repo = Git_store.Repo.v git_config
@@ -101,7 +101,7 @@ let git_repo = Git_store.Repo.v git_config
 let repo = Mem_store.Repo.v config
 ```
 
-## Using the repo to obtain access to a branch
+## Using the Repo to Obtain Access to a Branch
 
 Once a repo has been created, you can access a branch and start to modify it.
 
@@ -123,7 +123,7 @@ let branch config name =
     Mem_store.of_branch repo name
 ```
 
-## Modifying the store
+## Modifying the Store
 
 Now you can begin to interact with the store using `get` and `set`.
 
@@ -145,7 +145,7 @@ let () = Lwt_main.run main
 ## Transactions
 
 Transactions allow you to make many modifications using an in-memory tree then
-apply them all at once. This is done using [with_tree][irmin.s-with_tree]:
+apply them all at once. This is done using [`with_tree`][irmin.s-with_tree]:
 
 ```ocaml
 let transaction_example =
@@ -160,7 +160,7 @@ let transaction_example =
 let () = Lwt_main.run transaction_example
 ```
 
-A tree can be modified using the functions in [Irmin.S.Tree][irmin.s.tree], and
+A tree can be modified using the functions in [`Irmin.S.Tree`][irmin.s.tree], and
 when it is returned by the `with_tree` callback, it will be applied using the
 transaction's strategy (`` `Set `` in the code above) at the given key (`[]` in
 the code above).
@@ -187,17 +187,17 @@ let () = Lwt_main.run main
 
 ## Sync
 
-[Irmin.Sync] implements the functions needed to interact with remote stores.
+[`Irmin.Sync`] implements the functions needed to interact with remote stores.
 
-- [fetch][irmin.sync.fetch] populates a local store with objects from a remote
+- [`fetch`][irmin.sync.fetch] populates a local store with objects from a remote
   store
-- [pull][irmin.sync.pull] updates a local store with objects from a remote store
-- [push][irmin.sync.push] updates a remote store with objects from a local store
+- [`pull`][irmin.sync.pull] updates a local store with objects from a remote store
+- [`push`][irmin.sync.push] updates a remote store with objects from a local store
 
-Each of these also has an `_exn` variant which may raise an exception instead of
+Each of these also has an `_exn` variant, which may raise an exception instead of
 returning `result` value.
 
-For example, you can pull a repo and list the files in the root of the project:
+For example, you can pull a repo and list the files in the project's root:
 
 ```ocaml skip
 module Git_mem_store = Irmin_git_unix.Mem.KV(Irmin.Contents.String)
@@ -217,10 +217,10 @@ let () = Lwt_main.run main
 
 ## JSON Contents
 
-Most examples in this tutorial use string contents, so I will provide some
+Most examples in this tutorial use string contents, so let's provide some
 further information about using JSON values.
 
-There are two types of JSON contents: [Json_value] and [Json], where `Json` can
+There are two types of JSON contents: [`Json_value`] and [`Json`], where `Json` can
 only store JSON objects and `Json_value` works with any JSON value.
 
 Setting up the store is exactly the same as when working with strings:
@@ -230,7 +230,7 @@ module Mem_store_json = Irmin_mem.KV.Make(Irmin.Contents.Json)
 module Mem_store_json_value = Irmin_mem.KV.Make(Irmin.Contents.Json_value)
 ```
 
-For example, using `Men_store_json_value` we can assign
+For example, by using `Men_store_json_value`, we can assign
 `{"x": 1, "y": 2, "z": 3}` to the key `a/b/c`:
 
 ```ocaml
@@ -247,16 +247,16 @@ let main =
 let () = Lwt_main.run main
 ```
 
-An interesting thing about `Json_value` stores is the ability to use [Json_tree]
+An interesting thing about `Json_value` stores is the ability to use [`Json_tree`]
 to recursively project values onto a key. This means that using `Json_tree.set`,
 to assign `{"test": {"foo": "bar"}, "x": 1, "y": 2, "z": 3}` to the key `a/b/c`
-will set `a/b/c/x` to `1`, `a/b/c/y` to `2`, `a/b/c/z` to `3` and
+will set `a/b/c/x` to `1`, `a/b/c/y` to `2`, `a/b/c/z` to `3`, and
 `a/b/c/test/foo` to `"bar"`.
 
-This allows for large JSON objects to be modified in pieces without having the
-encode/decode the entire thing to access specific fields. Using `Json_tree.get`
+This allows users to modify large JSON objects in pieces without having to
+encode/decode the entire thing just to access specific fields. Using `Json_tree.get`,
 we can also retrieve a tree as a JSON value. So if we call `Json_tree.get` with
-the key `a/b` we will get the following object back:
+the key `a/b`, we will get the following object back:
 `{"c": {"test": {"foo": "bar"}, "x": 1, "y": 2, "z": 3}}`.
 
 ```ocaml
