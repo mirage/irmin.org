@@ -1,6 +1,6 @@
 ---
 path: "/tutorial/graphql"
-title: "GraphQL bindings"
+title: "GraphQL Bindings"
 ---
 
 `irmin-graphql` provides a nice interface for accessing remote Irmin stores over
@@ -9,39 +9,39 @@ query it using your favorite GraphQL client!
 
 ## Installation
 
-`irmin-graphql` is part of the latest `irmin` release, so all that's needed is:
+`irmin-graphql` is part of the latest Irmin release, so all that's needed is:
 
 ```shell
 $ opam install irmin-cli
 ```
 
-## Running the server
+## Running the Server
 
 To start the GraphQL server:
 
 ```shell
-$ irmin graphql --port 8080
+$ irmin graphql --port 8080 &
 ```
 
-This will start the server on `localhost:8080` - this can be customized using
+This will start the server on `localhost:8080`, which can be customised using
 the `--address` and `--port` flags. By default `irmin-graphql` provides an
-GraphiQL editor for writing queries from within the browser which can be
+GraphiQL editor for writing queries from within the browser. It can be
 accessed at [http://localhost:8080/graphql](http://localhost:8080/graphql).
 
 ## Schema
 
-Using the GraphiQL web interface you can explore the schema using the **Docs**
+Through the GraphiQL web interface you can explore the schema using the **Docs**
 button in the upper-right corner. Additionally, there are tools like
-[`get-graphql-schema`] which will dump the entire schema for you.
+[`get-graphql-schema`], which will dump the entire schema for you.
 
 ## Queries
 
-Using `irmin-graphql` it is possible to collect information about Irmin
+By using `irmin-graphql`, it is possible to collect information about Irmin
 databases (and Git repositories) using GraphQL.
 
 ### Get
 
-To start off we will create a query to retrieve the value stored at the path
+To begin, let's create a query to retrieve the value stored at the path
 `abc`:
 
 ```graphql
@@ -80,7 +80,7 @@ mutation {
 }
 ```
 
-And updating multiple keys is similar:
+Updating multiple keys is similar:
 
 ```graphql
 mutation {
@@ -93,11 +93,11 @@ mutation {
 }
 ```
 
-this will set `a` to "testing" and remove the value associated with `b`.
+This will set `a` to "testing" and remove the value associated with `b`.
 
-### Branch info
+### Branch Info
 
-Using `main`/`branch` queries we are able to find lots of information about the
+By using `main`/`branch` queries, we can find lots of information about the
 attached Irmin store:
 
 ```graphql
@@ -112,7 +112,7 @@ query {
 }
 ```
 
-### Bulk queries
+### Bulk Queries
 
 Due to difficulties representing infinitely recursive datatypes in GraphQL, an
 Irmin tree is represented using the `[TreeItem!]` type. `TreeItem` has the
@@ -139,7 +139,7 @@ query {
 }
 ```
 
-Which can also be augmented using `get_tree` to return a specific subtree:
+This can also be augmented by using `get_tree` to return a specific subtree:
 
 ```graphql
 query {
@@ -180,8 +180,8 @@ returns the new commit's hash.
 
 ### Sync
 
-`clone`, `push` and `pull` are also supported as long as they're supported by
-the underlying store! This allows data to be synchronized across servers using a
+`clone`, `push`, and `pull` are also supported, as long as they're supported by
+the underlying store! This allows data to be synchronised across servers using a
 simple mutation:
 
 ```graphql
@@ -192,12 +192,12 @@ mutation {
 }
 ```
 
-### Bulk updates
+### Bulk Updates
 
-To update multiple values you can use `set_tree` and `update_tree`. The
-difference between the two is `set_tree` will modify the tree to match to
-provided tree, while `update_tree` will only modify the provided keys - updating
-the value if one is provided, otherwise removing the current value if `null` is
+To update multiple values, use `set_tree` and `update_tree`. The
+difference between them is that `set_tree` will modify the tree to match the
+provided tree, while `update_tree` will only modify the provided keys, which will only update
+the value if one is provided. Otherwise it removes the current value if `null` is
 provided. For example:
 
 ```graphql
@@ -211,8 +211,8 @@ mutation {
 }
 ```
 
-will set `a/b/c` to `"123"` and `d/e/f` to "456", and if there are any other
-keys they will be removed. To keep the existing values, `update_tree` should be
+This will set `a/b/c` to `"123"` and `d/e/f` to "456", and if there are any other
+keys, they will be removed. To keep the existing values, `update_tree` should be
 used:
 
 ```graphql
@@ -230,15 +230,15 @@ mutation {
 }
 ```
 
-The above query will set the values of `a/b/c` and `d/e/f`, while removing the
-value associated with `testing` - all other values will be left as-is.
+The above query will set the values of `a/b/c` and `d/e/f` while removing the
+value associated with `testing`. All other values will be left as-is.
 
-## GraphQL servers in OCaml
+## GraphQL Servers in OCaml
 
 It is also possible to use the `irmin-graphql` OCaml interface to embed a
 GraphQL server in any application!
 
-Using `Irmin_graphql_unix.Server.Make` you can convert an existing `Irmin.S`
+By using `Irmin_graphql_unix.Server.Make`, you can convert an existing `Irmin.S`
 typed module into a GraphQL server:
 
 ```ocaml
@@ -246,7 +246,7 @@ module Graphql_store = Irmin_git_unix.Mem.KV(Irmin.Contents.String)
 module Graphql = Irmin_graphql_unix.Server.Make(Graphql_store)(struct let remote = Some Graphql_store.remote end)
 ```
 
-The following code will initialize and run the server:
+The following code will initialise and run the server:
 
 ```ocaml
 let run_server () =
@@ -263,7 +263,7 @@ let run_server () =
   Cohttp_lwt_unix.Server.create ~on_exn ~mode:(`TCP (`Port 1234)) server
 ```
 
-### Customization
+### Customisation
 
 It is possible to use a custom JSON representation for a `type` by implementing
 your own `Schema.typ` value:
