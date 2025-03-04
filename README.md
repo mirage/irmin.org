@@ -1,4 +1,4 @@
-# Irmin website &nbsp;&nbsp; [![OCaml-CI status][ocaml-ci-img]][ocaml-ci]
+# Irmin Website &nbsp;&nbsp; [![OCaml-CI status][ocaml-ci-img]][ocaml-ci]
 
 [ocaml-ci]: https://ocaml.ci.dev/github/mirage/irmin.org
 [ocaml-ci-img]: https://img.shields.io/endpoint?url=https%3A%2F%2Focaml.ci.dev%2Fbadge%2Fmirage%2Firmin.org%2Fmain&logo=ocaml
@@ -10,7 +10,7 @@ distributed database][irmin] and contains tutorials for getting started with Irm
 
 All contributions are welcome! The tutorial files can be found in [`data/tutorial`][tutorial-dir].
 
-### Building the website locally
+### Building the Website Locally
 
 The minimum version of Node required to build/run the site is 18. Packages are
 managed with [`pnpm`][pnpm]. Since we use Node > 16, `corepack` is the recommended
@@ -32,7 +32,7 @@ pnpm serve   # Serve the build at `localhost:9000`
 When working on the website, an incremental development server can be run with `pnpm develop`,
 but beware that this may show stale artefacts.
 
-### Running tests/linting
+### Running Tests/Linting
 
 - The source code is formatted with [Prettier][prettier]. 
 - Any incorrectly formatted code will be reported by `pnpm lint`.
