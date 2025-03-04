@@ -1,32 +1,40 @@
 ---
 path: "/tutorial/command-line"
-title: "Using the command-line"
+title: "Using the Command-Line"
 ---
 
 ## Installation
 
-These examples requires the `irmin-cli` package to be installed from [opam]:
+These examples require you to install the `irmin-cli` package from [opam]:
 
 ```shell
 $ opam install irmin-cli
 ```
 
-After that is finished you should have the `irmin` binary installed! To get a
-list of commands run:
+Once completed, you should have the `irmin` binary installed! To get a
+list of commands, run:
 
 ```shell
 $ irmin help
 ```
 
-## Working with stores
+## Working With Stores
 
 Now you can do things like create an in-memory store and serve it over GraphQL:
 
 ```shell
-$ irmin graphql --store mem --address 127.0.0.1 --port 8888
+$ irmin graphql --store mem --address 127.0.0.1 --port 8888 &
+[1] 12635
 ```
 
-Or create a new store on-disk and manipulate it directly from the terminal:
+The `&` at the end runs the server in the background. The number printed when launching the command, in this
+instance, `[1]`, is your process number.
+
+Before moving on with this tutorial, don't forget to kill the background running server created by this command.
+Run `kill %id`, replacing `id` with the process number from your output above. Remember to do the same in the following
+examples. 
+
+You can also create a new store on-disk and manipulate it directly from the terminal:
 
 ```shell
 $ irmin init
@@ -82,13 +90,13 @@ options.
 - `mem`: in-memory store
 - `fs`: on-disk store
 
-### Content types (`-c`/`--contents`):
+### Content Types (`-c`/`--contents`):
 
 - `string`
 - `json`: JSON objects
 - `json_value`: JSON values
 
-### Customization
+### Customisation
 
 It is possible to extend the `irmin` executable using [Irmin_cli.Resolver] and
 [Irmin_cli]:
@@ -106,13 +114,14 @@ let () =
   Irmin_cli.(run ~default commands)
 ```
 
-## Starting a GraphQL server
+## Starting a GraphQL Server
 
-`irmin` comes with a built-in [GraphQL] server, which can be used to easily
+Irmin comes with a built-in [GraphQL] server, which can be used to easily
 query/modify a store remotely:
 
 ```shell
-$ irmin graphql --port 8080
+$ irmin graphql --port 8080 &
+[1] 13058
 ```
 
 To verify the GraphQL server is up and running, you can try the following queries:
@@ -130,7 +139,7 @@ You can also visit
 interactive environment for writing GraphQL queries. Of course, you're also free
 to use your GraphQL client of choice!
 
-## Snapshot/revert
+## Snapshot/Revert
 
 To get a reference to the current state of the database:
 
@@ -139,19 +148,19 @@ $ irmin snapshot
 7941ae769181f4fbf5056d8b2bfe1cd8e10928bd
 ```
 
-And to restore to that point:
+Use the returned sequence and `irmin revert` to restore to that point:
 
 ```shell
 $ irmin revert 7941ae769181f4fbf5056d8b2bfe1cd8e10928bd
 ```
 
-## Git compatibility
+## Git Compatibility
 
 `irmin` and `git` can be used interchangeably to inspect and modify a
 repository. For instance, here are some examples of operations that can be
 achieved using either `git` or `irmin`.
 
-### Cloning a remote repository
+### Cloning a Remote Repository
 
 ```shell
 $ irmin clone -s git $GIT_REPO_URL
@@ -161,7 +170,7 @@ $ irmin clone -s git $GIT_REPO_URL
 $ git clone $GIT_REPO_URL
 ```
 
-### Restoring to a previous commit
+### Restoring to a Previous Commit
 
 ```shell
 $ irmin revert -s git $COMMIT_HASH
@@ -171,7 +180,7 @@ $ irmin revert -s git $COMMIT_HASH
 $ git reset --hard $COMMIT_HASH
 ```
 
-### Pushing to a remote repository
+### Pushing to a Remote Repository
 
 ```shell
 $ irmin push -s git $GIT_REPO_URL
