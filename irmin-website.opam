@@ -1,13 +1,14 @@
 opam-version: "2.0"
 name: "irmin-website"
 synopsis: "Public homepage of Irmin"
+license: "ISC"
 maintainer: "Craig Ferguson <me@craigfe.io>"
 authors: "Craig Ferguson <me@craigfe.io>"
 homepage: "https://github.com/tarides/irmin.org"
 bug-reports: "https://github.com/tarides/irmin.org/issues"
 depends: [
   "ocaml" {>= "4.06.0"}
-  "dune" {>= "1.7.0"}
+  "dune" {>= "1.11.0"}
   "irmin" {= "3.4.0" & with-test}
   "irmin-cli" {with-test}
   "digestif" {>= "1.0.0"}
