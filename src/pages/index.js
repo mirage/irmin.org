@@ -26,7 +26,7 @@ class HomePage extends React.Component {
               <div className="colleft">
                 <h2>Installation</h2>
                 <p>
-                  To install Irmin, the command-line tool and all optional
+                  To install Irmin, the command-line tool, and all optional
                   dependencies using opam:
                 </p>
                 <pre>
@@ -80,13 +80,13 @@ class HomePage extends React.Component {
                     <code>irmin-graphql</code> - a GraphQL server
                   </li>
                   <li>
-                    <code>irmin-mirage</code> - mirage compatibility
+                    <code>irmin-mirage</code> - MirageOS compatibility
                   </li>
                   <li>
-                    <code>irmin-cli</code> - command line tool
+                    <code>irmin-cli</code> - command-line tool
                   </li>
                   <li>
-                    <code>libirmin</code> - C bindings to the irmin API
+                    <code>libirmin</code> - C bindings to the Irmin API
                   </li>
                 </ul>
 
@@ -103,7 +103,7 @@ class HomePage extends React.Component {
               <h2>Examples</h2>
               <p>
                 Below is a simple example of setting a key and getting the value
-                out of a Git based, filesystem-backed store.
+                out of a Git-based, filesystem-backed store.
               </p>
 
               <pre>
@@ -115,7 +115,7 @@ class HomePage extends React.Component {
 
               <p>
                 The example is contained in <code>examples/readme.ml</code>. It
-                can be compiled and executed with dune:
+                can be compiled and executed with Dune:
               </p>
               <pre>
                 <code className="language-shell-session">
@@ -130,9 +130,9 @@ foo/bar => 'testing 123'`}
                 can be executed in the same way.
               </p>
 
-              <h2>Command-line</h2>
+              <h2>Command-Line</h2>
               <p>
-                The same thing can also be accomplished using irmin, the
+                The same thing can also be accomplished using Irmin, the
                 command-line application installed with <code>irmin-cli</code>,
                 by running:
               </p>
@@ -143,11 +143,12 @@ foo/bar => 'testing 123'`}
 $ irmin init
 $ irmin set foo/bar "testing 123"
 $ irmin get foo/bar`}
+testing 123
                 </code>
               </pre>
 
               <p>
-                <code>irmin.yml</code> allows for irmin flags to be set on a
+                <code>irmin.yml</code> allows for Irmin flags to be set on a
                 per-directory basis. You can also set flags globally using{" "}
                 <code>$HOME/.irmin/config.yml</code>.{" "}
               </p>
@@ -156,7 +157,7 @@ $ irmin get foo/bar`}
                 Run <code>irmin help irmin.yml</code> for further details.
               </p>
 
-              <h2>Explore further</h2>
+              <h2>Explore Further</h2>
 
               <p>
                 <Link to="/tutorial/introduction" className="button tutorial">
