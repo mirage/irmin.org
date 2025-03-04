@@ -1,28 +1,28 @@
 ---
 path: "/tutorial/contents"
-title: "Custom content types"
+title: "Custom Content Types"
 ---
 
-At some point working with `Irmin` you will probably want to move beyond using
+At some point while working with Irmin, you might want to move beyond using
 the default content types.
 
 This section will explain how custom datatypes can be implemented using
-[Irmin.Type][irmin.type]. Before continuing with these examples make sure to
-read through the [official documentation][irmin.type], which has information
+[`Irmin.Type`][irmin.type]. Before continuing with these examples, make sure to
+read through the [official documentation][irmin.type], as it contains information
 about the predefined types and how they're used.
 
-Now that you've read through the documentation, let's create some contents by
+Now that you've read through that documentation, let's create some contents by
 defining the functions required by the [Irmin.Contents.S] interface. This
 section will walk you through a few different examples:
 
 - [Counter](#counter)
 - [Record](#record)
-- [Association list](#association-list)
+- [Association List](#association-list)
 - [LWW register](#lww-register)
 
 ## Overview
 
-To create a content type you need to define the following:
+To create a content type, you need to define the following:
 
 - A type `t`
 - A value `t` of type `t Irmin.Type.t`
@@ -31,11 +31,11 @@ To create a content type you need to define the following:
 ## Counter
 
 A counter is just a simple `int64` value that can be incremented and
-decremented, when counters are merged the values will be added together.
+decremented. When counters are merged, the values will be added together.
 
 To get started, you will need to define a type `t` and build a value `t` using
-the functions provided in [Irmin.Type]. In this case all we need is the existing
-`int64` value, but in most cases it won't be this simple!
+the functions provided in [`Irmin.Type`]. In this case, all we need is the existing
+`int64` value, but in most cases, it won't be this simple!
 
 ```ocaml
 module Counter: Irmin.Contents.S with type t = int64 = struct
@@ -44,7 +44,7 @@ module Counter: Irmin.Contents.S with type t = int64 = struct
 ```
 
 Now we need to define a merge function. There is already a `counter`
-implementation available in [Irmin.Merge][irmin.merge], so you wouldn't actually
+implementation available in [`Irmin.Merge`][irmin.merge], so you wouldn't actually
 need to write this yourself:
 
 ```ocaml
@@ -61,7 +61,7 @@ need to write this yourself:
 end
 ```
 
-If we were to leverage the existing implementation it would be even simpler:
+If we were to leverage the existing implementation, it would be even simpler:
 
 ```ocaml
 let merge = Irmin.Merge.(option counter)
@@ -75,7 +75,7 @@ module Counter_mem_store = Irmin_mem.KV.Make(Counter)
 
 ## Record
 
-In this example I will wrap a record type so it can be stored directly in Irmin.
+In this example, let's wrap a record type so Irmin can store it directly.
 
 Here is a `car` type that we will use as the content type of our store:
 
@@ -94,7 +94,7 @@ type car = {
 ```
 
 First, `color` has to be wrapped. Variants are modeled using the
-[variant][irmin.type-variant] function:
+[`variant`][irmin.type-variant] function:
 
 ```ocaml
 module Car = struct
@@ -111,7 +111,7 @@ module Car = struct
         |> sealv
 ```
 
-This is mapping variant cases to their names in string representation. Records
+This maps variant cases to their names in string representation. Records
 are handled similarly:
 
 ```ocaml
@@ -134,9 +134,9 @@ Here's the merge operation:
 end
 ```
 
-Now some examples using `Car` -- we will map Vehicle Identification Number to a
-car record, this could be used by a tow company or an auto shop to identify
-cars:
+Now some with examples using `car`, we will map a Vehicle Identification Number (VIN) to a
+car record. This could be used by a tow company or an auto shop to identify
+cars, for example:
 
 ```ocaml
 open Lwt.Syntax
@@ -176,13 +176,13 @@ let main =
 let () = Lwt_main.run main
 ```
 
-## Association list
+## Association List
 
-In this example we will define an association list that maps string keys to
+In the following example, we will define an association list that maps string keys to
 string values. The type itself is not very complicated, but the merge function
 is even more complex than the previous two examples.
 
-Like the two examples above, you need to define a `t` type and a `t` value of
+Like the two examples above, you must define a `t` type and a `t` value of
 type `Irmin.Type.t` to begin:
 
 ```ocaml
@@ -191,14 +191,14 @@ module Object = struct
     let t = Irmin.Type.(list (pair string string))
 ```
 
-So far so good, Irmin provides a simple way to model a list of pairs!
+So far so good! Irmin provides a simple way to model a list of pairs!
 
-To write the merge function we can leverage `Irmin.Merge.alist`, which
-simplifies this process for association lists. In this example we are using
-strings for both the keys and values, however in most other cases `alist` can
+To write the merge function, we can leverage `Irmin.Merge.alist`, which
+simplifies this process for association lists. In this example, we use
+strings for both the keys and values; however, in most other cases, `alist` can
 get a bit more complicated since it requires existing merge functions for both
-the key and value types. For a slightly more complicated example you can read
-through `merge_object` and `merge_value` in [contents.ml][irmin.contents], which
+the key and value types. For a slightly more complicated example, read
+through `merge_object` and `merge_value` in [`contents.ml`][irmin.contents], which
 are used to implement JSON contents for Irmin.
 
 ```ocaml
@@ -208,14 +208,14 @@ are used to implement JSON contents for Irmin.
 end
 ```
 
-## LWW register
+## LWW Register
 
-A last-write-wins register is similar to a basic Irmin store, except on merge
+A last-write-wins (LWW)) register is similar to a basic Irmin store; except on merge,
 the most recently written value will be picked rather than trying to merge the
 values.
 
-First, this requires a way to get a timestamp -- we will make this as generic as
-possible so it can be used on Unix or MirageOS:
+First, this requires a way to get a timestamp. We will make this as generic as
+possible, so it can be used on Unix or MirageOS:
 
 ```ocaml
 module type TIMESTAMP = sig
@@ -223,7 +223,7 @@ module type TIMESTAMP = sig
 end
 ```
 
-On Unix this can be implemented `Unix.gettimeofday`:
+On Unix this can be implemented using `Unix.gettimeofday`:
 
 ```ocaml
 module Timestamp = struct
@@ -231,7 +231,7 @@ module Timestamp = struct
 end
 ```
 
-`Lww_register` will be defined a functor that wraps an existing content type:
+`Lww_register` will be defined as a functor that wraps an existing content type:
 
 ```ocaml
 module Lww_register (Time: TIMESTAMP) (C: Irmin.Type.S) = struct
@@ -240,14 +240,14 @@ module Lww_register (Time: TIMESTAMP) (C: Irmin.Type.S) = struct
         Irmin.Type.(pair C.t int64)
 ```
 
-A convenience function for adding a timestamp to a `C.t` value:
+Here's a convenient function for adding a timestamp to a `C.t` value:
 
 ```ocaml
     let v c = (c, Time.now ())
 ```
 
 The merge operation for `Lww_register` is slightly different than the ones
-covered so far. It will not attempt to merge any values, instead it will pick
+covered so far. It will not attempt to merge any values. Instead, it will pick
 the newest value based on the attached timestamp.
 
 ```ocaml
@@ -299,8 +299,8 @@ let main =
 let () = Lwt_main.run main
 ```
 
-If you'd like another example then check out the [custom
-merge][examples/custom-merge] example in the Irmin repository, which illustrates
+If you'd like another example, check out the [custom
+merge][examples/custom-merge] example in the Irmin repository. It illustrates
 how to write a mergeable log.
 
 <!-- prettier-ignore-start -->
