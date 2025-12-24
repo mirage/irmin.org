@@ -10,4 +10,4 @@
 
 (test
  (name mdx)
- (libraries irmin irmin-cli lwt))
+ (libraries irmin irmin-cli eio_main))

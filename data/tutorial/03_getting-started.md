@@ -94,7 +94,7 @@ With this configuration, it's very easy to create an [`Irmin.Repo`] using
 [`Repo.v`][irmin.repo.v]:
 
 ```ocaml
-let git_repo = Git_store.Repo.v git_config
+let git_repo () = Git_store.Repo.v git_config
 ```
 
 ```ocaml
@@ -108,10 +108,8 @@ Once a repo has been created, you can access a branch and start to modify it.
 To get access to the `main` branch:
 
 ```ocaml
-open Lwt.Syntax
-
 let main_branch config =
-    let* repo = Mem_store.Repo.v config in
+    let repo = Mem_store.Repo.v config in
     Mem_store.main repo
 ```
 
@@ -119,7 +117,7 @@ To get access to a named branch:
 
 ```ocaml
 let branch config name =
-    let* repo = Mem_store.Repo.v config in
+    let repo = Mem_store.Repo.v config in
     Mem_store.of_branch repo name
 ```
 
@@ -132,14 +130,14 @@ module Mem_info = Irmin_unix.Info(Mem_store.Info)
 
 let info message = Mem_info.v ~author:"Example" "%s" message
 
-let main =
-    let* t = main_branch config in
+let () =
+    Eio_main.run @@ fun _ ->
+    let t = main_branch config in
     (* Set a/b/c to "Hello, Irmin!" *)
-    let* () = Mem_store.set_exn t ["a"; "b"; "c"] "Hello, Irmin!" ~info:(info "my first commit") in
+    Mem_store.set_exn t ["a"; "b"; "c"] "Hello, Irmin!" ~info:(info "my first commit");
     (* Get a/b/c *)
-    let+ s = Mem_store.get t ["a"; "b"; "c"] in
+    let s = Mem_store.get t ["a"; "b"; "c"] in
     assert (s = "Hello, Irmin!")
-let () = Lwt_main.run main
 ```
 
 ## Transactions
@@ -148,16 +146,16 @@ Transactions allow you to make many modifications using an in-memory tree then
 apply them all at once. This is done using [`with_tree`][irmin.s-with_tree]:
 
 ```ocaml
-let transaction_example =
-    let* t = main_branch config in
+let () =
+    Eio_main.run @@ fun _ ->
+    let t = main_branch config in
     let info = info "example transaction" in
     Mem_store.with_tree_exn t [] ~info ~strategy:`Set (fun tree ->
         let tree = match tree with Some t -> t | None -> Mem_store.Tree.empty () in
-        let* tree = Mem_store.Tree.remove tree ["foo"; "bar"] in
-        let* tree = Mem_store.Tree.add tree ["a"; "b"; "c"] "123" in
-        let* tree = Mem_store.Tree.add tree ["d"; "e"; "f"] "456" in
-        Lwt.return_some tree)
-let () = Lwt_main.run transaction_example
+        let tree = Mem_store.Tree.remove tree ["foo"; "bar"] in
+        let tree = Mem_store.Tree.add tree ["a"; "b"; "c"] "123" in
+        let tree = Mem_store.Tree.add tree ["d"; "e"; "f"] "456" in
+        Some tree)
 ```
 
 A tree can be modified using the functions in [`Irmin.S.Tree`][irmin.s.tree], and
@@ -172,17 +170,18 @@ let move t ~src ~dest =
     Mem_store.with_tree_exn t Mem_store.Path.empty ~strategy:`Set (fun tree ->
         match tree with
         | Some tr ->
-            let* v = Mem_store.Tree.get_tree tr src in
-            let* tr = Mem_store.Tree.remove tr src in
-            let* tree = Mem_store.Tree.add_tree tr dest v in
-            Lwt.return_some tree
-        | None -> Lwt.return_none
+            let v = Mem_store.Tree.get_tree tr src in
+            let tr = Mem_store.Tree.remove tr src in
+            let tree = Mem_store.Tree.add_tree tr dest v in
+            Some tree
+        | None -> None
     )
-let main =
-    let* t = main_branch config in
+
+let () =
+    Eio_main.run @@ fun _ ->
+    let t = main_branch config in
     let info = info "move a -> foo" in
     move t ~src:["a"] ~dest:["foo"] ~info
-let () = Lwt_main.run main
 ```
 
 ## Sync
@@ -203,16 +202,15 @@ For example, you can pull a repo and list the files in the project's root:
 module Git_mem_store = Irmin_git_unix.Mem.KV(Irmin.Contents.String)
 module Sync = Irmin.Sync(Git_mem_store)
 let remote = Git_mem_store.remote "git://github.com/mirage/irmin.git"
-let main =
-    let* repo = Git_mem_store.Repo.v config in
-    let* t = Git_mem_store.main in
-    let* () = Sync.pull_exn t remote `Set in
-    let* list = Git_mem_store.list t [] in
+let () =
+    let repo = Git_mem_store.Repo.v config in
+    let t = Git_mem_store.main in
+    Sync.pull_exn t remote `Set;
+    let list = Git_mem_store.list t [] in
     List.iter (fun (step, kind) ->
         match kind with
         | `Contents -> Printf.printf "FILE %s\n" step
         | `Node -> Printf.printf "DIR %s\n" step) list
-let () = Lwt_main.run main
 ```
 
 ## JSON Contents
@@ -235,16 +233,17 @@ For example, by using `Men_store_json_value`, we can assign
 
 ```ocaml
 let contents_equal = Irmin.Type.(unstage (equal Mem_store_json_value.contents_t))
-let main =
+
+let () =
+    Eio_main.run @@ fun _ ->
     let module Store = Mem_store_json_value in
     let module Info = Irmin_unix.Info(Store.Info) in
-    let* repo = Store.Repo.v config in
-    let* t = Store.main repo in
+    let repo = Store.Repo.v config in
+    let t = Store.main repo in
     let value = `O ["x", `Float 1.; "y", `Float 2.; "z", `Float 3.] in
-    let* () = Store.set_exn t ["a"; "b"; "c"] value ~info:(Info.v "set a/b/c") in
-    let+ x = Store.get t ["a"; "b"; "c"] in
+    Store.set_exn t ["a"; "b"; "c"] value ~info:(Info.v "set a/b/c");
+    let x = Store.get t ["a"; "b"; "c"] in
     assert (contents_equal value x)
-let () = Lwt_main.run main
 ```
 
 An interesting thing about `Json_value` stores is the ability to use [`Json_tree`]
@@ -260,21 +259,21 @@ the key `a/b`, we will get the following object back:
 `{"c": {"test": {"foo": "bar"}, "x": 1, "y": 2, "z": 3}}`.
 
 ```ocaml
-let main =
+let () =
+    Eio_main.run @@ fun _ ->
     let module Store = Mem_store_json_value in
     let module Info = Irmin_unix.Info(Store.Info) in
     let module Proj = Irmin.Json_tree(Store) in
-    let* repo = Store.Repo.v config in
-    let* t = Store.main repo in
+    let repo = Store.Repo.v config in
+    let t = Store.main repo in
     let value = `O ["test", `O ["foo", `String "bar"]; "x", `Float 1.; "y", `Float 2.; "z", `Float 3.] in
-    let* () = Proj.set t ["a"; "b"; "c"] value ~info:(Info.v "set a/b/c") in
-    let* x = Store.get t ["a"; "b"; "c"; "x"] in
+    Proj.set t ["a"; "b"; "c"] value ~info:(Info.v "set a/b/c");
+    let x = Store.get t ["a"; "b"; "c"; "x"] in
     assert (contents_equal (`Float 1.) x);
-    let* x = Store.get t ["a"; "b"; "c"; "test"; "foo"] in
+    let x = Store.get t ["a"; "b"; "c"; "test"; "foo"] in
     assert (contents_equal (`String "bar") x);
-    let+ x = Proj.get t ["a"; "b"] in
+    let x = Proj.get t ["a"; "b"] in
     assert (contents_equal (`O ["c", value]) x)
-let () = Lwt_main.run main
 ```
 
 <!-- prettier-ignore-start -->

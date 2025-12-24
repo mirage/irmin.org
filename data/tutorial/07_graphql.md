@@ -250,8 +250,11 @@ The following code will initialise and run the server:
 
 ```ocaml
 let run_server () =
+  Eio_main.run @@ fun env ->
+  Lwt_eio.with_event_loop ~clock:env#clock @@ fun () ->
+
   (* Set up the Irmin store *)
-  let* repo = Graphql_store.Repo.v (Irmin_git.config "/tmp/irmin") in
+  let repo = Graphql_store.Repo.v (Irmin_git.config "/tmp/irmin") in
 
   (* Initialize the GraphQL server *)
   let server = Graphql.v repo in

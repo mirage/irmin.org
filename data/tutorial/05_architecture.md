@@ -70,8 +70,8 @@ the [Getting Started](/tutorial/getting-started) section:
 
 ```ocaml
 let main () =
-    let* repo = Mem_store.Repo.v config in
-    let* t = Mem_store.main repo in
+    let repo = Mem_store.Repo.v config in
+    let t = Mem_store.main repo in
     Mem_store.set_exn t ["a"; "b"; "c"] "Hello, Irmin!" ~info:(info "my first commit")
 ```
 

@@ -28,8 +28,6 @@ and the atomic-write store:
 - `value`: the value/content type
 
 ```ocaml
-open Lwt.Syntax
-
 module Helper (K: Irmin.Type.S) (V: Irmin.Type.S) = struct
   module Tbl = Hashtbl.Make(struct
     type t = K.t
@@ -60,29 +58,26 @@ backend should register a new config specification using
   let v config =
     let module C = Irmin.Backend.Conf in
     let init_size = C.get config init_size in
-    Lwt.return (Tbl.create init_size)
+    Tbl.create init_size
 ```
 
 `mem` can be implemented directly using `Tbl.mem`:
 
 ```ocaml
-  let mem t key =
-      Lwt.return (Tbl.mem t key)
+  let mem t key = Tbl.mem t key
 ```
 
 `find` uses `Tbl.find_opt`:
 
 ```ocaml
-  let find t key =
-      Lwt.return (Tbl.find_opt t key)
+  let find t key = Tbl.find_opt t key
 ```
 
 `clear` is used to cleanup any data in the store:
 
 ```ocaml
   let clear t =
-    Tbl.clear t;
-    Lwt.return_unit
+    Tbl.clear t
 end
 ```
 
@@ -106,12 +101,11 @@ association, and returns the hash:
   let encode_value = Irmin.Type.(unstage (to_bin_string V.t))
 
   let unsafe_add t k v =
-      Tbl.replace t k v;
-      Lwt.return_unit
+      Tbl.replace t k v
 
   let add t value =
       let hash = K.hash (fun f -> f (encode_value value)) in
-      let+ () = unsafe_add t hash value in
+      unsafe_add t hash value;
       hash
 ```
 
@@ -123,20 +117,15 @@ the most basic implementation with a global lock:
 
   let batch t f =
     Mutex.lock lock;
-    let+ x = Lwt.catch (fun () -> f t)
-      (fun exn ->
-        Mutex.unlock lock;
-        raise exn)
-    in
-    Mutex.unlock lock;
-    x
+    Fun.protect ~finally:(fun () -> Mutex.unlock lock) @@ fun () ->
+    f t
 ```
 
 Finally, we must provide a `close` function to free any resources held by the
 backend. In our case, this can be a simple no-op:
 
 ```ocaml
-  let close _t = Lwt.return_unit
+  let close _t = ()
 end
 ```
 
@@ -179,8 +168,8 @@ Again, we need a `v` function for creating a value of type `t`:
 
 ```ocaml
   let v config =
-    let* t = H.v config in
-    Lwt.return {t; w = watches }
+    let t = H.v config in
+    {t; w = watches }
 ```
 
 The next few functions (`find` and `mem`) are just wrappers around the
@@ -213,8 +202,7 @@ The `list` implementation gets a list of keys in the store:
 
 ```ocaml
   let list {t; _} =
-      let keys = H.Tbl.to_seq_keys t |> List.of_seq in
-      Lwt.return keys
+      H.Tbl.to_seq_keys t |> List.of_seq
 ```
 
 `set` stores a key/value pair in the store. When this operation updates the
@@ -225,7 +213,6 @@ store, the watchers have to be notified:
       let exists = H.Tbl.mem t key in
       H.Tbl.replace t key value;
       if exists then W.notify w key (Some value)
-      else Lwt.return_unit
 ```
 
 `remove` deletes stored values and then notifies the watchers:
@@ -252,9 +239,9 @@ requires an atomic check and set:
           | None ->
             H.Tbl.remove t key
         in
-        let* () = W.notify w key set_value in
-        Lwt.return_true
-    ) else Lwt.return_false
+        W.notify w key set_value;
+        true
+    ) else false
 ```
 
 Finally, we must pull in `clear` from our `Helper` implementation and add
@@ -262,10 +249,9 @@ another `close` function:
 
 ```ocaml
   let clear {t; _} =
-      H.Tbl.clear t;
-      Lwt.return_unit
+      H.Tbl.clear t
 
-  let close _t = Lwt.return_unit
+  let close _t = ()
 end
 ```
 

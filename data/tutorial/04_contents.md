@@ -139,7 +139,6 @@ car record. This could be used by a tow company or an auto shop to identify
 cars, for example:
 
 ```ocaml
-open Lwt.Syntax
 module Car_store = Irmin_mem.KV.Make(Car)
 module Car_info = Irmin_unix.Info(Car_store.Info)
 
@@ -163,17 +162,16 @@ let add_car store car_number car =
     let info = Car_info.v "added %s" car_number in
     Car_store.set_exn store [car_number] car ~info
 
-let main =
+let () =
+    Eio_main.run @@ fun _ ->
     let config = Irmin_mem.config () in
-    let* repo = Car_store.Repo.v config in
-    let* t = Car_store.main repo in
-    let* () = add_car t "5Y2SR67049Z456146" car_a in
-    let* () = add_car t "2FAFP71W65X110910" car_b in
-    let+ car = Car_store.get t ["2FAFP71W65X110910"] in
+    let repo = Car_store.Repo.v config in
+    let t = Car_store.main repo in
+    add_car t "5Y2SR67049Z456146" car_a;
+    add_car t "2FAFP71W65X110910" car_b;
+    let car = Car_store.get t ["2FAFP71W65X110910"] in
     assert (car.license = car_b.license);
     assert (car.year = car_b.year)
-
-let () = Lwt_main.run main
 ```
 
 ## Association List
@@ -268,35 +266,33 @@ end
 An example using `Lww_register`:
 
 ```ocaml
-open Lwt.Syntax
 module Value = Lww_register (Timestamp) (Irmin.Contents.String)
 module S = Irmin_mem.KV.Make (Value)
 module I = Irmin_unix.Info(S.Info)
 
-let main =
+let () =
+    Eio_main.run @@ fun _ ->
     (* Configure the repo *)
     let cfg = Irmin_mem.config () in
     (* Access the main branch *)
-    let* repo = S.Repo.v cfg in
-    let* main = S.main repo in
+    let repo = S.Repo.v cfg in
+    let main = S.main repo in
     (* Set [foo] to ["bar"] on main branch *)
-    let* () = S.set_exn main ["foo"] (Value.v "bar") ~info:(I.v "set foo on main branch") in
+    S.set_exn main ["foo"] (Value.v "bar") ~info:(I.v "set foo on main branch");
     (* Access example branch *)
-    let* example = S.of_branch repo "example" in
+    let example = S.of_branch repo "example" in
     (* Set [foo] to ["baz"] on example branch *)
-    let* () = S.set_exn example ["foo"] (Value.v "baz") ~info:(I.v "set foo on example branch") in
+    S.set_exn example ["foo"] (Value.v "baz") ~info:(I.v "set foo on example branch");
     (* Merge the example into main branch *)
-    let* m = S.merge_into ~into:main example ~info:(I.v "merge example into main") in
+    let m = S.merge_into ~into:main example ~info:(I.v "merge example into main") in
     match m with
     | Ok () ->
         (* Check that [foo] is set to ["baz"] after the merge *)
-        let+ (foo, _) = S.get main ["foo"] in
+        let (foo, _) = S.get main ["foo"] in
         assert (foo = "baz")
     | Error conflict ->
         let fmt = Irmin.Type.pp_json Irmin.Merge.conflict_t in
-        Lwt_io.printl (Fmt.to_to_string fmt conflict)
-
-let () = Lwt_main.run main
+        print_endline (Fmt.to_to_string fmt conflict)
 ```
 
 If you'd like another example, check out the [custom
