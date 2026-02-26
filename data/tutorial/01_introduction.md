@@ -17,11 +17,14 @@ your application.
 
 Take a moment to skim the [README][irmin-readme] to familiarise yourself with
 some of the concepts. This tutorial should always be up to date with the latest
-opam release. If you find that anything is outdated, missing, or unclear,
-please file [an issue][irmin-issues]!
+release. Irmin packages are available via [opam] and also support the
+[`dune pkg`][dune-pkg] workflow. If you find that anything is outdated,
+missing, or unclear, please file [an issue][irmin-issues]!
 
 <!-- prettier-ignore-start -->
 [irmin]: https://github.com/mirage/irmin
 [irmin-issues]: https://github.com/mirage/irmin.org/issues
 [irmin-readme]: https://github.com/mirage/irmin/blob/main/README.md
+[opam]: https://opam.ocaml.org
+[dune-pkg]: https://dune.readthedocs.io/en/stable/tutorials/dune-package-management/setup.html
 <!-- prettier-ignore-end -->

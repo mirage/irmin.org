@@ -36,6 +36,36 @@ It is important to note that most Irmin functions return `Lwt.t` values, which
 means you must use `Lwt_main.run` to execute them. If you're not
 familiar with [Lwt][lwt], then I suggest [this tutorial][lwt-tutorial].
 
+## Installation
+
+### Using opam
+
+Install the packages you need directly:
+
+```shell
+$ opam install irmin irmin-mem irmin-git irmin-unix
+```
+
+### Using dune pkg
+
+If you are using the [`dune pkg`][dune-pkg] workflow, declare Irmin as a
+dependency in your `dune-project`:
+
+```
+(lang dune 3.17)
+(package
+ (name my-project)
+ (depends irmin irmin-mem irmin-git irmin-unix))
+```
+
+Then generate a lock file, which resolves and pins all dependencies:
+
+```shell
+$ dune pkg lock
+```
+
+Dune will fetch and build the locked dependencies as part of your next `dune build`.
+
 ## Creating a Store
 
 To create an in-memory store with string contents, run:
@@ -296,6 +326,7 @@ let () =
 [Json_tree]: https://mirage.github.io/irmin/irmin/Irmin/index.html#module-Json_tree
 [Json_value]: https://mirage.github.io/irmin/irmin/Irmin/Contents/index.html#module-Json_value
 
+[dune-pkg]: https://dune.readthedocs.io/en/stable/tutorials/dune-package-management/setup.html
 [mirage]: https://mirage.io
 [lwt]: https://github.com/ocsigen/lwt
 [lwt-tutorial]: https://mirage.io/wiki/tutorial-lwt

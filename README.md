@@ -34,9 +34,29 @@ but beware that this may show stale artefacts.
 
 ### Running Tests/Linting
 
-- The source code is formatted with [Prettier][prettier]. 
+- The source code is formatted with [Prettier][prettier].
 - Any incorrectly formatted code will be reported by `pnpm lint`.
 - Use `pnpm format` to apply the changes.
+
+### Building the Tutorial Code (OCaml)
+
+The tutorial code snippets are verified with [OCaml MDX][mdx]. This requires an
+[opam][opam] switch with OCaml >= 5.2.0. To set one up and run the tests:
+
+```shell
+opam switch create . ocaml.5.2.0 --no-install  # create a local opam switch (first time only)
+opam install . --deps-only --with-test          # install OCaml dependencies
+dune runtest                                    # build and test the tutorial examples
+```
+## Deployment
+
+The website is deployed to [GitHub Pages][github-pages] automatically via a [GitHub
+Actions workflow][deploy-workflow] whenever changes are pushed to the `main` branch.
+There is no manual release step — merging a pull request into `main` is sufficient to
+trigger a new deployment.
+
+The built site is output to the `./public` directory and uploaded as a GitHub Pages
+artifact by the workflow.
 
 [irmin]: https://github.com/mirage/irmin/
 [irmin.org]: https://irmin.org/
@@ -45,3 +65,7 @@ but beware that this may show stale artefacts.
 [gatsby]: https://www.gatsbyjs.org/
 [pnpm]: https://pnpm.io/
 [pnpm-install]: https://pnpm.io/installation#using-corepack
+[mdx]: https://github.com/realworldocaml/mdx
+[opam]: https://opam.ocaml.org/
+[github-pages]: https://pages.github.com/
+[deploy-workflow]: https://github.com/mirage/irmin.org/blob/main/.github/workflows/gatsby.yml
